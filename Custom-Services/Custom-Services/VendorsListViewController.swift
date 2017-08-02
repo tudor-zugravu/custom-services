@@ -8,10 +8,12 @@
 
 import UIKit
 
-class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, VendorListCellDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var dropdownMenuButton: DropMenuButton!
+    @IBOutlet weak var dropdownFilterButton: UILabel!
     
     var vendors: [VendorModel] = []
     
@@ -19,17 +21,20 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        vendors.append(VendorModel(name: "St. Christopher's Inn", rating: "4.5", distance: "313 m", price: "3 GBP", time: "18:00 - 20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true))
-        vendors.append(VendorModel(name: "The George Inn", rating: "5", distance: "56 m", price: "4 GBP", time: "16:00 - 20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true))
-        vendors.append(VendorModel(name: "The Sadler's Pub", rating: "3.5", distance: "1200 m", price: "3.5 GBP", time: "20:00 - 22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false))
-        vendors.append(VendorModel(name: "The Blue Bar", rating: "4", distance: "641 m", price: "4 GBP", time: "20:30 - 22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false))
+        self.dropInit()
+        
+        
+        vendors.append(VendorModel(name: "St. Christopher's Inn", rating: "4.5", distance: "313 m", price: "3 GBP", time: "18:00 - 20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0))
+        vendors.append(VendorModel(name: "The George Inn", rating: "5", distance: "56 m", price: "4 GBP", time: "16:00 - 20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 1))
+        vendors.append(VendorModel(name: "The Sadler's Pub", rating: "3.5", distance: "1200 m", price: "3.5 GBP", time: "20:00 - 22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0))
+        vendors.append(VendorModel(name: "The Blue Bar", rating: "4", distance: "641 m", price: "4 GBP", time: "20:30 - 22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 2))
         tableView.reloadData()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int
     {
         return vendors.count
@@ -37,13 +42,14 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        print("Heheeei \(vendors.count)")
         if let cell = tableView.dequeueReusableCell(withIdentifier: "vendorsCell") as? VendorsTableViewCell {
-            
+            cell.cellDelegate = self
+            cell.tag = indexPath.row
+
             var item: VendorModel
             item = vendors[indexPath.row]
             
-            cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, price:item.price!, time:item.time!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!)
+            cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, price:item.price!, time:item.time!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!, finished: item.finished!)
             
             return cell
         } else {
@@ -54,4 +60,19 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func didPressFavouriteButton(_ tag: Int) {
+        if (vendors[tag].favourite == true) {
+            vendors[tag].favourite = false
+        } else {
+            vendors[tag].favourite = true
+        }
+    }
+    
+    //Dropdown menu Initinal
+    func dropInit() {
+        dropdownMenuButton.initMenu(["Item A", "Item B", "Item C"], actions: [
+            ({ () -> (Void) in print("Im doing the A Action") }),
+            ({ () -> (Void) in print("Im doing the B Action") }),
+            ({ () -> (Void) in print("Im doing the C Action") })])    }
 }

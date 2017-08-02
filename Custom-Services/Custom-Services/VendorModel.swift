@@ -19,6 +19,7 @@ class VendorModel: NSObject {
     var vendorPicture: String?
     var vendorLogo: String?
     var favourite: Bool?
+    var finished: Int?
     
     //empty constructor
     override init()
@@ -27,7 +28,7 @@ class VendorModel: NSObject {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool) {
+    init(name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
         
         self.name = name
         self.rating = rating
@@ -37,11 +38,12 @@ class VendorModel: NSObject {
         self.vendorPicture = vendorPicture
         self.vendorLogo = vendorLogo
         self.favourite = favourite
+        self.finished = finished
     }
     
     
     //prints object's current state
     override var description: String {
-        return "Name: \(name), Rating: \(rating), Distance: \(distance), Price: \(price), Time: \(time), VendorPicture: \(vendorPicture), VendorLogo: \(vendorLogo), Favourite: \(favourite)"
+        return "Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Price: \(String(describing: price)), Time: \(String(describing: time)), VendorPicture: \(String(describing: vendorPicture)), VendorLogo: \(String(describing: vendorLogo)), Favourite: \(String(describing: favourite)), Finished: \(String(describing: finished))"
     }
 }

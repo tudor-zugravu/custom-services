@@ -8,8 +8,11 @@
 
 import UIKit
 
+protocol VendorListCellDelegate : class {
+    func didPressFavouriteButton(_ tag: Int)
+}
+
 class VendorsTableViewCell: UITableViewCell {
-        
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
@@ -19,7 +22,12 @@ class VendorsTableViewCell: UITableViewCell {
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var favouriteButton: UIButton!
+    @IBOutlet weak var finishedImage: UIImageView!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var opaqueView: UIView!
+    
+    weak var cellDelegate: VendorListCellDelegate?
+    var isFavourite: Bool = true
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,10 +40,29 @@ class VendorsTableViewCell: UITableViewCell {
         containerView.layer.shadowOpacity = 0.6
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.lightGray.cgColor
-//        containerView.clipsToBounds = false
     }
     
-    func configureCell(_ name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        let color = opaqueView.backgroundColor
+        super.setSelected(selected, animated: animated)
+        
+        if(selected) {
+            opaqueView.backgroundColor = color
+        }
+    }
+    
+    @IBAction func favouriteButtonPressed(_ sender: Any) {
+        if (isFavourite == false) {
+            isFavourite = true
+            favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
+        } else {
+            isFavourite = false
+            favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
+        }
+        cellDelegate?.didPressFavouriteButton(self.tag)
+    }
+    
+    func configureCell(_ name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
         
         nameLabel.text = name
         ratingLabel.text = rating
@@ -53,9 +80,23 @@ class VendorsTableViewCell: UITableViewCell {
             self.vendorLogo.image = UIImage(named: "stChristophersLogo")
         }
         if (favourite == true) {
+            isFavourite = true
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
         } else {
+            isFavourite = false
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
+        }
+        switch finished {
+        case 1:
+            finishedImage.image = UIImage(named: "soldOut.png")
+            finishedImage.isHidden = false
+            break
+        case 2:
+            finishedImage.image = UIImage(named: "fullyBooked.png")
+            finishedImage.isHidden = false
+            break
+        default:
+            finishedImage.isHidden = true
         }
     }
     

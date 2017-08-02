@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386222C81F32469C00CDB4F9 /* DropMenuButton.swift */; };
 		38A5B28E1F2F7B2800D8F418 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B28D1F2F7B2800D8F418 /* AppDelegate.swift */; };
 		38A5B2931F2F7B2800D8F418 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38A5B2911F2F7B2800D8F418 /* Main.storyboard */; };
 		38A5B2951F2F7B2800D8F418 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38A5B2941F2F7B2800D8F418 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		386222C81F32469C00CDB4F9 /* DropMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropMenuButton.swift; sourceTree = "<group>"; };
 		38A5B28A1F2F7B2800D8F418 /* Custom-Services.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom-Services.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38A5B28D1F2F7B2800D8F418 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38A5B2921F2F7B2800D8F418 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		38EDCA231F307F0200DEFA0E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				386222C81F32469C00CDB4F9 /* DropMenuButton.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 			files = (
 				38C3F59F1F30AAEC00C611B6 /* VendorModel.swift in Sources */,
 				38A5B28E1F2F7B2800D8F418 /* AppDelegate.swift in Sources */,
+				386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */,
 				38EDCA271F307F6C00DEFA0E /* VendorsTableViewCell.swift in Sources */,
 				38C3F59D1F30A96300C611B6 /* VendorsListViewController.swift in Sources */,
 			);
