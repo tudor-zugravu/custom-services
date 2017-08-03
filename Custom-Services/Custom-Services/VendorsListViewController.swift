@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, VendorListCellDelegate {
+class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, VendorListCellProtocol, PopoverFiltersProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -22,7 +22,6 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.delegate = self
         tableView.dataSource = self
         self.dropInit()
-        
         
         vendors.append(VendorModel(name: "St. Christopher's Inn", rating: "4.5", distance: "313 m", price: "3 GBP", time: "18:00 - 20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0))
         vendors.append(VendorModel(name: "The George Inn", rating: "5", distance: "56 m", price: "4 GBP", time: "16:00 - 20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 1))
@@ -43,7 +42,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "vendorsCell") as? VendorsTableViewCell {
-            cell.cellDelegate = self
+            cell.delegate = self
             cell.tag = indexPath.row
 
             var item: VendorModel
@@ -68,11 +67,25 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             vendors[tag].favourite = true
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "ShowPopoverFiltersViewController") {
+            let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
+            popoverFiltersViewController.delegate = self
+        }
+    }
+    
+    func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool) {
+        print("AllCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval)")
+    }
+    
+    func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool, categories: [String]) {
+        print("SomeCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval) \(categories)")
+    }
     
     //Dropdown menu Initinal
     func dropInit() {
-        dropdownMenuButton.initMenu(["Item A", "Item B", "Item C"], actions: [
-            ({ () -> (Void) in print("Im doing the A Action") }),
-            ({ () -> (Void) in print("Im doing the B Action") }),
-            ({ () -> (Void) in print("Im doing the C Action") })])    }
+        dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
+            ({ () -> (Void) in print("PROFILE!") }),
+            ({ () -> (Void) in print("CONTACT US!") }),
+            ({ () -> (Void) in print("SIGN OUT!") })])    }
 }

@@ -176,15 +176,14 @@ class DropMenuButton: UIButton, UITableViewDelegate, UITableViewDataSource
         let itemLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: rowHeight))
         itemLabel.textAlignment = NSTextAlignment.center
         itemLabel.text = items[(indexPath as NSIndexPath).row]
-        itemLabel.font = UIFont.init(name: "Futura", size: 19.0)
+        itemLabel.font = UIFont.init(name: "Futura", size: 17.0)
         itemLabel.textColor = UIColor.white
         
         let bgColorView = UIView()
-        
-        // TODO: SET COLOUR DYNAMICALLY
-        bgColorView.backgroundColor = UIColor.white
+        bgColorView.backgroundColor = UIColor.lightGray
         
         let cell = UITableViewCell(frame: CGRect(x: 0, y: 0, width: rowWidth, height: rowHeight))
+        // TODO: SET COLOUR DYNAMICALLY
         cell.backgroundColor = UIColor.init(red: 16/255.0, green: 173/255.0, blue: 203/255.0, alpha: 1)
         cell.selectedBackgroundView = bgColorView
         cell.separatorInset = UIEdgeInsetsMake(0, rowWidth, 0, rowWidth)

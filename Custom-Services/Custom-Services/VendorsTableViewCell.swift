@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol VendorListCellDelegate : class {
+protocol VendorListCellProtocol : class {
     func didPressFavouriteButton(_ tag: Int)
 }
 
@@ -26,7 +26,7 @@ class VendorsTableViewCell: UITableViewCell {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var opaqueView: UIView!
     
-    weak var cellDelegate: VendorListCellDelegate?
+    weak var delegate: VendorListCellProtocol?
     var isFavourite: Bool = true
     
     override func awakeFromNib() {
@@ -59,7 +59,7 @@ class VendorsTableViewCell: UITableViewCell {
             isFavourite = false
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
         }
-        cellDelegate?.didPressFavouriteButton(self.tag)
+        delegate?.didPressFavouriteButton(self.tag)
     }
     
     func configureCell(_ name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
@@ -99,5 +99,4 @@ class VendorsTableViewCell: UITableViewCell {
             finishedImage.isHidden = true
         }
     }
-    
 }
