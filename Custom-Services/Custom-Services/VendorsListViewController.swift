@@ -74,12 +74,12 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
-    func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool) {
-        print("AllCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval)")
+    func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool) {
+        print("AllCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval) \(sortBy)")
     }
     
-    func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool, categories: [String]) {
-        print("SomeCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval) \(categories)")
+    func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String]) {
+        print("SomeCategories: \(distance) \(lowerTimeInterval):\(higherTimeInterval) \(sortBy) \(categories)")
     }
     
     //Dropdown menu Initinal

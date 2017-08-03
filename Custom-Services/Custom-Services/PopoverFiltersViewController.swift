@@ -10,16 +10,17 @@ import UIKit
 import SwiftRangeSlider
 
 protocol PopoverFiltersProtocol : class {
-    func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool)
-    func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, onlyAvailableOffers: Bool, categories: [String])
+    func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool)
+    func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String])
 }
 
-class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CategoriesListCellProtocol {
+class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, CategoriesListCellProtocol {
     
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var distanceSlider: UISlider!
     @IBOutlet weak var timeIntervalLabel: UILabel!
     @IBOutlet weak var timeIntervalSlider: RangeSlider!
+    @IBOutlet weak var orderByPicker: UIPickerView!
     @IBOutlet weak var onlyAvailableSwitch: UISwitch!
     @IBOutlet weak var allCategoriesSwitch: UISwitch!
     @IBOutlet weak var tableView: UITableView!
@@ -34,6 +35,8 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
 
         tableView.delegate = self
         tableView.dataSource = self
+        orderByPicker.delegate = self
+        orderByPicker.dataSource = self
         
         selections = Array(repeating: false, count: categories.count)
     }
@@ -66,6 +69,25 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 3
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch row {
+        case 0:
+            return "Distance"
+        case 1:
+            return "Quality"
+        default:
+            return "Price"
+        }
+    }
+    
     @IBAction func distanceSliderChanged(_ sender: Any) {
         distanceLabel.text = "\(Int(distanceSlider.value)) km"
     }
@@ -94,7 +116,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     
     @IBAction func dismissPopover(_ sender: Any) {
         if allCategoriesSwitch.isOn {
-            delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), onlyAvailableOffers: true)
+            delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: true)
             dismiss(animated: true, completion: nil)
         } else {
             if noSelections == 0 {
@@ -110,7 +132,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
                         selectedCategories.append(categories[index])
                     }
                 }
-                delegate?.didChangeFiltersSomeCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), onlyAvailableOffers: true, categories: selectedCategories)
+                delegate?.didChangeFiltersSomeCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: true, categories: selectedCategories)
                 dismiss(animated: true, completion: nil)
             }
         }
