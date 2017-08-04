@@ -407,7 +407,7 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="25 km" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n97-AD-bF3">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50 km" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n97-AD-bF3">
                                                         <rect key="frame" x="142" y="0.0" width="137" height="22.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="137" id="Hl4-v0-cnZ"/>
@@ -418,7 +418,7 @@
                                                     </label>
                                                 </subviews>
                                             </stackView>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="1" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="tRe-oi-3ma">
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="1" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="tRe-oi-3ma">
                                                 <rect key="frame" x="-2" y="27.5" width="283" height="31"/>
                                                 <color key="tintColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -534,7 +534,7 @@
                                             </switch>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="k9I-z4-0gZ">
+                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="k9I-z4-0gZ">
                                         <rect key="frame" x="0.0" y="286" width="279" height="159"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="75" translatesAutoresizingMaskIntoConstraints="NO" id="Iwg-qJ-Are">
@@ -677,6 +677,7 @@
                     </view>
                     <connections>
                         <outlet property="allCategoriesSwitch" destination="XI5-Pb-Y82" id="gSe-We-IQb"/>
+                        <outlet property="categoriesStackView" destination="k9I-z4-0gZ" id="WNZ-sF-OSb"/>
                         <outlet property="distanceLabel" destination="n97-AD-bF3" id="rMs-4Z-NSA"/>
                         <outlet property="distanceSlider" destination="tRe-oi-3ma" id="8lo-fb-AwH"/>
                         <outlet property="onlyAvailableSwitch" destination="YkJ-zT-nzk" id="xyk-Dh-Yka"/>
@@ -701,16 +702,7 @@
                     <view key="view" contentMode="scaleToFill" id="v8t-C6-Agu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vmS-V3-ZEm">
-                                <rect key="frame" x="27.5" y="225" width="320" height="216"/>
-                            </pickerView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="vmS-V3-ZEm" firstAttribute="centerX" secondItem="v8t-C6-Agu" secondAttribute="centerX" id="7Oa-pn-Vgf"/>
-                            <constraint firstItem="vmS-V3-ZEm" firstAttribute="centerY" secondItem="v8t-C6-Agu" secondAttribute="centerY" id="Lru-2h-wUQ"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="mapTab" id="wka-x8-bjD"/>
                 </viewController>

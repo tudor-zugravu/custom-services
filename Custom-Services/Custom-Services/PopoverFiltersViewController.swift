@@ -25,20 +25,29 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var allCategoriesSwitch: UISwitch!
     @IBOutlet weak var tableView: UITableView!
     
+    // TODO: Customize categories here
     var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours", "Hahaha", "Hohoho", "Hihihi"]
+//    var categories: [String] = ["Restaurants"]
+    
     var selections: [Bool] = []
     var noSelections = 0
+    @IBOutlet weak var categoriesStackView: UIStackView!
     weak var delegate: PopoverFiltersProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.delegate = self
-        tableView.dataSource = self
         orderByPicker.delegate = self
         orderByPicker.dataSource = self
         
-        selections = Array(repeating: false, count: categories.count)
+        if categories.count == 1 {
+            categoriesStackView.isHidden = true
+        } else {
+            categoriesStackView.isHidden = false
+            tableView.delegate = self
+            tableView.dataSource = self
+            selections = Array(repeating: false, count: categories.count)
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -115,25 +124,30 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     @IBAction func dismissPopover(_ sender: Any) {
-        if allCategoriesSwitch.isOn {
-            delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: true)
+        if categories.count == 1 {
+            delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: onlyAvailableSwitch.isOn)
             dismiss(animated: true, completion: nil)
         } else {
-            if noSelections == 0 {
-                let alertView = UIAlertController(title: "No category selected",
-                                                  message: "Please select at least one category" as String, preferredStyle:.alert)
-                let okAction = UIAlertAction(title: "Done", style: .default, handler: nil)
-                alertView.addAction(okAction)
-                self.present(alertView, animated: true, completion: nil)
-            } else {
-                var selectedCategories: [String] = []
-                for (index, value) in selections.enumerated() {
-                    if value == true {
-                        selectedCategories.append(categories[index])
-                    }
-                }
-                delegate?.didChangeFiltersSomeCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: true, categories: selectedCategories)
+            if allCategoriesSwitch.isOn {
+                delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: onlyAvailableSwitch.isOn)
                 dismiss(animated: true, completion: nil)
+            } else {
+                if noSelections == 0 {
+                    let alertView = UIAlertController(title: "No category selected",
+                                                      message: "Please select at least one category" as String, preferredStyle:.alert)
+                    let okAction = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alertView.addAction(okAction)
+                    self.present(alertView, animated: true, completion: nil)
+                } else {
+                    var selectedCategories: [String] = []
+                    for (index, value) in selections.enumerated() {
+                        if value == true {
+                            selectedCategories.append(categories[index])
+                        }
+                    }
+                    delegate?.didChangeFiltersSomeCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: onlyAvailableSwitch.isOn, categories: selectedCategories)
+                    dismiss(animated: true, completion: nil)
+                }
             }
         }
     }

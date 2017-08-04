@@ -35,4 +35,42 @@ class Utils: NSObject {
             }
         }
     }
+    
+    //properties
+//    var name: String?
+//    var rating: Float?
+//    var distance: Int = 0
+//    var latitude: Double?
+//    var longitude: Double?
+//    var price: Float?
+//    var minTime: String?
+//    var maxTime: String?
+//    var vendorPicture: String?
+//    var vendorLogo: String?
+//    var favourite: Bool?
+//    var finished: Int?
+    
+    func filterVendors(vendors: [VendorModel], distance: Int, minTime: String, maxTime: String, sortBy: Int, onlyAvailableOffers: Bool, allCategories: Bool, allowedCategories: [String]) -> [VendorModel] {
+        
+//        print("\(distance) \(minTime) \(maxTime) \(sortBy) \(onlyAvailableOffers) \(allCategories) \(allowedCategories)")
+        
+        return vendors.filter({ (vendor) -> Bool in
+            
+//            print(vendor.description)
+            
+            if vendor.distance > distance * 1000 {
+                return false
+            }
+            if ((strcmp(vendor.minTime!, maxTime) > 0) || (strcmp(vendor.maxTime!, minTime) <= 0)) {
+                print("NO \(vendor.minTime!)-\(vendor.maxTime!) \(minTime)-\(maxTime)")
+                return false
+            }
+            if onlyAvailableOffers && vendor.finished! > 0 {
+                return false
+            }
+            
+            print("YES \(vendor.minTime!)-\(vendor.maxTime!) \(minTime)-\(maxTime)")
+            return true
+        })
+    }
 }

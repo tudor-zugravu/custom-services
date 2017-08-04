@@ -62,13 +62,19 @@ class VendorsTableViewCell: UITableViewCell {
         delegate?.didPressFavouriteButton(self.tag)
     }
     
-    func configureCell(_ name: String, rating: String, distance: String, price: String, time: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
+    func configureCell(_ name: String, rating: Float, distance: Int, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
         
         nameLabel.text = name
-        ratingLabel.text = rating
-        distanceLabel.text = distance
-        priceLabel.text = price
-        timeLabel.text = time
+        ratingLabel.text = "\(String(format: "%.1f", rating))"
+        var dist: String
+        if distance < 1200 {
+            dist = "\(distance) m"
+        } else {
+            dist = "\(String(format: "%.1f", Float(distance)/1000)) km"
+        }
+        distanceLabel.text = dist
+        priceLabel.text = "\(String(format: "%.2f", price)) GBP"
+        timeLabel.text = "\(minTime) - \(maxTime)"
         if (vendorPicture != "") {
             self.vendorPicture.image = UIImage(named: vendorPicture)
         } else {
