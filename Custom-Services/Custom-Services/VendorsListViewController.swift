@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , VendorListCellProtocol, PopoverFiltersProtocol {
+class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , VendorListCellProtocol, PopoverFiltersProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -18,8 +18,10 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     // Customize here
     var dbVendors: [VendorModel] = []
+    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
     
     var vendors: [VendorModel] = []
+    var filteredVendors: [VendorModel] = []
     var maxDistance: Int = 50
     var minTime: String = "08:00"
     var maxTime: String = "24:00"
@@ -27,6 +29,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     var onlyAvailableOffers: Bool = true
     var allCategories: Bool = true
     var allowedCategories: [String] = []
+    var searchOn : Bool = false
     
     let locationManager = CLLocationManager()
     
@@ -34,7 +37,8 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        self.dropInit()
+        searchBar.delegate = self
+        self.initializeDropdown()
         
         dbVendors.append(VendorModel(name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
         dbVendors.append(VendorModel(name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
@@ -59,6 +63,35 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             locationManager.startUpdatingLocation()
             //locationManager.startUpdatingHeading()
         }
+        
+        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        filteredVendors = vendors.filter({ (vendor) -> Bool in
+            return (vendor.name!.lowercased().hasPrefix(searchText.lowercased()));
+        })
+        
+        self.tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        if searchBar.text != nil && searchBar.text != "" {
+            searchOn = true
+        } else {
+            searchOn = false
+        }
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchOn = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchOn = false;
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -67,7 +100,11 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int
     {
-        return vendors.count
+        if(searchOn){
+            return filteredVendors.count
+        } else {
+            return vendors.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -77,7 +114,11 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             cell.tag = indexPath.row
 
             var item: VendorModel
-            item = vendors[indexPath.row]
+            if(searchOn){
+                item = filteredVendors[indexPath.row]
+            } else {
+                item = vendors[indexPath.row]
+            }
             
             cell.configureCell(item.name!, rating: item.rating!, distance: item.distance, price:item.price!, minTime:item.minTime!, maxTime:item.maxTime!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!, finished: item.finished!)
             
@@ -102,37 +143,27 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         if (segue.identifier == "ShowPopoverFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
-            
-            
-//            var maxDistance: Int = 50
-//            var minTime: String = "08:00"
-//            var maxTime: String = "24:00"
-//            var sortBy: Int = 0
-//            var onlyAvailableOffers: Bool = true
-//            var allCategories: Bool = true
-//            var allowedCategories: [String] = []
-            
-            // TODO: Customize categories here
-            var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
-            
-            var selections: [Bool] = []
-            var noSelections = 0
 
-            popoverFiltersViewController.timeIntervalSlider.lowerValue = Double(Utils.instance.getTimeInt(time: minTime))
-            popoverFiltersViewController.timeIntervalSlider.upperValue = Double(Utils.instance.getTimeInt(time: maxTime))
-            popoverFiltersViewController.timeIntervalLabel.text = "\(minTime)-\(maxTime)"
-            popoverFiltersViewController.distanceSlider.value = Float(maxDistance)
-            popoverFiltersViewController.distanceLabel.text = "\(maxDistance) km"
-            popoverFiltersViewController.orderByPicker.selectRow(sortBy, inComponent: 0, animated: false)
-            popoverFiltersViewController.onlyAvailableSwitch.isOn = onlyAvailableOffers
-            popoverFiltersViewController.allCategoriesSwitch.isOn = allCategories
-            if allCategories {
-                popoverFiltersViewController.noSelections = allowedCategories.count
-                for category in popoverFiltersViewController.categories {
-                    
+            popoverFiltersViewController.minTime = minTime
+            popoverFiltersViewController.maxTime = maxTime
+            popoverFiltersViewController.maxDistance = maxDistance
+            popoverFiltersViewController.sortBy = sortBy
+            popoverFiltersViewController.onlyAvailableOffers = onlyAvailableOffers
+            popoverFiltersViewController.selections = Array(repeating: false, count: categories.count)
+            
+            if categories.count > 1 {
+                popoverFiltersViewController.allCategories = allCategories
+                if !allCategories {
+                    popoverFiltersViewController.noSelections = allowedCategories.count
+                    for (index,category) in categories.enumerated() {
+                        if allowedCategories.contains(category) {
+                            popoverFiltersViewController.selections[index] = true
+                        } else {
+                            popoverFiltersViewController.selections[index] = false
+                        }
+                    }
                 }
             }
-            
         }
     }
     
@@ -163,10 +194,16 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.reloadData()
     }
     
-    //Dropdown menu Initinal
-    func dropInit() {
+    // Create the dropdown menu
+    func initializeDropdown() {
         dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
             ({ () -> (Void) in print("PROFILE!") }),
             ({ () -> (Void) in print("CONTACT US!") }),
-            ({ () -> (Void) in print("SIGN OUT!") })])    }
+            ({ () -> (Void) in print("SIGN OUT!") })])
+    }
+    
+    // Called to dismiss the keyboard from the screen
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }

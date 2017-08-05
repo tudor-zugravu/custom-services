@@ -28,8 +28,15 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     // TODO: Customize categories here
     var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
     
+    var maxDistance: Int = 50
+    var minTime: String = "08:00"
+    var maxTime: String = "24:00"
+    var sortBy: Int = 0
+    var onlyAvailableOffers: Bool = true
+    var allCategories: Bool = true
     var selections: [Bool] = []
     var noSelections = 0
+    
     @IBOutlet weak var categoriesStackView: UIStackView!
     weak var delegate: PopoverFiltersProtocol?
 
@@ -39,13 +46,26 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         orderByPicker.delegate = self
         orderByPicker.dataSource = self
         
+        timeIntervalSlider.lowerValue = Double(Utils.instance.getTimeInt(time: minTime))
+        timeIntervalSlider.upperValue = Double(Utils.instance.getTimeInt(time: maxTime))
+        timeIntervalLabel.text = "\(minTime)-\(maxTime)"
+        distanceSlider.value = Float(maxDistance)
+        distanceLabel.text = "\(maxDistance) km"
+        orderByPicker.selectRow(sortBy, inComponent: 0, animated: false)
+        onlyAvailableSwitch.isOn = onlyAvailableOffers
+        
         if categories.count == 1 {
             categoriesStackView.isHidden = true
         } else {
             categoriesStackView.isHidden = false
             tableView.delegate = self
             tableView.dataSource = self
-            selections = Array(repeating: false, count: categories.count)
+            allCategoriesSwitch.isOn = allCategories
+            if !allCategoriesSwitch.isOn {
+                tableView.isHidden = false
+            } else {
+                tableView.isHidden = true
+            }
         }
     }
 
@@ -90,7 +110,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         case 0:
             return "Distance"
         case 1:
-            return "Quality"
+            return "Rating"
         default:
             return "Price"
         }
