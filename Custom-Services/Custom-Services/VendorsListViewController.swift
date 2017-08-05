@@ -15,10 +15,12 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var dropdownFilterButton: UILabel!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     // Customize here
     var dbVendors: [VendorModel] = []
-    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
+//    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
+    var categories: [String] = ["Pubs"]
     
     var vendors: [VendorModel] = []
     var filteredVendors: [VendorModel] = []
@@ -30,7 +32,6 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     var allCategories: Bool = true
     var allowedCategories: [String] = []
     var searchOn : Bool = false
-    
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
@@ -39,11 +40,17 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.dataSource = self
         searchBar.delegate = self
         self.initializeDropdown()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
         
-        dbVendors.append(VendorModel(name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
-        dbVendors.append(VendorModel(name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
-        dbVendors.append(VendorModel(name: "The Sadler's Pub", rating: 3.5, latitude: 51.715760, longitude: -1.221712, price: 3.5, minTime: "20:00", maxTime: "22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0, category: "Pubs"))
-        dbVendors.append(VendorModel(name: "The Blue Bar", rating: 4, latitude: 51.502064, longitude: -0.156193, price: 4, minTime: "20:30", maxTime: "22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 0, category: "Pubs"))
+        dbVendors.append(VendorModel(id: 0, name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
+        dbVendors.append(VendorModel(id: 1, name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
+        dbVendors.append(VendorModel(id: 2, name: "The Sadler's Pub", rating: 3.5, latitude: 51.715760, longitude: -1.221712, price: 3.5, minTime: "20:00", maxTime: "22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0, category: "Pubs"))
+        dbVendors.append(VendorModel(id: 3, name: "The Blue Bar", rating: 4, latitude: 51.502064, longitude: -0.156193, price: 4, minTime: "20:30", maxTime: "22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 0, category: "Pubs"))
        
         if let currentLocation = locationManager.location {
             for vendor in dbVendors {
@@ -51,47 +58,51 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             }
         }
         
-        vendors = Utils.instance.filterVendors(vendors: dbVendors, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
-        tableView.reloadData()
+        reloadTable()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.requestWhenInUseAuthorization()
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.startUpdatingLocation()
-            //locationManager.startUpdatingHeading()
-        }
+        searchOn = false
+        searchBar.text = ""
         
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        // COPIED
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    // COPIED
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredVendors = vendors.filter({ (vendor) -> Bool in
-            return (vendor.name!.lowercased().hasPrefix(searchText.lowercased()));
+            return vendor.name!.lowercased().range(of: searchText.lowercased()) != nil;
         })
-        
         self.tableView.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        if searchBar.text != nil && searchBar.text != "" {
-            searchOn = true
-        } else {
-            searchOn = false
-        }
+        searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchOn = false;
+        searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchOn = true
+        searchBar.resignFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchOn = false;
+        searchOn = false
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -100,32 +111,21 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int
     {
-        if(searchOn){
-            return filteredVendors.count
-        } else {
-            return vendors.count
-        }
+        return searchOn ? filteredVendors.count : vendors.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "vendorsCell") as? VendorsTableViewCell {
-            cell.delegate = self
-            cell.tag = indexPath.row
-
-            var item: VendorModel
-            if(searchOn){
-                item = filteredVendors[indexPath.row]
-            } else {
-                item = vendors[indexPath.row]
-            }
-            
-            cell.configureCell(item.name!, rating: item.rating!, distance: item.distance, price:item.price!, minTime:item.minTime!, maxTime:item.maxTime!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!, finished: item.finished!)
-            
-            return cell
-        } else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "vendorsCell") as? VendorsTableViewCell else {
             return VendorsTableViewCell()
         }
+        cell.delegate = self
+        cell.tag = indexPath.row
+
+        let item: VendorModel = searchOn ? filteredVendors[indexPath.row] : vendors[indexPath.row]
+        cell.configureCell(item.name!, rating: item.rating!, distance: item.distance, price:item.price!, minTime:item.minTime!, maxTime:item.maxTime!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!, finished: item.finished!)
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -133,12 +133,9 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func didPressFavouriteButton(_ tag: Int) {
-        if (vendors[tag].favourite == true) {
-            vendors[tag].favourite = false
-        } else {
-            vendors[tag].favourite = true
-        }
+        vendors[tag].favourite = vendors[tag].favourite! ? false : true
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "ShowPopoverFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
@@ -175,9 +172,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         self.sortBy = sortBy
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = true
-        
-        vendors = Utils.instance.filterVendors(vendors: dbVendors, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
-        tableView.reloadData()
+        reloadTable()
     }
     
     func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String]) {
@@ -189,7 +184,10 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = false
         self.allowedCategories = categories
-        
+        reloadTable()
+    }
+    
+    func reloadTable() {
         vendors = Utils.instance.filterVendors(vendors: dbVendors, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
         tableView.reloadData()
     }
@@ -200,6 +198,31 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             ({ () -> (Void) in print("PROFILE!") }),
             ({ () -> (Void) in print("CONTACT US!") }),
             ({ () -> (Void) in print("SIGN OUT!") })])
+    }
+    
+    // COPIED
+    func keyboardWillShow(notification:NSNotification) {
+        adjustingHeight(show: true, notification: notification)
+    }
+    
+    // COPIED
+    func keyboardWillHide(notification:NSNotification) {
+        adjustingHeight(show: false, notification: notification)
+    }
+    
+    // COPIED
+    func adjustingHeight(show:Bool, notification:NSNotification) {
+        if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
+            let duration = (durationValue as AnyObject).doubleValue
+            let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+            let options = UIViewAnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
+            
+            self.bottomConstraint.constant = (keyboardFrame.height  - 50) * (show ? 1 : 0)
+            UIView.animate(withDuration: duration!, delay: 0, options: options, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+        reloadTable()
     }
     
     // Called to dismiss the keyboard from the screen

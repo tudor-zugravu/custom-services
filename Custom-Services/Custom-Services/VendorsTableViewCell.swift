@@ -66,25 +66,14 @@ class VendorsTableViewCell: UITableViewCell {
         
         nameLabel.text = name
         ratingLabel.text = "\(String(format: "%.1f", rating))"
-        var dist: String
-        if distance < 1200 {
-            dist = "\(distance) m"
-        } else {
-            dist = "\(String(format: "%.1f", Float(distance)/1000)) km"
-        }
+        let dist: String = distance < 1200 ? "\(distance) m" : "\(String(format: "%.1f", Float(distance)/1000)) km"
         distanceLabel.text = dist
         priceLabel.text = "\(String(format: "%.2f", price)) GBP"
         timeLabel.text = "\(minTime) - \(maxTime)"
-        if (vendorPicture != "") {
-            self.vendorPicture.image = UIImage(named: vendorPicture)
-        } else {
-            self.vendorPicture.image = UIImage(named: "stChristophersImage")
-        }
-        if (vendorLogo != "") {
-            self.vendorLogo.image = UIImage(named: vendorLogo)
-        } else {
-            self.vendorLogo.image = UIImage(named: "stChristophersLogo")
-        }
+        
+        //TODO: add global default photos
+        self.vendorPicture.image = vendorPicture != "" ? UIImage(named: vendorPicture) : UIImage(named: "stChristophersImage")
+        self.vendorLogo.image = vendorLogo != "" ? UIImage(named: vendorLogo) : UIImage(named: "stChristophersLogo")
         if (favourite == true) {
             isFavourite = true
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)

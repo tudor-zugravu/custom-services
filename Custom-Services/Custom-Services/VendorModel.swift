@@ -12,6 +12,7 @@ import CoreLocation
 class VendorModel: NSObject {
 
     //properties
+    var id: Int?
     var name: String?
     var rating: Float?
     var distance: Int = 0
@@ -33,8 +34,9 @@ class VendorModel: NSObject {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(name: String, rating: Float, latitude: Double, longitude: Double, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int, category: String) {
+    init(id: Int, name: String, rating: Float, latitude: Double, longitude: Double, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int, category: String) {
         
+        self.id = id
         self.name = name
         self.rating = rating
         self.latitude = latitude
@@ -55,6 +57,6 @@ class VendorModel: NSObject {
     
     //prints object's current state
     override var description: String {
-        return "Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Price: \(String(describing: price)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), VendorPicture: \(String(describing: vendorPicture)), VendorLogo: \(String(describing: vendorLogo)), Favourite: \(String(describing: favourite)), Finished: \(String(describing: finished)), Category: \(String(describing: category))"
+        return "ID: \(String(describing: id)), Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Price: \(String(describing: price)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), VendorPicture: \(String(describing: vendorPicture)), VendorLogo: \(String(describing: vendorLogo)), Favourite: \(String(describing: favourite)), Finished: \(String(describing: finished)), Category: \(String(describing: category))"
     }
 }

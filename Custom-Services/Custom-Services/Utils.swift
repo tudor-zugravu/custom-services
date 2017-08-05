@@ -22,17 +22,9 @@ class Utils: NSObject {
 
     func getTime(time: Int) -> String {
         if time < 8 {
-            if time % 4 == 0 {
-                return "0\(time / 4 + 8):0\((time % 4) * 15)"
-            } else {
-                return "0\(time / 4 + 8):\((time % 4) * 15)"
-            }
+            return time % 4 == 0 ? "0\(time / 4 + 8):0\((time % 4) * 15)" : "0\(time / 4 + 8):\((time % 4) * 15)"
         } else {
-            if time % 4 == 0 {
-                return "\(time / 4 + 8):0\((time % 4) * 15)"
-            } else {
-                return "\(time / 4 + 8):\((time % 4) * 15)"
-            }
+            return time % 4 == 0 ? "\(time / 4 + 8):0\((time % 4) * 15)" : "\(time / 4 + 8):\((time % 4) * 15)"
         }
     }
     
@@ -41,20 +33,6 @@ class Utils: NSObject {
         return (Int(timeComponents[0])! - 8) * 4 + Int(timeComponents[1])! / 15
     }
     
-    //properties
-//    var name: String?
-//    var rating: Float?
-//    var distance: Int = 0
-//    var latitude: Double?
-//    var longitude: Double?
-//    var price: Float?
-//    var minTime: String?
-//    var maxTime: String?
-//    var vendorPicture: String?
-//    var vendorLogo: String?
-//    var favourite: Bool?
-//    var finished: Int?
-    
     func filterVendors(vendors: [VendorModel], distance: Int, minTime: String, maxTime: String, sortBy: Int, onlyAvailableOffers: Bool, allCategories: Bool, allowedCategories: [String]) -> [VendorModel] {
         
         return vendors.filter({ (vendor) -> Bool in
@@ -62,7 +40,6 @@ class Utils: NSObject {
                 return false
             }
             if ((strcmp(vendor.minTime!, maxTime) > 0) || (strcmp(vendor.maxTime!, minTime) <= 0)) {
-                print("NO \(vendor.minTime!)-\(vendor.maxTime!) \(minTime)-\(maxTime)")
                 return false
             }
             if onlyAvailableOffers && vendor.finished! > 0 {

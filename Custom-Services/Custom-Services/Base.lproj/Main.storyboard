@@ -316,6 +316,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Locales" image="drinkUpTab" id="Xnn-Xe-bzW"/>
                     <connections>
+                        <outlet property="bottomConstraint" destination="5Oe-2Q-fth" id="0kb-aG-b3P"/>
                         <outlet property="dropdownFilterButton" destination="Acr-w4-0xp" id="Yoz-3o-ubp"/>
                         <outlet property="dropdownMenuButton" destination="tJj-cu-DLm" id="0Qr-Xl-Yfg"/>
                         <outlet property="searchBar" destination="g6I-a2-Pyx" id="Iqd-Ek-XHa"/>

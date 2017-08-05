@@ -26,7 +26,8 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var tableView: UITableView!
     
     // TODO: Customize categories here
-    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
+//    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
+    var categories: [String] = ["Pubs"]
     
     var maxDistance: Int = 50
     var minTime: String = "08:00"
@@ -61,11 +62,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
             tableView.delegate = self
             tableView.dataSource = self
             allCategoriesSwitch.isOn = allCategories
-            if !allCategoriesSwitch.isOn {
-                tableView.isHidden = false
-            } else {
-                tableView.isHidden = true
-            }
+            tableView.isHidden = allCategories ? true : false
         }
     }
 
@@ -78,19 +75,16 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         return categories.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "categoriesCell") as? CategoriesTableViewCell {
-            
-            cell.delegate = self
-            cell.tag = indexPath.row
-            cell.categorySwitch.setOn(selections[indexPath.row], animated: false)
-            cell.configureCell(categories[indexPath.row])
-            
-            return cell
-        } else {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoriesCell") as? CategoriesTableViewCell else {
             return CategoriesTableViewCell()
         }
+        cell.delegate = self
+        cell.tag = indexPath.row
+        cell.categorySwitch.setOn(selections[indexPath.row], animated: false)
+        cell.configureCell(categories[indexPath.row])
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -125,11 +119,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     @IBAction func allCategoriesSwitchChanged(_ sender: Any) {
-        if !allCategoriesSwitch.isOn {
-            tableView.isHidden = false
-        } else {
-            tableView.isHidden = true
-        }
+        tableView.isHidden = allCategoriesSwitch.isOn ? true : false
     }
     
     func didSwitch(_ tag: Int) {
