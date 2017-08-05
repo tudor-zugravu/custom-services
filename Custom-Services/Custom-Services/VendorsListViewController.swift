@@ -36,10 +36,10 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.dataSource = self
         self.dropInit()
         
-        dbVendors.append(VendorModel(name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0))
-        dbVendors.append(VendorModel(name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 1))
-        dbVendors.append(VendorModel(name: "The Sadler's Pub", rating: 3.5, latitude: 51.715760, longitude: -1.221712, price: 3.5, minTime: "20:00", maxTime: "22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0))
-        dbVendors.append(VendorModel(name: "The Blue Bar", rating: 4, latitude: 51.502064, longitude: -0.156193, price: 4, minTime: "20:30", maxTime: "22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 2))
+        dbVendors.append(VendorModel(name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
+        dbVendors.append(VendorModel(name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
+        dbVendors.append(VendorModel(name: "The Sadler's Pub", rating: 3.5, latitude: 51.715760, longitude: -1.221712, price: 3.5, minTime: "20:00", maxTime: "22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0, category: "Pubs"))
+        dbVendors.append(VendorModel(name: "The Blue Bar", rating: 4, latitude: 51.502064, longitude: -0.156193, price: 4, minTime: "20:30", maxTime: "22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 0, category: "Pubs"))
        
         if let currentLocation = locationManager.location {
             for vendor in dbVendors {
@@ -102,6 +102,37 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         if (segue.identifier == "ShowPopoverFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
+            
+            
+//            var maxDistance: Int = 50
+//            var minTime: String = "08:00"
+//            var maxTime: String = "24:00"
+//            var sortBy: Int = 0
+//            var onlyAvailableOffers: Bool = true
+//            var allCategories: Bool = true
+//            var allowedCategories: [String] = []
+            
+            // TODO: Customize categories here
+            var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
+            
+            var selections: [Bool] = []
+            var noSelections = 0
+
+            popoverFiltersViewController.timeIntervalSlider.lowerValue = Double(Utils.instance.getTimeInt(time: minTime))
+            popoverFiltersViewController.timeIntervalSlider.upperValue = Double(Utils.instance.getTimeInt(time: maxTime))
+            popoverFiltersViewController.timeIntervalLabel.text = "\(minTime)-\(maxTime)"
+            popoverFiltersViewController.distanceSlider.value = Float(maxDistance)
+            popoverFiltersViewController.distanceLabel.text = "\(maxDistance) km"
+            popoverFiltersViewController.orderByPicker.selectRow(sortBy, inComponent: 0, animated: false)
+            popoverFiltersViewController.onlyAvailableSwitch.isOn = onlyAvailableOffers
+            popoverFiltersViewController.allCategoriesSwitch.isOn = allCategories
+            if allCategories {
+                popoverFiltersViewController.noSelections = allowedCategories.count
+                for category in popoverFiltersViewController.categories {
+                    
+                }
+            }
+            
         }
     }
     

@@ -36,6 +36,11 @@ class Utils: NSObject {
         }
     }
     
+    func getTimeInt(time: String) -> Int {
+        let timeComponents = time.components(separatedBy: ":")
+        return (Int(timeComponents[0])! - 8) * 4 + Int(timeComponents[1])! / 15
+    }
+    
     //properties
 //    var name: String?
 //    var rating: Float?
@@ -52,12 +57,7 @@ class Utils: NSObject {
     
     func filterVendors(vendors: [VendorModel], distance: Int, minTime: String, maxTime: String, sortBy: Int, onlyAvailableOffers: Bool, allCategories: Bool, allowedCategories: [String]) -> [VendorModel] {
         
-//        print("\(distance) \(minTime) \(maxTime) \(sortBy) \(onlyAvailableOffers) \(allCategories) \(allowedCategories)")
-        
         return vendors.filter({ (vendor) -> Bool in
-            
-//            print(vendor.description)
-            
             if vendor.distance > distance * 1000 {
                 return false
             }
@@ -68,9 +68,28 @@ class Utils: NSObject {
             if onlyAvailableOffers && vendor.finished! > 0 {
                 return false
             }
-            
-            print("YES \(vendor.minTime!)-\(vendor.maxTime!) \(minTime)-\(maxTime)")
+            if !allCategories && !allowedCategories.contains(vendor.category!) {
+                return false
+            }
             return true
+        }).sorted(by: { (vendor1, vendor2) -> Bool in
+            switch sortBy {
+            case 0:
+                if vendor1.distance < vendor2.distance {
+                    return true
+                }
+                break
+            case 1:
+                if vendor1.rating! - vendor2.rating! > 0 {
+                    return true
+                }
+                break
+            default:
+                if vendor1.price! - vendor2.price! < 0 {
+                    return true
+                }
+            }
+            return false
         })
     }
 }

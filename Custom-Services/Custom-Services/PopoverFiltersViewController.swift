@@ -26,8 +26,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var tableView: UITableView!
     
     // TODO: Customize categories here
-    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours", "Hahaha", "Hohoho", "Hihihi"]
-//    var categories: [String] = ["Restaurants"]
+    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
     
     var selections: [Bool] = []
     var noSelections = 0

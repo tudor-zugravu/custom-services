@@ -24,6 +24,7 @@ class VendorModel: NSObject {
     var vendorLogo: String?
     var favourite: Bool?
     var finished: Int?
+    var category: String?
     
     //empty constructor
     override init()
@@ -32,7 +33,7 @@ class VendorModel: NSObject {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(name: String, rating: Float, latitude: Double, longitude: Double, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
+    init(name: String, rating: Float, latitude: Double, longitude: Double, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int, category: String) {
         
         self.name = name
         self.rating = rating
@@ -45,6 +46,7 @@ class VendorModel: NSObject {
         self.vendorLogo = vendorLogo
         self.favourite = favourite
         self.finished = finished
+        self.category = category
     }
     
     func setDistance(location: CLLocation) {
@@ -53,6 +55,6 @@ class VendorModel: NSObject {
     
     //prints object's current state
     override var description: String {
-        return "Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Price: \(String(describing: price)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), VendorPicture: \(String(describing: vendorPicture)), VendorLogo: \(String(describing: vendorLogo)), Favourite: \(String(describing: favourite)), Finished: \(String(describing: finished))"
+        return "Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Price: \(String(describing: price)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), VendorPicture: \(String(describing: vendorPicture)), VendorLogo: \(String(describing: vendorLogo)), Favourite: \(String(describing: favourite)), Finished: \(String(describing: finished)), Category: \(String(describing: category))"
     }
 }
