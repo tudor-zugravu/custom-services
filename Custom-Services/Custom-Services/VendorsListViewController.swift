@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , VendorListCellProtocol, PopoverFiltersProtocol {
+class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , VendorListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -19,8 +19,8 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     // Customize here
     var dbVendors: [VendorModel] = []
-//    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
-    var categories: [String] = ["Pubs"]
+    var categories: [String] = []
+    let offersModel = OffersModel()
     
     var vendors: [VendorModel] = []
     var filteredVendors: [VendorModel] = []
@@ -36,6 +36,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        offersModel.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -46,6 +47,8 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
+        
+        categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
         
         dbVendors.append(VendorModel(id: 0, name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
         dbVendors.append(VendorModel(id: 1, name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
@@ -59,6 +62,8 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         }
         
         reloadTable()
+        
+        offersModel.requestOffers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -141,6 +146,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
 
+            popoverFiltersViewController.categories = categories
             popoverFiltersViewController.minTime = minTime
             popoverFiltersViewController.maxTime = maxTime
             popoverFiltersViewController.maxDistance = maxDistance
@@ -162,6 +168,76 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
                 }
             }
         }
+    }
+    
+    func offersReceived(_ offers: [[String:Any]]) {
+        print(offers[0])
+        
+//        var offersAux: [ContactModel] = []
+//        var item:ContactModel;
+//        
+//        // parse the received JSON and save the contacts
+//        for i in 0 ..< contactDetails.count {
+//            
+//            if let username = contactDetails[i]["username"] as? String,
+//                let name = contactDetails[i]["name"] as? String,
+//                let email = contactDetails[i]["email"] as? String,
+//                let phoneNo = contactDetails[i]["phone_number"] as? String,
+//                let userId = contactDetails[i]["user_id"] as? Int,
+//                let contactId = contactDetails[i]["contact_id"] as? Int
+//            {
+//                item = ContactModel()
+//                item.username = username
+//                item.name = name
+//                item.email = email
+//                item.phoneNo = phoneNo
+//                item.userId = userId
+//                item.contactId = contactId
+//                item.phoneNo = phoneNo
+//                
+//                if let about = contactDetails[i]["biography"] as? String {
+//                    item.about = about
+//                } else {
+//                    item.about = ""
+//                }
+//                
+//                if let profilePicture = contactDetails[i]["profile_picture"] as? String {
+//                    
+//                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
+//                    if FileManager.default.fileExists(atPath: filename.path) {
+//                        item.profilePicture = profilePicture
+//                    } else {
+//                        // Download the profile picture, if exists
+//                        if let url = URL(string: "http://188.166.157.62/profile_pictures/\(profilePicture)") {
+//                            if let data = try? Data(contentsOf: url) {
+//                                var profileImg: UIImage
+//                                profileImg = UIImage(data: data)!
+//                                if let data = UIImagePNGRepresentation(profileImg) {
+//                                    try? data.write(to: filename)
+//                                    item.profilePicture = profilePicture
+//                                } else {
+//                                    item.profilePicture = ""
+//                                }
+//                            } else {
+//                                item.profilePicture = ""
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    item.profilePicture = ""
+//                }
+//                
+//                contactsAux.append(item)
+//            }
+//        }
+//        contacts = contactsAux
+//        
+//        let storedContacts = NSKeyedArchiver.archivedData(withRootObject: contacts)
+//        UserDefaults.standard.set(storedContacts, forKey:"contacts");
+//        
+//        self.tableView.reloadData()
+        
+        
     }
     
     func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool) {

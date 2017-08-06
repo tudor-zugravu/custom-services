@@ -26,8 +26,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var tableView: UITableView!
     
     // TODO: Customize categories here
-//    var categories: [String] = ["Pubs", "Bars", "Venues", "Happy Hours"]
-    var categories: [String] = ["Pubs"]
+    var categories: [String] = []
     
     var maxDistance: Int = 50
     var minTime: String = "08:00"
@@ -55,7 +54,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         orderByPicker.selectRow(sortBy, inComponent: 0, animated: false)
         onlyAvailableSwitch.isOn = onlyAvailableOffers
         
-        if categories.count == 1 {
+        if categories.count <= 1 {
             categoriesStackView.isHidden = true
         } else {
             categoriesStackView.isHidden = false
@@ -106,7 +105,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         case 1:
             return "Rating"
         default:
-            return "Price"
+            return "Discount"
         }
     }
     
