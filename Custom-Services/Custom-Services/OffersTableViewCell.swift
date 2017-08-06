@@ -8,16 +8,16 @@
 
 import UIKit
 
-protocol VendorListCellProtocol : class {
+protocol OfferListCellProtocol : class {
     func didPressFavouriteButton(_ tag: Int)
 }
 
-class VendorsTableViewCell: UITableViewCell {
+class OffersTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var vendorPicture: UIImageView!
-    @IBOutlet weak var vendorLogo: UIImageView!
+    @IBOutlet weak var offerImage: UIImageView!
+    @IBOutlet weak var offerLogo: UIImageView!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
@@ -26,7 +26,7 @@ class VendorsTableViewCell: UITableViewCell {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var opaqueView: UIView!
     
-    weak var delegate: VendorListCellProtocol?
+    weak var delegate: OfferListCellProtocol?
     var isFavourite: Bool = true
     
     override func awakeFromNib() {
@@ -62,18 +62,18 @@ class VendorsTableViewCell: UITableViewCell {
         delegate?.didPressFavouriteButton(self.tag)
     }
     
-    func configureCell(_ name: String, rating: Float, distance: Int, price: Float, minTime: String, maxTime: String, vendorPicture: String, vendorLogo: String, favourite: Bool, finished: Int) {
+    func configureCell(_ name: String, rating: Float, distance: Int, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
         
         nameLabel.text = name
         ratingLabel.text = "\(String(format: "%.1f", rating))"
         let dist: String = distance < 1200 ? "\(distance) m" : "\(String(format: "%.1f", Float(distance)/1000)) km"
         distanceLabel.text = dist
-        priceLabel.text = "\(String(format: "%.2f", price)) GBP"
+        priceLabel.text = "\(discount)% OFF"
         timeLabel.text = "\(minTime) - \(maxTime)"
         
         //TODO: add global default photos
-        self.vendorPicture.image = vendorPicture != "" ? UIImage(named: vendorPicture) : UIImage(named: "stChristophersImage")
-        self.vendorLogo.image = vendorLogo != "" ? UIImage(named: vendorLogo) : UIImage(named: "stChristophersLogo")
+        self.offerImage.image = offerImage != "" ? UIImage(named: offerImage) : UIImage(named: "stChristophersImage")
+        self.offerLogo.image = offerLogo != "" ? UIImage(named: offerLogo) : UIImage(named: "stChristophersLogo")
         if (favourite == true) {
             isFavourite = true
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
@@ -81,16 +81,10 @@ class VendorsTableViewCell: UITableViewCell {
             isFavourite = false
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
         }
-        switch finished {
-        case 1:
+        if quantity == 0 {
             finishedImage.image = UIImage(named: "soldOut.png")
             finishedImage.isHidden = false
-            break
-        case 2:
-            finishedImage.image = UIImage(named: "fullyBooked.png")
-            finishedImage.isHidden = false
-            break
-        default:
+        } else {
             finishedImage.isHidden = true
         }
     }

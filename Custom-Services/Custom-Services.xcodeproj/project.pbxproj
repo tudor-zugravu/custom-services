@@ -20,10 +20,10 @@
 		38A5B2AE1F2F7B2800D8F418 /* Custom_ServicesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5B2AD1F2F7B2800D8F418 /* Custom_ServicesUITests.swift */; };
 		38B8E87E1F333E7B00769AF3 /* PopoverFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8E87D1F333E7B00769AF3 /* PopoverFiltersViewController.swift */; };
 		38B8E8801F3377E100769AF3 /* CategoriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */; };
-		38C3F59D1F30A96300C611B6 /* VendorsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59C1F30A96300C611B6 /* VendorsListViewController.swift */; };
-		38C3F59F1F30AAEC00C611B6 /* VendorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59E1F30AAEC00C611B6 /* VendorModel.swift */; };
+		38C3F59D1F30A96300C611B6 /* OffersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59C1F30A96300C611B6 /* OffersListViewController.swift */; };
+		38C3F59F1F30AAEC00C611B6 /* OfferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */; };
 		38DD46461F339BF000EFA95A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DD46451F339BF000EFA95A /* Utils.swift */; };
-		38EDCA271F307F6C00DEFA0E /* VendorsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EDCA261F307F6C00DEFA0E /* VendorsTableViewCell.swift */; };
+		38EDCA271F307F6C00DEFA0E /* OffersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */; };
 		5C67E1E2A70400D5138D28DE /* Pods_Custom_Services.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF80219C53A1039C7B89965D /* Pods_Custom_Services.framework */; };
 		CE9312280BFE95FDDB557204 /* Pods_Custom_ServicesUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2687CC115284D2738025A5B /* Pods_Custom_ServicesUITests.framework */; };
 /* End PBXBuildFile section */
@@ -66,10 +66,10 @@
 		38A5B2AF1F2F7B2800D8F418 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38B8E87D1F333E7B00769AF3 /* PopoverFiltersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverFiltersViewController.swift; sourceTree = "<group>"; };
 		38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewCell.swift; sourceTree = "<group>"; };
-		38C3F59C1F30A96300C611B6 /* VendorsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VendorsListViewController.swift; sourceTree = "<group>"; };
-		38C3F59E1F30AAEC00C611B6 /* VendorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VendorModel.swift; sourceTree = "<group>"; };
+		38C3F59C1F30A96300C611B6 /* OffersListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffersListViewController.swift; sourceTree = "<group>"; };
+		38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfferModel.swift; sourceTree = "<group>"; };
 		38DD46451F339BF000EFA95A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		38EDCA261F307F6C00DEFA0E /* VendorsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VendorsTableViewCell.swift; sourceTree = "<group>"; };
+		38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffersTableViewCell.swift; sourceTree = "<group>"; };
 		4851262DF244A57B24B88FDE /* Pods-Custom-ServicesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Custom-ServicesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Custom-ServicesTests/Pods-Custom-ServicesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		719BBC111362FB46B3AE8A8A /* Pods-Custom-ServicesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Custom-ServicesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Custom-ServicesUITests/Pods-Custom-ServicesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		73C59650E343F02C7E906D88 /* Pods_Custom_ServicesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Custom_ServicesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +176,7 @@
 		38EDCA201F307EF000DEFA0E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38EDCA261F307F6C00DEFA0E /* VendorsTableViewCell.swift */,
+				38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */,
 				38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */,
 			);
 			name = Views;
@@ -185,7 +185,7 @@
 		38EDCA211F307EF800DEFA0E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				38C3F59C1F30A96300C611B6 /* VendorsListViewController.swift */,
+				38C3F59C1F30A96300C611B6 /* OffersListViewController.swift */,
 				38B8E87D1F333E7B00769AF3 /* PopoverFiltersViewController.swift */,
 				38742C8D1F378A74008FF09B /* InitialViewController.swift */,
 			);
@@ -195,7 +195,7 @@
 		38EDCA221F307EFE00DEFA0E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				38C3F59E1F30AAEC00C611B6 /* VendorModel.swift */,
+				38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */,
 				38742C8F1F378D6D008FF09B /* SystemModel.swift */,
 				38742C911F379442008FF09B /* OffersModel.swift */,
 			);
@@ -521,15 +521,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				38B8E87E1F333E7B00769AF3 /* PopoverFiltersViewController.swift in Sources */,
-				38C3F59F1F30AAEC00C611B6 /* VendorModel.swift in Sources */,
+				38C3F59F1F30AAEC00C611B6 /* OfferModel.swift in Sources */,
 				38A5B28E1F2F7B2800D8F418 /* AppDelegate.swift in Sources */,
 				38742C8E1F378A74008FF09B /* InitialViewController.swift in Sources */,
 				38742C921F379442008FF09B /* OffersModel.swift in Sources */,
 				38742C901F378D6D008FF09B /* SystemModel.swift in Sources */,
 				386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */,
-				38EDCA271F307F6C00DEFA0E /* VendorsTableViewCell.swift in Sources */,
+				38EDCA271F307F6C00DEFA0E /* OffersTableViewCell.swift in Sources */,
 				38B8E8801F3377E100769AF3 /* CategoriesTableViewCell.swift in Sources */,
-				38C3F59D1F30A96300C611B6 /* VendorsListViewController.swift in Sources */,
+				38C3F59D1F30A96300C611B6 /* OffersListViewController.swift in Sources */,
 				38DD46461F339BF000EFA95A /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

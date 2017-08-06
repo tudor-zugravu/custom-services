@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class VendorsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , VendorListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol {
+class OffersListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -17,13 +17,10 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet weak var dropdownFilterButton: UILabel!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
-    // Customize here
-    var dbVendors: [VendorModel] = []
     var categories: [String] = []
     let offersModel = OffersModel()
-    
-    var vendors: [VendorModel] = []
-    var filteredVendors: [VendorModel] = []
+    var offers: [OfferModel] = []
+    var filteredOffers: [OfferModel] = []
     var maxDistance: Int = 50
     var minTime: String = "08:00"
     var maxTime: String = "24:00"
@@ -33,12 +30,17 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     var allowedCategories: [String] = []
     var searchOn : Bool = false
     let locationManager = CLLocationManager()
+    var refreshControl: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         offersModel.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to reload offers")
+        refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControlEvents.valueChanged)
+        tableView.addSubview(refreshControl) // not required when using UITableViewController
         searchBar.delegate = self
         self.initializeDropdown()
         locationManager.delegate = self
@@ -47,22 +49,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
-        
         categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
-        
-        dbVendors.append(VendorModel(id: 0, name: "St. Christopher's Inn", rating: 4.5, latitude: 51.502839, longitude: -0.091894, price: 3, minTime: "18:00", maxTime: "20:30", vendorPicture: "stChristopherImage", vendorLogo: "stChristopherLogo", favourite: true, finished: 0, category: "Pubs"))
-        dbVendors.append(VendorModel(id: 1, name: "The George Inn", rating: 5, latitude: 51.504176, longitude: -0.089994, price: 4, minTime: "16:00", maxTime: "20:00", vendorPicture: "theGeorgeImage", vendorLogo: "theGeorgeLogo", favourite: true, finished: 0, category: "Bars"))
-        dbVendors.append(VendorModel(id: 2, name: "The Sadler's Pub", rating: 3.5, latitude: 51.715760, longitude: -1.221712, price: 3.5, minTime: "20:00", maxTime: "22:00", vendorPicture: "theSadlersImage", vendorLogo: "theSadlersLogo", favourite: false, finished: 0, category: "Pubs"))
-        dbVendors.append(VendorModel(id: 3, name: "The Blue Bar", rating: 4, latitude: 51.502064, longitude: -0.156193, price: 4, minTime: "20:30", maxTime: "22:30", vendorPicture: "theBlueBarImage", vendorLogo: "theBlueBarLogo", favourite: false, finished: 0, category: "Pubs"))
-       
-        if let currentLocation = locationManager.location {
-            for vendor in dbVendors {
-                vendor.setDistance(location: currentLocation)
-            }
-        }
-        
-        reloadTable()
-        
         offersModel.requestOffers()
     }
     
@@ -87,8 +74,8 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
-        filteredVendors = vendors.filter({ (vendor) -> Bool in
-            return vendor.name!.lowercased().range(of: searchText.lowercased()) != nil;
+        filteredOffers = offers.filter({ (offer) -> Bool in
+            return offer.name!.lowercased().range(of: searchText.lowercased()) != nil;
         })
         self.tableView.reloadData()
     }
@@ -116,19 +103,19 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int
     {
-        return searchOn ? filteredVendors.count : vendors.count
+        return searchOn ? filteredOffers.count : offers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "vendorsCell") as? VendorsTableViewCell else {
-            return VendorsTableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "offersCell") as? OffersTableViewCell else {
+            return OffersTableViewCell()
         }
         cell.delegate = self
         cell.tag = indexPath.row
-
-        let item: VendorModel = searchOn ? filteredVendors[indexPath.row] : vendors[indexPath.row]
-        cell.configureCell(item.name!, rating: item.rating!, distance: item.distance, price:item.price!, minTime:item.minTime!, maxTime:item.maxTime!, vendorPicture:item.vendorPicture!, vendorLogo:item.vendorLogo!, favourite:item.favourite!, finished: item.finished!)
+        
+        let item: OfferModel = searchOn ? filteredOffers[indexPath.row] : offers[indexPath.row]
+        cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, discount:item.discount!, minTime:item.minTime!, maxTime:item.maxTime!, offerImage:item.offerImage!, offerLogo:item.offerLogo!, favourite:item.favourite!, quantity: item.quantity!)
         
         return cell
     }
@@ -138,7 +125,7 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func didPressFavouriteButton(_ tag: Int) {
-        vendors[tag].favourite = vendors[tag].favourite! ? false : true
+        offers[tag].favourite = offers[tag].favourite! ? false : true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -170,74 +157,112 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
-    func offersReceived(_ offers: [[String:Any]]) {
-        print(offers[0])
+    func offersReceived(_ receivedOffers: [[String:Any]]) {
         
-//        var offersAux: [ContactModel] = []
-//        var item:ContactModel;
-//        
-//        // parse the received JSON and save the contacts
-//        for i in 0 ..< contactDetails.count {
-//            
-//            if let username = contactDetails[i]["username"] as? String,
-//                let name = contactDetails[i]["name"] as? String,
-//                let email = contactDetails[i]["email"] as? String,
-//                let phoneNo = contactDetails[i]["phone_number"] as? String,
-//                let userId = contactDetails[i]["user_id"] as? Int,
-//                let contactId = contactDetails[i]["contact_id"] as? Int
-//            {
-//                item = ContactModel()
-//                item.username = username
-//                item.name = name
-//                item.email = email
-//                item.phoneNo = phoneNo
-//                item.userId = userId
-//                item.contactId = contactId
-//                item.phoneNo = phoneNo
-//                
-//                if let about = contactDetails[i]["biography"] as? String {
-//                    item.about = about
-//                } else {
-//                    item.about = ""
-//                }
-//                
-//                if let profilePicture = contactDetails[i]["profile_picture"] as? String {
-//                    
-//                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
-//                    if FileManager.default.fileExists(atPath: filename.path) {
-//                        item.profilePicture = profilePicture
-//                    } else {
-//                        // Download the profile picture, if exists
-//                        if let url = URL(string: "http://188.166.157.62/profile_pictures/\(profilePicture)") {
-//                            if let data = try? Data(contentsOf: url) {
-//                                var profileImg: UIImage
-//                                profileImg = UIImage(data: data)!
-//                                if let data = UIImagePNGRepresentation(profileImg) {
-//                                    try? data.write(to: filename)
-//                                    item.profilePicture = profilePicture
-//                                } else {
-//                                    item.profilePicture = ""
-//                                }
-//                            } else {
-//                                item.profilePicture = ""
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    item.profilePicture = ""
-//                }
-//                
-//                contactsAux.append(item)
-//            }
-//        }
-//        contacts = contactsAux
-//        
-//        let storedContacts = NSKeyedArchiver.archivedData(withRootObject: contacts)
-//        UserDefaults.standard.set(storedContacts, forKey:"contacts");
-//        
-//        self.tableView.reloadData()
+        var offersAux: [OfferModel] = []
+        var item:OfferModel;
         
+        // parse the received JSON and save the contacts
+        for i in 0 ..< receivedOffers.count {
+            
+            if let offerId = Int((receivedOffers[i]["offer_id"] as? String)!),
+                let name = receivedOffers[i]["name"] as? String,
+                let discount = Int((receivedOffers[i]["discount"] as? String)!),
+                let startingTime = receivedOffers[i]["starting_time"] as? String,
+                let endingTime = receivedOffers[i]["ending_time"] as? String,
+                let rating = Float((receivedOffers[i]["rating"] as? String)!),
+                let category = receivedOffers[i]["category"] as? String,
+                let latitude = Double((receivedOffers[i]["latitude"] as? String)!),
+                let longitude = Double((receivedOffers[i]["longitude"] as? String)!)
+            {
+                item = OfferModel()
+                item.id = offerId
+                item.name = name
+                item.rating = Float(rating)
+                item.discount = Int(discount)
+                item.minTime = Utils.instance.trimSeconds(time: startingTime)
+                item.maxTime = Utils.instance.trimSeconds(time: endingTime)
+                item.category = category
+                item.latitude = Double(latitude)
+                item.longitude = Double(longitude)
+                
+                if let quantity = receivedOffers[i]["quantity"] as? String {
+                    item.quantity = Int(quantity)
+                } else {
+                    item.quantity = -1
+                }
+                
+                if let logoImage = receivedOffers[i]["logo_image"] as? String {
+                    
+                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(logoImage)")
+                    if FileManager.default.fileExists(atPath: filename.path) {
+                        item.offerLogo = logoImage
+                    } else {
+                        // Download the profile picture, if exists
+                        if let url = URL(string: "http://46.101.29.197/vendor_images/\(logoImage)") {
+                            if let data = try? Data(contentsOf: url) {
+                                var logoImg: UIImage
+                                logoImg = UIImage(data: data)!
+                                if let data = UIImagePNGRepresentation(logoImg) {
+                                    try? data.write(to: filename)
+                                    item.offerLogo = logoImage
+                                } else {
+                                    item.offerLogo = ""
+                                }
+                            } else {
+                                item.offerLogo = ""
+                            }
+                        }
+                    }
+                } else {
+                    item.offerLogo = ""
+                }
+                
+                if let offerImage = receivedOffers[i]["image"] as? String {
+                    
+                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)")
+                    if FileManager.default.fileExists(atPath: filename.path) {
+                        item.offerImage = offerImage
+                    } else {
+                        // Download the profile picture, if exists
+                        if let url = URL(string: "http://46.101.29.197/vendor_images/\(offerImage)") {
+                            if let data = try? Data(contentsOf: url) {
+                                var offerImg: UIImage
+                                offerImg = UIImage(data: data)!
+                                if let data = UIImagePNGRepresentation(offerImg) {
+                                    try? data.write(to: filename)
+                                    item.offerImage = offerImage
+                                } else {
+                                    item.offerImage = ""
+                                }
+                            } else {
+                                item.offerImage = ""
+                            }
+                        }
+                    }
+                } else {
+                    item.offerImage = ""
+                }
+                
+                item.favourite = false
+                offersAux.append(item)
+            }
+        }
+        offers = offersAux
         
+        if let currentLocation = locationManager.location {
+            for offer in offers {
+                offer.setDistance(location: currentLocation)
+            }
+        }
+        
+        let storedOffers = NSKeyedArchiver.archivedData(withRootObject: offers)
+        UserDefaults.standard.set(storedOffers, forKey:"storedOffers");
+        
+        reloadTable()
+        if refreshControl.isRefreshing {
+            refreshControl.endRefreshing()
+        }
     }
     
     func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool) {
@@ -264,8 +289,19 @@ class VendorsListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func reloadTable() {
-        vendors = Utils.instance.filterVendors(vendors: dbVendors, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
+        if (UserDefaults.standard.value(forKey: "storedOffers") != nil) {
+            if let data = UserDefaults.standard.data(forKey: "storedOffers"),
+                let offersAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [OfferModel] {
+                offers = offersAux
+            }
+        }
+        offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
         tableView.reloadData()
+    }
+    
+    func refreshTable() {
+        // Code to refresh table view
+        offersModel.requestOffers()
     }
     
     // Create the dropdown menu
