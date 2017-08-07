@@ -62,13 +62,17 @@ class OffersTableViewCell: UITableViewCell {
         delegate?.didPressFavouriteButton(self.tag)
     }
     
-    func configureCell(_ name: String, rating: Float, distance: Int, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
+    func configureCell(_ name: String, rating: Float, distance: Int, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, discountRange: String?) {
         
         nameLabel.text = name
         ratingLabel.text = "\(String(format: "%.1f", rating))"
         let dist: String = distance < 1200 ? "\(distance) m" : "\(String(format: "%.1f", Float(distance)/1000)) km"
         distanceLabel.text = dist
-        priceLabel.text = "\(discount)% OFF"
+        if discountRange != nil && discountRange != "" {
+            priceLabel.text = "\(discountRange!)% OFF"
+        } else {
+            priceLabel.text = "\(discount)% OFF"
+        }
         timeLabel.text = "\(minTime) - \(maxTime)"
         
         //TODO: add global default photos

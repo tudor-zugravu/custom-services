@@ -81,6 +81,34 @@ class Utils: NSObject {
         })
     }
     
+    func removeDuplicateLocations(offers: [OfferModel]) -> [OfferModel] {
+        
+        guard let firstOffer = offers.first else {
+            return [] // Empty array
+        }
+        var currentOffer = firstOffer
+        var uniqueOffers = [currentOffer] // Keep first element
+        
+        for offer in offers.dropFirst() {
+            if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
+                if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
+                    let discounts = currentOffer.discountRange?.components(separatedBy: "-")
+                    if Int(discounts![0])! > offer.discount! {
+                        currentOffer.discountRange = "\(offer.discount!)-\(discounts![1])"
+                    } else if Int(discounts![1])! < offer.discount! {
+                        currentOffer.discountRange = "\(discounts![0])-\(offer.discount!)"
+                    }
+                } else {
+                    currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(offer.discount!)-\(currentOffer.discount!)" : "\(currentOffer.discount!)-\(offer.discount!)"
+                }
+            } else {
+                currentOffer = offer
+                uniqueOffers.append(currentOffer) // Found a different element
+            }
+        }
+        return uniqueOffers
+    }
+    
     // COPIED
     // Function that returns the path of the images
     func getDocumentsDirectory() -> URL {

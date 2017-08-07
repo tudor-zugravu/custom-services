@@ -175,8 +175,8 @@
                                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IYk-CI-bKb">
                                                                     <rect key="frame" x="0.0" y="108" width="355" height="20"/>
                                                                     <subviews>
-                                                                        <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="equalSpacing" alignment="center" spacing="50" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5YG-Of-4TC">
-                                                                            <rect key="frame" x="17" y="0.0" width="330" height="20"/>
+                                                                        <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="equalSpacing" alignment="center" spacing="45" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5YG-Of-4TC">
+                                                                            <rect key="frame" x="17" y="0.0" width="325" height="20"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="313 m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nvd-30-w0e">
@@ -190,7 +190,7 @@
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="8oR-s4-w6F">
-                                                                                    <rect key="frame" x="110" y="0.0" width="40" height="20"/>
+                                                                                    <rect key="frame" x="105" y="0.0" width="40" height="20"/>
                                                                                     <subviews>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="4.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sly-M5-koR">
                                                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -215,10 +215,10 @@
                                                                                         <constraint firstAttribute="width" constant="40" id="aVl-Ma-QxO"/>
                                                                                     </constraints>
                                                                                 </stackView>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="3 GBP" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ITz-Zn-kBA">
-                                                                                    <rect key="frame" x="200" y="0.0" width="60" height="20"/>
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="30% OFF" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ITz-Zn-kBA">
+                                                                                    <rect key="frame" x="190" y="0.0" width="70" height="20"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" constant="60" id="gom-z9-shV"/>
+                                                                                        <constraint firstAttribute="width" constant="70" id="gom-z9-shV"/>
                                                                                         <constraint firstAttribute="height" constant="20" id="nmb-cF-l1N"/>
                                                                                     </constraints>
                                                                                     <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="12"/>
@@ -226,7 +226,7 @@
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QiI-cC-1hr">
-                                                                                    <rect key="frame" x="310" y="0.0" width="20" height="20"/>
+                                                                                    <rect key="frame" x="305" y="0.0" width="20" height="20"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" constant="20" id="Cty-zQ-nKY"/>
                                                                                         <constraint firstAttribute="height" constant="20" id="mHA-xC-ldl"/>

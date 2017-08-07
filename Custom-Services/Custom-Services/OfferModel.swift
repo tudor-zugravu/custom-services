@@ -13,6 +13,7 @@ class OfferModel: NSObject, NSCoding {
 
     //properties
     var id: Int?
+    var locationId: Int?
     var name: String?
     var rating: Float?
     var distance: Int?
@@ -26,6 +27,7 @@ class OfferModel: NSObject, NSCoding {
     var favourite: Bool?
     var quantity: Int?
     var category: String?
+    var discountRange: String?
     
     //empty constructor
     override init()
@@ -34,9 +36,10 @@ class OfferModel: NSObject, NSCoding {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(id: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, category: String) {
+    init(id: Int, locationId: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, category: String) {
         
         self.id = id
+        self.locationId = locationId
         self.name = name
         self.rating = rating
         self.distance = 0
@@ -54,6 +57,7 @@ class OfferModel: NSObject, NSCoding {
     
     required init(coder decoder: NSCoder) {
         self.id = decoder.decodeObject(forKey: "id") as? Int
+        self.locationId = decoder.decodeObject(forKey: "locationId") as? Int
         self.name = decoder.decodeObject(forKey: "name") as? String ?? ""
         self.rating = decoder.decodeObject(forKey: "rating") as? Float
         self.distance = decoder.decodeObject(forKey: "distance") as? Int
@@ -71,6 +75,7 @@ class OfferModel: NSObject, NSCoding {
     
     func encode(with coder: NSCoder) {
         coder.encode(id, forKey: "id")
+        coder.encode(locationId, forKey: "locationId")
         coder.encode(name, forKey: "name")
         coder.encode(rating, forKey: "rating")
         coder.encode(distance, forKey: "distance")
@@ -92,6 +97,6 @@ class OfferModel: NSObject, NSCoding {
     
     //prints object's current state
     override var description: String {
-        return "ID: \(String(describing: id)), Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Discount: \(String(describing: discount)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), OfferImage: \(String(describing: offerImage)), OfferLogo: \(String(describing: offerLogo)), Favourite: \(String(describing: favourite)), Quantity: \(String(describing: quantity)), Category: \(String(describing: category))"
+        return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Name: \(String(describing: name)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Discount: \(String(describing: discount)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), OfferImage: \(String(describing: offerImage)), OfferLogo: \(String(describing: offerLogo)), Favourite: \(String(describing: favourite)), Quantity: \(String(describing: quantity)), Category: \(String(describing: category))"
     }
 }

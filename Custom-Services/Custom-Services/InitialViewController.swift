@@ -33,6 +33,12 @@ class InitialViewController: UIViewController, SystemModelProtocol {
         
         UserDefaults.standard.set(categories, forKey:"categories");
         
+        UserDefaults.standard.set(1, forKey:"userId");
+        UserDefaults.standard.set("Tudor Zugravu", forKey:"name");
+        UserDefaults.standard.set("tudor.zugravu@gmail.com", forKey:"email");
+        UserDefaults.standard.set("tudor", forKey:"password");
+        UserDefaults.standard.set(0.0, forKey:"credit");
+        
         self.performSegue(withIdentifier: "initialTabBarViewController", sender: nil)
     }
 }

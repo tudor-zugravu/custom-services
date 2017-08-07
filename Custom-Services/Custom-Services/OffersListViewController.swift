@@ -115,7 +115,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         cell.tag = indexPath.row
         
         let item: OfferModel = searchOn ? filteredOffers[indexPath.row] : offers[indexPath.row]
-        cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, discount:item.discount!, minTime:item.minTime!, maxTime:item.maxTime!, offerImage:item.offerImage!, offerLogo:item.offerLogo!, favourite:item.favourite!, quantity: item.quantity!)
+        cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, discount:item.discount!, minTime:item.minTime!, maxTime:item.maxTime!, offerImage:item.offerImage!, offerLogo:item.offerLogo!, favourite:item.favourite!, quantity: item.quantity!, discountRange: item.discountRange)
         
         return cell
     }
@@ -125,7 +125,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func didPressFavouriteButton(_ tag: Int) {
-        offers[tag].favourite = offers[tag].favourite! ? false : true
+        offersModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -157,6 +157,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    func favouriteSelected(_ result: NSString, tag: Int) {
+        if result == "1" {
+            offers[tag].favourite = offers[tag].favourite! ? false : true
+        }
+    }
+    
     func offersReceived(_ receivedOffers: [[String:Any]]) {
         
         var offersAux: [OfferModel] = []
@@ -166,6 +172,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         for i in 0 ..< receivedOffers.count {
             
             if let offerId = Int((receivedOffers[i]["offer_id"] as? String)!),
+                let locationId = Int((receivedOffers[i]["location_id"] as? String)!),
                 let name = receivedOffers[i]["name"] as? String,
                 let discount = Int((receivedOffers[i]["discount"] as? String)!),
                 let startingTime = receivedOffers[i]["starting_time"] as? String,
@@ -177,6 +184,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             {
                 item = OfferModel()
                 item.id = offerId
+                item.locationId = locationId
                 item.name = name
                 item.rating = Float(rating)
                 item.discount = Int(discount)
@@ -192,6 +200,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                     item.quantity = -1
                 }
                 
+                if let favourite = receivedOffers[i]["favourite"] as? String {
+                        item.favourite = favourite == "1" ? true : false
+                } else {
+                    item.favourite = false
+                }
+
                 if let logoImage = receivedOffers[i]["logo_image"] as? String {
                     
                     let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(logoImage)")
@@ -244,7 +258,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                     item.offerImage = ""
                 }
                 
-                item.favourite = false
                 offersAux.append(item)
             }
         }
@@ -273,7 +286,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         self.sortBy = sortBy
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = true
-        reloadTable()
+        offersModel.requestOffers()
     }
     
     func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String]) {
@@ -285,7 +298,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = false
         self.allowedCategories = categories
-        reloadTable()
+        offersModel.requestOffers()
     }
     
     func reloadTable() {
@@ -296,6 +309,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
         offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
+        offers = Utils.instance.removeDuplicateLocations(offers: offers)
+        
         tableView.reloadData()
     }
     
