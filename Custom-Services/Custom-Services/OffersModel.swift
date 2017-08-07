@@ -20,7 +20,7 @@ class OffersModel: NSObject, URLSessionDataDelegate {
     var data : NSMutableData = NSMutableData()
     
     // Server request function for validating log in credentials
-    func requestOffers() {
+    func requestOffers(hasCategories: Bool) {
         
         if let userId = UserDefaults.standard.value(forKey: "userId") {
         
@@ -34,7 +34,8 @@ class OffersModel: NSObject, URLSessionDataDelegate {
             request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
             
             // Request parameters
-            let paramString = "userId=\(userId)"
+            let paramString = "userId=\(userId)&hasCategories=\(hasCategories)"
+            
             request.httpBody = paramString.data(using: String.Encoding.utf8)
             
             let task = session.dataTask(with: request, completionHandler: {

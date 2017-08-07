@@ -36,7 +36,7 @@ class OfferModel: NSObject, NSCoding {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(id: Int, locationId: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, category: String) {
+    init(id: Int, locationId: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
         
         self.id = id
         self.locationId = locationId
@@ -52,7 +52,6 @@ class OfferModel: NSObject, NSCoding {
         self.offerLogo = offerLogo
         self.favourite = favourite
         self.quantity = quantity
-        self.category = category
     }
     
     required init(coder decoder: NSCoder) {

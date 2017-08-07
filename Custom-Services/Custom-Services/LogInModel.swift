@@ -1,34 +1,38 @@
 //
-//  SystemModel.swift
+//  LogInModel.swift
 //  Custom-Services
 //
-//  Created by Tudor Zugravu on 06/08/2017.
+//  Created by Tudor Zugravu on 07/08/2017.
 //  Copyright © 2017 Tudor Zugravu. All rights reserved.
 //
 
 import Foundation
 
-protocol SystemModelProtocol: class {
-    func systemDataReceived(_ systemData: [[String:Any]])
+protocol LogInModelProtocol: class {
+    func responseReceived(_ response: [String:Any])
 }
 
-class SystemModel: NSObject, URLSessionDataDelegate {
+class LogInModel: NSObject, URLSessionDataDelegate {
     
     //properties
-    weak var delegate: SystemModelProtocol!
+    weak var delegate: LogInModelProtocol!
     var data : NSMutableData = NSMutableData()
     
     // Server request function for validating log in credentials
-    func requestData() {
+    func checkCredentials(email: String, password: String) {
         
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "http://46.101.29.197/services/categories.php")!
+        let url: URL = URL(string: "http://46.101.29.197/services/login.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+        
+        // Request parameters
+        let paramString = "email=\(email)&password=\(password)"
+        request.httpBody = paramString.data(using: String.Encoding.utf8)
         
         let task = session.dataTask(with: request, completionHandler: {
             (data, response, error) in
@@ -41,10 +45,11 @@ class SystemModel: NSObject, URLSessionDataDelegate {
             
             do {
                 // Sending the received JSON
-                let parsedData = try JSONSerialization.jsonObject(with: data!, options: []) as! [[String:Any]]
+                let parsedData = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
                 DispatchQueue.main.async(execute: { () -> Void in
+                    
                     // Calling the success handler asynchroniously
-                    self.delegate.systemDataReceived(parsedData)
+                    self.delegate.responseReceived(parsedData)
                 })
                 
             } catch let error as NSError {

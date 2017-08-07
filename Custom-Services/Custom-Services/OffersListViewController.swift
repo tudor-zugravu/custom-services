@@ -49,8 +49,13 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
-        categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
-        offersModel.requestOffers()
+        
+        if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+            categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
+            offersModel.requestOffers(hasCategories: true)
+        } else {
+            offersModel.requestOffers(hasCategories: false)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -178,7 +183,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 let startingTime = receivedOffers[i]["starting_time"] as? String,
                 let endingTime = receivedOffers[i]["ending_time"] as? String,
                 let rating = Float((receivedOffers[i]["rating"] as? String)!),
-                let category = receivedOffers[i]["category"] as? String,
                 let latitude = Double((receivedOffers[i]["latitude"] as? String)!),
                 let longitude = Double((receivedOffers[i]["longitude"] as? String)!)
             {
@@ -190,9 +194,14 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 item.discount = Int(discount)
                 item.minTime = Utils.instance.trimSeconds(time: startingTime)
                 item.maxTime = Utils.instance.trimSeconds(time: endingTime)
-                item.category = category
                 item.latitude = Double(latitude)
                 item.longitude = Double(longitude)
+                
+                if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+                    if let category = receivedOffers[i]["category"] as? String {
+                        item.category = category
+                    }
+                }
                 
                 if let quantity = receivedOffers[i]["quantity"] as? String {
                     item.quantity = Int(quantity)
@@ -286,7 +295,11 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         self.sortBy = sortBy
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = true
-        offersModel.requestOffers()
+        if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+            offersModel.requestOffers(hasCategories: true)
+        } else {
+            offersModel.requestOffers(hasCategories: false)
+        }
     }
     
     func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String]) {
@@ -298,7 +311,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         self.onlyAvailableOffers = onlyAvailableOffers
         self.allCategories = false
         self.allowedCategories = categories
-        offersModel.requestOffers()
+        offersModel.requestOffers(hasCategories: true)
     }
     
     func reloadTable() {
@@ -316,7 +329,11 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     
     func refreshTable() {
         // Code to refresh table view
-        offersModel.requestOffers()
+        if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+            offersModel.requestOffers(hasCategories: true)
+        } else {
+            offersModel.requestOffers(hasCategories: false)
+        }
     }
     
     // Create the dropdown menu
@@ -324,9 +341,19 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
             ({ () -> (Void) in print("PROFILE!") }),
             ({ () -> (Void) in print("CONTACT US!") }),
-            ({ () -> (Void) in print("SIGN OUT!") })])
+            ({ () -> (Void) in
+//                self.dropButton.table.isHidden = true
+                print("YES")
+//                self.logOut(Any.self) 
+            })])
     }
-    
+
+    func signOut(_ sender: Any) {
+        
+        Utils.instance.signOut()
+        _ = self.navigationController?.popToRootViewController(animated: true)
+    }
+
     // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)

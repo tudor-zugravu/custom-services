@@ -116,4 +116,30 @@ class Utils: NSObject {
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
+    
+    func signOut() {
+        
+        // Delete profile picture
+        do {
+            let fileManager = FileManager.default
+            let fileName = getDocumentsDirectory().appendingPathComponent("\(String(describing: UserDefaults.standard.value(forKey: "profilePicture")))").path
+            
+            if fileManager.fileExists(atPath: fileName) {
+                try fileManager.removeItem(atPath: fileName)
+            } else {
+                print("File does not exist")
+            }
+        }
+        catch let error as NSError {
+            print("An error took place: \(error)")
+        }
+        
+        // Delete stored user data
+        UserDefaults.standard.removeObject(forKey: "email")
+        UserDefaults.standard.removeObject(forKey:"userId")
+        UserDefaults.standard.removeObject(forKey: "email")
+        UserDefaults.standard.removeObject(forKey: "password")
+        UserDefaults.standard.removeObject(forKey: "profilePicture")
+        UserDefaults.standard.removeObject(forKey: "credit")
+    }
 }

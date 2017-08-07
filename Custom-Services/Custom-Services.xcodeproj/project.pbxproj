@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		204CD5A97C19D1155731D5F2 /* Pods_Custom_ServicesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C59650E343F02C7E906D88 /* Pods_Custom_ServicesTests.framework */; };
+		380601D01F3925B800387274 /* LogInModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380601CF1F3925B800387274 /* LogInModel.swift */; };
 		386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386222C81F32469C00CDB4F9 /* DropMenuButton.swift */; };
 		38742C8E1F378A74008FF09B /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38742C8D1F378A74008FF09B /* InitialViewController.swift */; };
 		38742C901F378D6D008FF09B /* SystemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38742C8F1F378D6D008FF09B /* SystemModel.swift */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		1C8CD998221063875792B084 /* Pods-Custom-ServicesUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Custom-ServicesUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Custom-ServicesUITests/Pods-Custom-ServicesUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		22B13185331BF9EE5E529021 /* Pods-Custom-ServicesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Custom-ServicesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Custom-ServicesTests/Pods-Custom-ServicesTests.release.xcconfig"; sourceTree = "<group>"; };
+		380601CF1F3925B800387274 /* LogInModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInModel.swift; sourceTree = "<group>"; };
 		386222C81F32469C00CDB4F9 /* DropMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropMenuButton.swift; sourceTree = "<group>"; };
 		38742C8D1F378A74008FF09B /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		38742C8F1F378D6D008FF09B /* SystemModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemModel.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */,
 				38742C8F1F378D6D008FF09B /* SystemModel.swift */,
 				38742C911F379442008FF09B /* OffersModel.swift */,
+				380601CF1F3925B800387274 /* LogInModel.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -529,6 +532,7 @@
 				386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */,
 				38EDCA271F307F6C00DEFA0E /* OffersTableViewCell.swift in Sources */,
 				38B8E8801F3377E100769AF3 /* CategoriesTableViewCell.swift in Sources */,
+				380601D01F3925B800387274 /* LogInModel.swift in Sources */,
 				38C3F59D1F30A96300C611B6 /* OffersListViewController.swift in Sources */,
 				38DD46461F339BF000EFA95A /* Utils.swift in Sources */,
 			);
