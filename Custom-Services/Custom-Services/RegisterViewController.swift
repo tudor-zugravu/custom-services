@@ -1,5 +1,5 @@
 //
-//  LogInViewController.swift
+//  RegisterViewController.swift
 //  Custom-Services
 //
 //  Created by Tudor Zugravu on 08/08/2017.
@@ -8,18 +8,20 @@
 
 import UIKit
 
-class LogInViewController: UIViewController, LogInModelProtocol {
+class RegisterViewController: UIViewController, RegisterModelProtocol {
 
+    @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
-    let logInModel = LogInModel()
+    let registerModel = RegisterModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        logInModel.delegate = self
+
+        registerModel.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,11 +40,19 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-        
-    @IBAction func loginButtonPressed(_ sender: Any) {
-        if emailTextField.text != nil && emailTextField.text != "" && passwordTextField.text != nil && passwordTextField.text != "" {
+    
+    @IBAction func registerButtonPressed(_ sender: Any) {
+        if nameTextField.text != nil && nameTextField.text != "" && emailTextField.text != nil && emailTextField.text != "" && confirmPasswordTextField.text != nil && confirmPasswordTextField.text != "" && passwordTextField.text != nil && passwordTextField.text != "" {
             if Utils.instance.isValidEmailFormat(email:emailTextField.text!) {
-                logInModel.checkCredentials(email: emailTextField.text!, password: passwordTextField.text!)
+                if passwordTextField.text! == confirmPasswordTextField.text! {
+                    registerModel.registerRequest(name: nameTextField.text!, email: emailTextField.text!, password: passwordTextField.text!)
+                } else {
+                    let alert = UIAlertController(title: "Passwords do not match",
+                                                  message: "Please enter matching passwords" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                }
             } else {
                 let alert = UIAlertController(title: "Incorrect email format",
                                               message: "Please enter a valid email address" as String, preferredStyle:.alert)
@@ -52,7 +62,7 @@ class LogInViewController: UIViewController, LogInModelProtocol {
             }
         } else {
             let alert = UIAlertController(title: "Empty fields",
-                                          message: "Please enter both username and password" as String, preferredStyle:.alert)
+                                          message: "Please fill in all fields" as String, preferredStyle:.alert)
             let done = UIAlertAction(title: "Done", style: .default, handler: nil)
             alert.addAction(done)
             self.present(alert, animated: true, completion: nil)
@@ -60,54 +70,35 @@ class LogInViewController: UIViewController, LogInModelProtocol {
     }
     
     func responseReceived(_ response: [String:Any]) {
-        if (response["status"] as? String) != nil {
-            let alert = UIAlertController(title: "Login failed",
-                                              message: "Wrong username or password" as String, preferredStyle:.alert)
-            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
-            alert.addAction(done)
-            self.present(alert, animated: true, completion: nil)
-        } else if let userId = Int((response["user_id"] as? String)!),
-                    let name = response["name"] as? String,
-                    let email = response["email"] as? String,
-                    let password = response["password"] as? String,
-                    let credit = Float((response["credit"] as? String)!) {
-            UserDefaults.standard.set(userId, forKey:"userId");
-            UserDefaults.standard.set(name, forKey:"name");
-            UserDefaults.standard.set(email, forKey:"email");
-            UserDefaults.standard.set(password, forKey:"password");
-            UserDefaults.standard.set(credit, forKey:"credit");
-            if let profilePicture = response["profile_picture"] as? String {
-                let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
-                if FileManager.default.fileExists(atPath: filename.path) {
-                    UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
-                } else {
-                    // Download the profile picture, if exists
-                    if let url = URL(string: "http://46.101.29.197/profile_pictures/\(profilePicture)") {
-                        if let data = try? Data(contentsOf: url) {
-                            var profilePic: UIImage
-                            profilePic = UIImage(data: data)!
-                            if let data = UIImagePNGRepresentation(profilePic) {
-                                try? data.write(to: filename)
-                                UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
-                            } else {
-                                UserDefaults.standard.set(profilePicture, forKey:"");
-                            }
-                        } else {
-                            UserDefaults.standard.set(profilePicture, forKey:"");
-                        }
-                    }
-                }
+
+        if let insertId = response["insertId"] as? Int {
+            if insertId == 0 {
+                let alert = UIAlertController(title: "Register failed",
+                                              message: "Email address already registered with another account" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
             } else {
+                UserDefaults.standard.set(insertId, forKey:"userId");
+                UserDefaults.standard.set(nameTextField.text!, forKey:"name");
+                UserDefaults.standard.set(emailTextField.text!, forKey:"email");
+                UserDefaults.standard.set(passwordTextField.text!, forKey:"password");
+                UserDefaults.standard.set(0, forKey:"credit");
                 UserDefaults.standard.set("", forKey:"profilePicture");
+                print("\(insertId) \(nameTextField.text!) \(emailTextField.text!) \(passwordTextField.text!)")
+                self.performSegue(withIdentifier: "registerTabBarViewController", sender: nil)
             }
-            self.performSegue(withIdentifier: "logInTabBarViewController", sender: nil)
         } else {
-            let alert = UIAlertController(title: "Login failed",
-                                          message: "Wrong username or password" as String, preferredStyle:.alert)
+            let alert = UIAlertController(title: "Register failed",
+                                          message: "Please try again" as String, preferredStyle:.alert)
             let done = UIAlertAction(title: "Done", style: .default, handler: nil)
             alert.addAction(done)
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    @IBAction func backButtonPressed(_ sender: Any) {
+        let _ = navigationController?.popViewController(animated: true)
     }
     
     // COPIED

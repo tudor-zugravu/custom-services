@@ -135,7 +135,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "ShowPopoverFiltersViewController") {
+        if (segue.identifier == "showPopoverFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
 
@@ -340,7 +340,11 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     // Create the dropdown menu
     func initializeDropdown() {
         dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
-            ({ () -> (Void) in print("PROFILE!") }),
+            ({ () -> (Void) in
+//                let nextView:UIViewController = (self.storyboard?.instantiateViewController(withIdentifier: "changePWD"))!
+//                self.navigationController?.pushViewController(nextView , animated: true)
+                self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
+            }),
             ({ () -> (Void) in print("CONTACT US!") }),
             ({ () -> (Void) in
                 self.signOut(Any.self) 

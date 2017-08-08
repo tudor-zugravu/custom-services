@@ -53,10 +53,14 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         if (response["status"] as? String) != nil {
             self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
         } else if let userId = Int((response["user_id"] as? String)!),
-                let name = response["name"] as? String,
-                let credit = Float((response["credit"] as? String)!) {
+                    let name = response["name"] as? String,
+                    let email = response["email"] as? String,
+                    let password = response["password"] as? String,
+                    let credit = Float((response["credit"] as? String)!) {
             UserDefaults.standard.set(userId, forKey:"userId");
             UserDefaults.standard.set(name, forKey:"name");
+            UserDefaults.standard.set(email, forKey:"email");
+            UserDefaults.standard.set(password, forKey:"password");
             UserDefaults.standard.set(credit, forKey:"credit");
             
             if let profilePicture = response["profile_picture"] as? String {

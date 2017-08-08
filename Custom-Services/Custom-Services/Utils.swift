@@ -124,20 +124,21 @@ class Utils: NSObject {
     }
     
     func signOut() {
-        
         // Delete profile picture
-        do {
-            let fileManager = FileManager.default
-            let fileName = getDocumentsDirectory().appendingPathComponent("\(String(describing: UserDefaults.standard.value(forKey: "profilePicture")))").path
-            
-            if fileManager.fileExists(atPath: fileName) {
-                try fileManager.removeItem(atPath: fileName)
-            } else {
-                print("File does not exist")
+        if UserDefaults.standard.value(forKey: "profilePicture") as! String != "" {
+            do {
+                let fileManager = FileManager.default
+                let fileName = getDocumentsDirectory().appendingPathComponent("\(UserDefaults.standard.value(forKey: "profilePicture")!)").path
+                
+                if fileManager.fileExists(atPath: fileName) {
+                    try fileManager.removeItem(atPath: fileName)
+                } else {
+                    print("File does not exist")
+                }
             }
-        }
-        catch let error as NSError {
-            print("An error took place: \(error)")
+            catch let error as NSError {
+                print("An error took place: \(error)")
+            }
         }
         
         // Delete stored user data
