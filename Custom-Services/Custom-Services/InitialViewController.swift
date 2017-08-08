@@ -18,13 +18,14 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         
         logInModel.delegate = self
         systemModel.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         systemModel.requestData()
-        // Do any additional setup after loading the view.
     }
 
     func systemDataReceived(_ systemData: [[String:Any]]) {
         var categories: [String] = []
-        
         // parse the received JSON and save the contacts
         for i in 0 ..< systemData.count {
             
@@ -43,11 +44,12 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         if let email = UserDefaults.standard.value(forKey: "email") as? String,
             let password = UserDefaults.standard.value(forKey: "password") as? String {
             logInModel.checkCredentials(email: email, password: password)
+        } else {
+            self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
         }
     }
     
     func responseReceived(_ response: [String:Any]) {
-        
         if (response["status"] as? String) != nil {
             self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
         } else if let userId = Int((response["user_id"] as? String)!),

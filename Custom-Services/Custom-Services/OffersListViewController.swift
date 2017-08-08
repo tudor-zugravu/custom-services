@@ -41,8 +41,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to reload offers")
         refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl) // not required when using UITableViewController
-        searchBar.delegate = self
         self.initializeDropdown()
+        searchBar.delegate = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestWhenInUseAuthorization()
@@ -63,7 +63,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.text = ""
         
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
         // COPIED
@@ -342,9 +343,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             ({ () -> (Void) in print("PROFILE!") }),
             ({ () -> (Void) in print("CONTACT US!") }),
             ({ () -> (Void) in
-//                self.dropButton.table.isHidden = true
-                print("YES")
-//                self.logOut(Any.self) 
+                self.signOut(Any.self) 
             })])
     }
 
@@ -380,7 +379,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     // Called to dismiss the keyboard from the screen
-    func dismissKeyboard() {
+    func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
+        if !self.dropdownMenuButton.table.frame.contains(gestureRecognizer.location(in: self.view)) && !self.dropdownMenuButton.frame.contains(gestureRecognizer.location(in: self.view)) {
+            dropdownMenuButton.hideMenu()
+        }
         view.endEditing(true)
     }
 }

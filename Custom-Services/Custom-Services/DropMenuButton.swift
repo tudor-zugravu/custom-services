@@ -47,6 +47,16 @@ class DropMenuButton: UIButton, UITableViewDelegate, UITableViewDataSource
         
     }
 
+    func hideMenu() {
+        if(table.alpha == 1)
+        {
+            UIView.animate(withDuration: 0.3
+                , animations: {
+                    self.table.alpha = 0;
+                    self.layer.zPosition = 0
+            })
+        }
+    }
     
     func initMenu(_ items: [String], actions: [() -> (Void)])
     {
