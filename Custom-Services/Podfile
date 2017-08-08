@@ -18,5 +18,7 @@ target 'Custom-Services' do
   end
 
   pod ‘SwiftRangeSlider’
+  pod 'PayPal-iOS-SDK'
+  pod 'BraintreeDropIn'
 
 end

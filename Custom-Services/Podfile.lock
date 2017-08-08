@@ -1,12 +1,39 @@
 PODS:
+  - Braintree/Card (4.8.5):
+    - Braintree/Core
+  - Braintree/Core (4.8.5)
+  - Braintree/UnionPay (4.8.5):
+    - Braintree/Card
+    - Braintree/Core
+  - BraintreeDropIn (5.2.2):
+    - BraintreeDropIn/DropIn (= 5.2.2)
+  - BraintreeDropIn/DropIn (5.2.2):
+    - Braintree/Card (~> 4.0)
+    - Braintree/Core (~> 4.0)
+    - Braintree/UnionPay (~> 4.0)
+    - BraintreeDropIn/UIKit
+  - BraintreeDropIn/UIKit (5.2.2)
+  - CardIO (5.4.1)
+  - PayPal-iOS-SDK (2.17.0):
+    - PayPal-iOS-SDK/CardIO (= 2.17.0)
+    - PayPal-iOS-SDK/Core (= 2.17.0)
+  - PayPal-iOS-SDK/CardIO (2.17.0):
+    - CardIO (~> 5.4.1)
+  - PayPal-iOS-SDK/Core (2.17.0)
   - SwiftRangeSlider (1.0.2)
 
 DEPENDENCIES:
+  - BraintreeDropIn
+  - PayPal-iOS-SDK
   - SwiftRangeSlider
 
 SPEC CHECKSUMS:
+  Braintree: 12225834d0e39ffad56888756a3c0d8bda043d53
+  BraintreeDropIn: 0ff4879547af66dae814911992e01324975d556d
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
+  PayPal-iOS-SDK: 849321f6214a7187ee4cc684f63fe509df4c4a36
   SwiftRangeSlider: 111f9a70b8502c6b0607bd3fcf5662f47009a90c
 
-PODFILE CHECKSUM: 38552c6afd9b058d4cd6835afb3e91968664cbff
+PODFILE CHECKSUM: a8a5d64485c59fc3ccb50480c6f405dca0765fe6
 
 COCOAPODS: 1.3.0

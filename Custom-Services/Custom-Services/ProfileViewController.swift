@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import BraintreeDropIn
+import Braintree
 
 class ProfileViewController: UIViewController, ProfileModelProtocol {
 
@@ -17,6 +19,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    let apiClient = BTAPIClient(authorization: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
     let profileModel = ProfileModel()
     var newPass: String = ""
     
@@ -158,7 +161,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     @IBAction func addCreditButtonPressed(_ sender: Any) {
-        
+        showDropIn(clientTokenOrTokenizationKey: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
     }
     
     func detailsResponseReceived(_ response: [String:Any]) {
@@ -193,7 +196,6 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     func passwordResponseReceived(_ response: [String:Any]) {
-        print(response)
         if (response["status"] as? String) != nil && (response["status"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
                                           message: "You have been disconnected" as String, preferredStyle:.alert)
@@ -226,7 +228,30 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     func creditResponseReceived(_ response: [String:Any]) {
-        print(response)
+        
+        if let status = response["success"] as? Bool {
+            if status {
+                
+            }
+        } else {
+            print("hmmm...")
+        }
+    }
+    
+    func showDropIn(clientTokenOrTokenizationKey: String) {
+        let request =  BTDropInRequest()
+        let dropIn = BTDropInController(authorization: clientTokenOrTokenizationKey, request: request)
+        { (controller, result, error) in
+            if (error != nil) {
+                print("ERROR")
+            } else if (result?.isCancelled == true) {
+                print("CANCELLED")
+            } else if let result = result {
+                self.profileModel.addCredit(userId: (UserDefaults.standard.value(forKey: "userId") as? Int)!, amount: 10.00, paymentMethodNonce: (result.paymentMethod?.nonce)!)
+            }
+            controller.dismiss(animated: true, completion: nil)
+        }
+        self.present(dropIn!, animated: true, completion: nil)
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
