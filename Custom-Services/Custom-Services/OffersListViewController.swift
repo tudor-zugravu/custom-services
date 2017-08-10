@@ -14,7 +14,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
-    @IBOutlet weak var dropdownFilterButton: UILabel!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     var categories: [String] = []
@@ -49,13 +48,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
-        
-        if UserDefaults.standard.bool(forKey: "hasCategories") == true {
-            categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
-            offersModel.requestOffers(hasCategories: true)
-        } else {
-            offersModel.requestOffers(hasCategories: false)
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,12 +62,22 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+            categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
+            offersModel.requestOffers(hasCategories: true)
+        } else {
+            offersModel.requestOffers(hasCategories: false)
+        }
     }
     
     // COPIED
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        offers = []
+        filteredOffers = []
+        tableView.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -135,7 +137,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "showPopoverFiltersViewController") {
+        if (segue.identifier == "offersFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
 
@@ -322,8 +324,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 offers = offersAux
             }
         }
-        offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
         offers = Utils.instance.removeDuplicateLocations(offers: offers)
+        offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
         
         tableView.reloadData()
     }

@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var creditTextField: UITextField!
     @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var addCreditButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     let apiClient = BTAPIClient(authorization: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
@@ -42,13 +43,22 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
+        if UserDefaults.standard.bool(forKey: "hasCredit") == false {
+            addCreditButton.isHidden = true
+            creditTextField.isHidden = true
+        } else {
+            addCreditButton.isHidden = false
+            creditTextField.isHidden = false
+            if let credit = UserDefaults.standard.value(forKey: "credit") as? Float {
+                creditTextField.text = "Credit: \(credit) GBP"
+            }
+        }
+        
         if let name = UserDefaults.standard.value(forKey: "name") as? String,
             let email = UserDefaults.standard.value(forKey: "email") as? String,
-            let profilePicture = UserDefaults.standard.value(forKey: "profilePicture") as? String,
-            let credit = UserDefaults.standard.value(forKey: "credit") as? Float {
+            let profilePicture = UserDefaults.standard.value(forKey: "profilePicture") as? String {
             nameTextField.text = name
             emailTextField.text = email
-            creditTextField.text = "Credit: \(credit)"
             
             if profilePicture != "" {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
@@ -161,11 +171,45 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     @IBAction func addCreditButtonPressed(_ sender: Any) {
-        showDropIn(clientTokenOrTokenizationKey: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
+        let creditPopUp = UIAlertController(title: "Amount to top up",
+                                              message: "" as String, preferredStyle:.alert)
+        creditPopUp.addTextField { (creditInput: UITextField!) -> Void in
+            creditInput.keyboardType = UIKeyboardType.decimalPad
+            creditInput.placeholder = ""
+            
+        }
+        let topUp = UIAlertAction(title: "Top up", style: .default, handler: {
+            alert -> Void in
+            
+            let creditInput = creditPopUp.textFields![0] as UITextField
+            
+            if creditInput.text != nil && creditInput.text != "" {
+                if let inputAmount = Float(creditInput.text!) {
+                    self.showDropIn(amount: inputAmount, clientTokenOrTokenizationKey: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
+                } else {
+                    let alert = UIAlertController(title: "Invalid amount",
+                                                  message: "Please enter a valid amount" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                let alert = UIAlertController(title: "Empty fields",
+                                              message: "Please fill in all fields" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+        
+        creditPopUp.addAction(topUp)
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        creditPopUp.addAction(cancel)
+        self.present(creditPopUp, animated: true, completion: nil)
     }
     
     func detailsResponseReceived(_ response: [String:Any]) {
-        if (response["status"] as? String) != nil && (response["status"] as? String) == "user_does_not_exist" {
+        if (response["error"] as? String) != nil && (response["error"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
                                           message: "You have been disconnected" as String, preferredStyle:.alert)
             let done = UIAlertAction(title: "Done", style: .default, handler: nil)
@@ -196,7 +240,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     func passwordResponseReceived(_ response: [String:Any]) {
-        if (response["status"] as? String) != nil && (response["status"] as? String) == "user_does_not_exist" {
+        if (response["error"] as? String) != nil && (response["status"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
                                           message: "You have been disconnected" as String, preferredStyle:.alert)
             let done = UIAlertAction(title: "Done", style: .default, handler: nil)
@@ -228,17 +272,47 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     func creditResponseReceived(_ response: [String:Any]) {
-        
-        if let status = response["success"] as? Bool {
+        if (response["error"] as? String) != nil && (response["error"] as? String) == "user_does_not_exist" {
+            let alert = UIAlertController(title: "Error",
+                                          message: "You have been disconnected" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
+            self.signOut(Any.self)
+        } else if let status = response["success"] as? Bool {
             if status {
-                
+                if let amount = response["amount"] as? Float {
+                    creditTextField.text = "Credit: \(amount) GBP"
+                    UserDefaults.standard.set(amount, forKey:"credit");
+                    let alert = UIAlertController(title: "Transaction successful",
+                                                  message: "Your credit has been topped up" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    let alert = UIAlertController(title: "Transaction failed",
+                                                  message: "Please try again" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                let alert = UIAlertController(title: "Transaction failed",
+                                              message: "Please try again" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
             }
         } else {
-            print("hmmm...")
+            let alert = UIAlertController(title: "Transaction failed",
+                                          message: "Please try again" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
-    func showDropIn(clientTokenOrTokenizationKey: String) {
+    func showDropIn(amount: Float, clientTokenOrTokenizationKey: String) {
         let request =  BTDropInRequest()
         let dropIn = BTDropInController(authorization: clientTokenOrTokenizationKey, request: request)
         { (controller, result, error) in
@@ -247,7 +321,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
             } else if (result?.isCancelled == true) {
                 print("CANCELLED")
             } else if let result = result {
-                self.profileModel.addCredit(userId: (UserDefaults.standard.value(forKey: "userId") as? Int)!, amount: 10.00, paymentMethodNonce: (result.paymentMethod?.nonce)!)
+                self.profileModel.addCredit(userId: (UserDefaults.standard.value(forKey: "userId") as? Int)!, amount: amount, paymentMethodNonce: (result.paymentMethod?.nonce)!)
             }
             controller.dismiss(animated: true, completion: nil)
         }

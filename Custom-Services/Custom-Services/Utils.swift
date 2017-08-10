@@ -83,13 +83,19 @@ class Utils: NSObject {
     
     func removeDuplicateLocations(offers: [OfferModel]) -> [OfferModel] {
         
-        guard let firstOffer = offers.first else {
+        let preOrderedOffers = offers.sorted(by: { (offer1, offer2) -> Bool in
+            if offer1.distance! < offer2.distance! {
+                return true
+            }
+            return false
+        })
+        guard let firstOffer = preOrderedOffers.first else {
             return [] // Empty array
         }
         var currentOffer = firstOffer
         var uniqueOffers = [currentOffer] // Keep first element
         
-        for offer in offers.dropFirst() {
+        for offer in preOrderedOffers.dropFirst() {
             if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
                 if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
                     let discounts = currentOffer.discountRange?.components(separatedBy: "-")

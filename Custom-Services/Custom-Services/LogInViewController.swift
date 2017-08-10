@@ -69,13 +69,18 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         } else if let userId = Int((response["user_id"] as? String)!),
                     let name = response["name"] as? String,
                     let email = response["email"] as? String,
-                    let password = response["password"] as? String,
-                    let credit = Float((response["credit"] as? String)!) {
+                    let password = response["password"] as? String {
             UserDefaults.standard.set(userId, forKey:"userId");
             UserDefaults.standard.set(name, forKey:"name");
             UserDefaults.standard.set(email, forKey:"email");
             UserDefaults.standard.set(password, forKey:"password");
-            UserDefaults.standard.set(credit, forKey:"credit");
+            
+            if UserDefaults.standard.bool(forKey: "hasCredit") == true {
+                if let credit = Float((response["credit"] as? String)!) {
+                    UserDefaults.standard.set(credit, forKey:"credit");
+                }
+            }
+            
             if let profilePicture = response["profile_picture"] as? String {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
                 if FileManager.default.fileExists(atPath: filename.path) {

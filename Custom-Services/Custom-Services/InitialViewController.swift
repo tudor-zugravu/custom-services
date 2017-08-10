@@ -21,10 +21,30 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        systemModel.requestData()
+        systemModel.requestSystemData()
+    }
+    
+    func systemDataReceived(_ systemData: [String:Any]) {
+        if let hasCredit = systemData["has_credit"] as? Bool,
+           let hasCategories = systemData["has_categories"] as? Bool {
+            print("\(hasCredit) \(hasCategories)")
+            UserDefaults.standard.set(hasCredit, forKey: "hasCredit")
+            UserDefaults.standard.set(hasCategories, forKey: "hasCategories")
+            
+            if hasCategories {
+                systemModel.requestCategories()
+            } else {
+                if let email = UserDefaults.standard.value(forKey: "email") as? String,
+                    let password = UserDefaults.standard.value(forKey: "password") as? String {
+                    logInModel.checkCredentials(email: email, password: password)
+                } else {
+                    self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
+                }
+            }
+        }
     }
 
-    func systemDataReceived(_ systemData: [[String:Any]]) {
+    func categoriesReceived(_ systemData: [[String:Any]]) {
         var categories: [String] = []
         // parse the received JSON and save the contacts
         for i in 0 ..< systemData.count {
@@ -55,13 +75,17 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         } else if let userId = Int((response["user_id"] as? String)!),
                     let name = response["name"] as? String,
                     let email = response["email"] as? String,
-                    let password = response["password"] as? String,
-                    let credit = Float((response["credit"] as? String)!) {
+                    let password = response["password"] as? String {
             UserDefaults.standard.set(userId, forKey:"userId");
             UserDefaults.standard.set(name, forKey:"name");
             UserDefaults.standard.set(email, forKey:"email");
             UserDefaults.standard.set(password, forKey:"password");
-            UserDefaults.standard.set(credit, forKey:"credit");
+            
+            if UserDefaults.standard.bool(forKey: "hasCredit") == true {
+                if let credit = Float((response["credit"] as? String)!) {
+                    UserDefaults.standard.set(credit, forKey:"credit");
+                }
+            }
             
             if let profilePicture = response["profile_picture"] as? String {
                 UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
