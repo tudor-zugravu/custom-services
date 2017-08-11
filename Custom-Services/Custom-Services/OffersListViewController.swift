@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class OffersListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol {
+class OffersListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol, FavouriteModelProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -18,6 +18,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     
     var categories: [String] = []
     let offersModel = OffersModel()
+    let favouriteModel = FavouriteModel()
     var offers: [OfferModel] = []
     var filteredOffers: [OfferModel] = []
     var maxDistance: Int = 50
@@ -34,6 +35,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         offersModel.delegate = self
+        favouriteModel.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         refreshControl = UIRefreshControl()
@@ -136,7 +138,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func didPressFavouriteButton(_ tag: Int) {
-        offersModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
+        favouriteModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
