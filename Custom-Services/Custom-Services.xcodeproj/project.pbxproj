@@ -28,6 +28,7 @@
 		38B8E8801F3377E100769AF3 /* CategoriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */; };
 		38C3F59D1F30A96300C611B6 /* OffersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59C1F30A96300C611B6 /* OffersListViewController.swift */; };
 		38C3F59F1F30AAEC00C611B6 /* OfferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */; };
+		38CEE2EA1F3E0948004A17E1 /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CEE2E91F3E0948004A17E1 /* LocationDetailsViewController.swift */; };
 		38CF352E1F3B3FD1009A81B1 /* CreditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CF352D1F3B3FD1009A81B1 /* CreditTextField.swift */; };
 		38CF35301F3B5972009A81B1 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */; };
 		38DD46461F339BF000EFA95A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DD46451F339BF000EFA95A /* Utils.swift */; };
@@ -82,6 +83,7 @@
 		38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewCell.swift; sourceTree = "<group>"; };
 		38C3F59C1F30A96300C611B6 /* OffersListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffersListViewController.swift; sourceTree = "<group>"; };
 		38C3F59E1F30AAEC00C611B6 /* OfferModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfferModel.swift; sourceTree = "<group>"; };
+		38CEE2E91F3E0948004A17E1 /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDetailsViewController.swift; sourceTree = "<group>"; };
 		38CF352D1F3B3FD1009A81B1 /* CreditTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditTextField.swift; sourceTree = "<group>"; };
 		38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		38DD46451F339BF000EFA95A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				389D41371F39CC4100EBF3A9 /* RegisterViewController.swift */,
 				389D413B1F39DF3D00EBF3A9 /* ProfileViewController.swift */,
 				38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */,
+				38CEE2E91F3E0948004A17E1 /* LocationDetailsViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -549,6 +552,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38B8E87E1F333E7B00769AF3 /* PopoverFiltersViewController.swift in Sources */,
+				38CEE2EA1F3E0948004A17E1 /* LocationDetailsViewController.swift in Sources */,
 				38C3F59F1F30AAEC00C611B6 /* OfferModel.swift in Sources */,
 				38A5B28E1F2F7B2800D8F418 /* AppDelegate.swift in Sources */,
 				38742C8E1F378A74008FF09B /* InitialViewController.swift in Sources */,

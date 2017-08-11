@@ -144,6 +144,7 @@ class Utils: NSObject {
         for offer in offers.dropFirst(numberOfFirsts + 1) {
             if UserDefaults.standard.value(forKey: "type") as! String != "location" && (onlyAvailableOffers ? offer.quantity! > 0 : true) {
                 if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
+                    currentOffer.quantity! += offer.quantity!
                     if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
                         let discounts = currentOffer.discountRange?.components(separatedBy: "-")
                         if Float(discounts![0])! - offer.discount! > 0 {

@@ -34,12 +34,14 @@ class OffersTableViewCell: UITableViewCell {
         
         //cell layout
         containerView.layer.cornerRadius = 10
+        containerView.layer.borderWidth = 1
+        containerView.layer.borderColor = UIColor.lightGray.cgColor
         containerView.layer.shadowColor = UIColor.lightGray.cgColor
         containerView.layer.shadowOffset = CGSize(width:-2, height:2)
         containerView.layer.shadowRadius = 3
         containerView.layer.shadowOpacity = 0.6
-        containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.lightGray.cgColor
+        containerView.layer.masksToBounds = false
+        containerView.clipsToBounds = false
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -98,7 +100,7 @@ class OffersTableViewCell: UITableViewCell {
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
         }
         if quantity == 0 {
-            finishedImage.image = UIImage(named: "soldOut.png")
+            finishedImage.image = UIImage(named: UserDefaults.standard.value(forKey: "type") as! String == "product" ? "soldOut.png" : "fullyBooked.png")
             finishedImage.isHidden = false
         } else {
             finishedImage.isHidden = true

@@ -128,6 +128,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let locationDetailsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "locationDetailsViewController"))! as! LocationDetailsViewController
+        locationDetailsViewController.locationId = offers[indexPath.row].locationId!
+        locationDetailsViewController.favourite = offers[indexPath.row].favourite!
+        self.navigationController?.pushViewController(locationDetailsViewController , animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -180,6 +184,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             if let offerId = Int((receivedOffers[i]["offer_id"] as? String)!),
                 let locationId = Int((receivedOffers[i]["location_id"] as? String)!),
                 let name = receivedOffers[i]["name"] as? String,
+                let address = receivedOffers[i]["address"] as? String,
+                let about = receivedOffers[i]["about"] as? String,
                 let discount = Float((receivedOffers[i]["discount"] as? String)!),
                 let startingTime = receivedOffers[i]["starting_time"] as? String,
                 let endingTime = receivedOffers[i]["ending_time"] as? String,
@@ -191,6 +197,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 item.id = offerId
                 item.locationId = locationId
                 item.name = name
+                item.address = address
+                item.about = about
                 item.rating = Float(rating)
                 item.discount = Float(discount)
                 item.minTime = Utils.instance.trimSeconds(time: startingTime)
@@ -342,8 +350,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     func initializeDropdown() {
         dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
             ({ () -> (Void) in
-//                let nextView:UIViewController = (self.storyboard?.instantiateViewController(withIdentifier: "changePWD"))!
-//                self.navigationController?.pushViewController(nextView , animated: true)
                 self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
             }),
             ({ () -> (Void) in print("CONTACT US!") }),
