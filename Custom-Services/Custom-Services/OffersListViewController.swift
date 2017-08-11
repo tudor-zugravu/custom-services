@@ -62,7 +62,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             offersModel.requestOffers(hasCategories: true)
@@ -172,7 +171,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func offersReceived(_ receivedOffers: [[String:Any]]) {
-        
         var offersAux: [OfferModel] = []
         var item:OfferModel;
         
@@ -324,9 +322,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 offers = offersAux
             }
         }
-        offers = Utils.instance.removeDuplicateLocations(offers: offers)
         offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
-        
+        offers = Utils.instance.sortOffers(offers: offers, sortBy: 0)
+        offers = Utils.instance.removeDuplicateLocations(offers: offers)
+        offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
         tableView.reloadData()
     }
     

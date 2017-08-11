@@ -25,13 +25,23 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
     }
     
     func systemDataReceived(_ systemData: [String:Any]) {
-        if let hasCredit = systemData["has_credit"] as? Bool,
-           let hasCategories = systemData["has_categories"] as? Bool {
-            print("\(hasCredit) \(hasCategories)")
-            UserDefaults.standard.set(hasCredit, forKey: "hasCredit")
-            UserDefaults.standard.set(hasCategories, forKey: "hasCategories")
+        if (systemData["error"] as? String) != nil {
+            let alert = UIAlertController(title: "Error",
+                                          message: "System cannot be loaded at this moment" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
+        } else if let type = systemData["type"] as? String,
+                    let hasCategories = systemData["has_categories"] as? String {
+            UserDefaults.standard.set(type, forKey: "type")
+            if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                UserDefaults.standard.set(false, forKey: "hasCredit")
+            } else {
+                UserDefaults.standard.set(true, forKey: "hasCredit")
+            }
+            UserDefaults.standard.set(hasCategories == "1" ? true : false, forKey: "hasCategories")
             
-            if hasCategories {
+            if hasCategories == "1" {
                 systemModel.requestCategories()
             } else {
                 if let email = UserDefaults.standard.value(forKey: "email") as? String,
@@ -80,7 +90,6 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
             UserDefaults.standard.set(name, forKey:"name");
             UserDefaults.standard.set(email, forKey:"email");
             UserDefaults.standard.set(password, forKey:"password");
-            
             if UserDefaults.standard.bool(forKey: "hasCredit") == true {
                 if let credit = Float((response["credit"] as? String)!) {
                     UserDefaults.standard.set(credit, forKey:"credit");

@@ -54,7 +54,11 @@ class Utils: NSObject {
                 return false
             }
             return true
-        }).sorted(by: { (offer1, offer2) -> Bool in
+        })
+    }
+    
+    func sortOffers(offers: [OfferModel], sortBy: Int) -> [OfferModel] {
+        return offers.sorted(by: { (offer1, offer2) -> Bool in
             switch sortBy {
             case 0:
                 if offer1.distance! < offer2.distance! {
@@ -70,11 +74,20 @@ class Utils: NSObject {
                 }
                 break
             default:
-                if offer1.discount! - offer2.discount! > 0 {
-                    return true
-                }
-                if offer1.rating! == offer2.rating! && offer1.distance! < offer2.distance! {
-                    return true
+                if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                    if offer1.discount! - offer2.discount! > 0 {
+                        return true
+                    }
+                    if offer1.rating! == offer2.rating! && offer1.distance! < offer2.distance! {
+                        return true
+                    }
+                } else {
+                    if offer2.discount! - offer1.discount! > 0 {
+                        return true
+                    }
+                    if offer2.rating! == offer1.rating! && offer2.distance! < offer1.distance! {
+                        return true
+                    }
                 }
             }
             return false
@@ -83,19 +96,13 @@ class Utils: NSObject {
     
     func removeDuplicateLocations(offers: [OfferModel]) -> [OfferModel] {
         
-        let preOrderedOffers = offers.sorted(by: { (offer1, offer2) -> Bool in
-            if offer1.distance! < offer2.distance! {
-                return true
-            }
-            return false
-        })
-        guard let firstOffer = preOrderedOffers.first else {
+        guard let firstOffer = offers.first else {
             return [] // Empty array
         }
         var currentOffer = firstOffer
         var uniqueOffers = [currentOffer] // Keep first element
         
-        for offer in preOrderedOffers.dropFirst() {
+        for offer in offers.dropFirst() {
             if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
                 if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
                     let discounts = currentOffer.discountRange?.components(separatedBy: "-")

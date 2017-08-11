@@ -37,7 +37,6 @@ class OffersModel: NSObject, URLSessionDataDelegate {
             let paramString = "userId=\(userId)&hasCategories=\(hasCategories)"
             
             request.httpBody = paramString.data(using: String.Encoding.utf8)
-            
             let task = session.dataTask(with: request, completionHandler: {
                 (data, response, error) in
                 
@@ -51,7 +50,6 @@ class OffersModel: NSObject, URLSessionDataDelegate {
                     // Sending the received JSON
                     let parsedData = try JSONSerialization.jsonObject(with: data!, options: []) as! [[String:Any]]
                     DispatchQueue.main.async(execute: { () -> Void in
-                        
                         // Calling the success handler asynchroniously
                         self.delegate.offersReceived(parsedData)
                     })

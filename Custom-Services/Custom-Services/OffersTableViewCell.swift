@@ -68,10 +68,18 @@ class OffersTableViewCell: UITableViewCell {
         ratingLabel.text = "\(String(format: "%.1f", rating))"
         let dist: String = distance < 1200 ? "\(distance) m" : "\(String(format: "%.1f", Float(distance)/1000)) km"
         distanceLabel.text = dist
-        if discountRange != nil && discountRange != "" {
-            priceLabel.text = "\(discountRange!)% OFF"
+        if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+            if discountRange != nil && discountRange != "" {
+                priceLabel.text = "\(discountRange!)% OFF"
+            } else {
+                priceLabel.text = "\(discount)% OFF"
+            }
         } else {
-            priceLabel.text = "\(discount)% OFF"
+            if discountRange != nil && discountRange != "" {
+                priceLabel.text = "\(discountRange!)% GBP"
+            } else {
+                priceLabel.text = "\(discount)% GBP"
+            }
         }
         timeLabel.text = "\(minTime) - \(maxTime)"
         
