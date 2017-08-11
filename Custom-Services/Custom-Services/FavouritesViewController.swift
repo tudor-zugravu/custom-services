@@ -189,7 +189,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
             if let offerId = Int((receivedOffers[i]["offer_id"] as? String)!),
                 let locationId = Int((receivedOffers[i]["location_id"] as? String)!),
                 let name = receivedOffers[i]["name"] as? String,
-                let discount = Int((receivedOffers[i]["discount"] as? String)!),
+                let discount = Float((receivedOffers[i]["discount"] as? String)!),
                 let startingTime = receivedOffers[i]["starting_time"] as? String,
                 let endingTime = receivedOffers[i]["ending_time"] as? String,
                 let rating = Float((receivedOffers[i]["rating"] as? String)!),
@@ -203,7 +203,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                     item.locationId = locationId
                     item.name = name
                     item.rating = Float(rating)
-                    item.discount = Int(discount)
+                    item.discount = Float(discount)
                     item.minTime = Utils.instance.trimSeconds(time: startingTime)
                     item.maxTime = Utils.instance.trimSeconds(time: endingTime)
                     item.latitude = Double(latitude)
@@ -331,7 +331,9 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
         offers = Utils.instance.filterOffers(offers: offers, distance: maxDistance, minTime: minTime, maxTime: maxTime, sortBy: sortBy, onlyAvailableOffers: onlyAvailableOffers, allCategories: allCategories, allowedCategories: allowedCategories)
-        offers = Utils.instance.removeDuplicateLocations(offers: offers)
+        offers = Utils.instance.sortOffers(offers: offers, sortBy: 0)
+        offers = Utils.instance.removeDuplicateLocations(offers: offers, onlyAvailableOffers: onlyAvailableOffers)
+        offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
         
         tableView.reloadData()
     }

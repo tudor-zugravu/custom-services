@@ -74,18 +74,44 @@ class Utils: NSObject {
                 }
                 break
             default:
+                var offer1Discount: Float = 0
+                var offer2Discount: Float = 0
                 if UserDefaults.standard.value(forKey: "type") as! String == "location" {
-                    if offer1.discount! - offer2.discount! > 0 {
+                    if offer1.discountRange != nil && offer1.discountRange != "" {
+                        let discounts = offer1.discountRange?.components(separatedBy: "-")
+                        offer1Discount = Float(discounts![1])!
+                    } else {
+                        offer1Discount = offer1.discount!
+                    }
+                    if offer2.discountRange != nil && offer2.discountRange != "" {
+                        let discounts = offer2.discountRange?.components(separatedBy: "-")
+                        offer2Discount = Float(discounts![1])!
+                    } else {
+                        offer2Discount = offer2.discount!
+                    }
+                    if offer1Discount - offer2Discount > 0 {
                         return true
                     }
-                    if offer1.rating! == offer2.rating! && offer1.distance! < offer2.distance! {
+                    if fabs(offer1Discount - offer2Discount) < 0.000001 && offer1.distance! < offer2.distance! {
                         return true
                     }
                 } else {
-                    if offer2.discount! - offer1.discount! > 0 {
+                    if offer1.discountRange != nil && offer1.discountRange != "" {
+                        let discounts = offer1.discountRange?.components(separatedBy: "-")
+                        offer1Discount = Float(discounts![0])!
+                    } else {
+                        offer1Discount = offer1.discount!
+                    }
+                    if offer2.discountRange != nil && offer2.discountRange != "" {
+                        let discounts = offer2.discountRange?.components(separatedBy: "-")
+                        offer2Discount = Float(discounts![0])!
+                    } else {
+                        offer2Discount = offer2.discount!
+                    }
+                    if offer2Discount - offer1Discount > 0 {
                         return true
                     }
-                    if offer2.rating! == offer1.rating! && offer2.distance! < offer1.distance! {
+                    if fabs(offer1Discount - offer2Discount) < 0.000001 && offer2.distance! < offer1.distance! {
                         return true
                     }
                 }
@@ -94,29 +120,84 @@ class Utils: NSObject {
         })
     }
     
-    func removeDuplicateLocations(offers: [OfferModel]) -> [OfferModel] {
+    func removeDuplicateLocations(offers: [OfferModel], onlyAvailableOffers: Bool) -> [OfferModel] {
         
         guard let firstOffer = offers.first else {
             return [] // Empty array
         }
+        
         var currentOffer = firstOffer
+        var numberOfFirsts = 0
+        
+        if onlyAvailableOffers && UserDefaults.standard.value(forKey: "type") as! String != "location" {
+            while currentOffer.quantity! == 0 {
+                numberOfFirsts += 1
+                if numberOfFirsts == offers.count {
+                    return []
+                } else {
+                    currentOffer = offers[numberOfFirsts]
+                }
+            }
+        }
         var uniqueOffers = [currentOffer] // Keep first element
         
-        for offer in offers.dropFirst() {
-            if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
-                if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
-                    let discounts = currentOffer.discountRange?.components(separatedBy: "-")
-                    if Int(discounts![0])! > offer.discount! {
-                        currentOffer.discountRange = "\(offer.discount!)-\(discounts![1])"
-                    } else if Int(discounts![1])! < offer.discount! {
-                        currentOffer.discountRange = "\(discounts![0])-\(offer.discount!)"
+        for offer in offers.dropFirst(numberOfFirsts + 1) {
+            if UserDefaults.standard.value(forKey: "type") as! String != "location" && (onlyAvailableOffers ? offer.quantity! > 0 : true) {
+                if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
+                    if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
+                        let discounts = currentOffer.discountRange?.components(separatedBy: "-")
+                        if Float(discounts![0])! - offer.discount! > 0 {
+                            if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                                currentOffer.discountRange = "\(Int(offer.discount!))-\(discounts![1])"
+                            } else {
+                                currentOffer.discountRange = "\(offer.discount!)-\(discounts![1])"
+                            }
+                        } else if Float(discounts![1])! - offer.discount! < 0 {
+                            if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                                currentOffer.discountRange = "\(discounts![0])-\(Int(offer.discount!))"
+                            } else {
+                                currentOffer.discountRange = "\(discounts![0])-\(offer.discount!)"
+                            }
+                        }
+                    } else {
+                        if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                            currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(Int(offer.discount!))-\(Int(currentOffer.discount!))" : "\(Int(currentOffer.discount!))-\(Int(offer.discount!))"
+                        } else {
+                            currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(offer.discount!)-\(currentOffer.discount!)" : "\(currentOffer.discount!)-\(offer.discount!)"
+                        }
                     }
                 } else {
-                    currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(offer.discount!)-\(currentOffer.discount!)" : "\(currentOffer.discount!)-\(offer.discount!)"
+                    currentOffer = offer
+                    uniqueOffers.append(currentOffer) // Found a different element
                 }
-            } else {
-                currentOffer = offer
-                uniqueOffers.append(currentOffer) // Found a different element
+            } else if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id {
+                    if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
+                        let discounts = currentOffer.discountRange?.components(separatedBy: "-")
+                        if Float(discounts![0])! - offer.discount! > 0 {
+                            if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                                currentOffer.discountRange = "\(Int(offer.discount!))-\(discounts![1])"
+                            } else {
+                                currentOffer.discountRange = "\(offer.discount!)-\(discounts![1])"
+                            }
+                        } else if Float(discounts![1])! - offer.discount! < 0 {
+                            if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                                currentOffer.discountRange = "\(discounts![0])-\(Int(offer.discount!))"
+                            } else {
+                                currentOffer.discountRange = "\(discounts![0])-\(offer.discount!)"
+                            }
+                        }
+                    } else {
+                        if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                            currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(Int(offer.discount!))-\(Int(currentOffer.discount!))" : "\(Int(currentOffer.discount!))-\(Int(offer.discount!))"
+                        } else {
+                            currentOffer.discountRange = currentOffer.discount! > offer.discount! ? "\(offer.discount!)-\(currentOffer.discount!)" : "\(currentOffer.discount!)-\(offer.discount!)"
+                        }
+                    }
+                } else {
+                    currentOffer = offer
+                    uniqueOffers.append(currentOffer) // Found a different element
+                }
             }
         }
         return uniqueOffers

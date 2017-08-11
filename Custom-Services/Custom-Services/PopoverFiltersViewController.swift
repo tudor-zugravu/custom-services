@@ -105,7 +105,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         case 1:
             return "Rating"
         default:
-            return "Discount"
+            return UserDefaults.standard.value(forKey: "type") as! String == "location" ? "Discount" : "Price"
         }
     }
     

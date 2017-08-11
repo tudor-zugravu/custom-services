@@ -62,7 +62,7 @@ class OffersTableViewCell: UITableViewCell {
         delegate?.didPressFavouriteButton(self.tag)
     }
     
-    func configureCell(_ name: String, rating: Float, distance: Int, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, discountRange: String?) {
+    func configureCell(_ name: String, rating: Float, distance: Int, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, discountRange: String?) {
         
         nameLabel.text = name
         ratingLabel.text = "\(String(format: "%.1f", rating))"
@@ -72,13 +72,17 @@ class OffersTableViewCell: UITableViewCell {
             if discountRange != nil && discountRange != "" {
                 priceLabel.text = "\(discountRange!)% OFF"
             } else {
-                priceLabel.text = "\(discount)% OFF"
+                if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+                    priceLabel.text = "\(Int(discount))% OFF"
+                } else {
+                    priceLabel.text = "\(discount)% OFF"
+                }
             }
         } else {
             if discountRange != nil && discountRange != "" {
-                priceLabel.text = "\(discountRange!)% GBP"
+                priceLabel.text = "\(discountRange!) GBP"
             } else {
-                priceLabel.text = "\(discount)% GBP"
+                priceLabel.text = "\(discount) GBP"
             }
         }
         timeLabel.text = "\(minTime) - \(maxTime)"

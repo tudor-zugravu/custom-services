@@ -19,7 +19,7 @@ class OfferModel: NSObject, NSCoding {
     var distance: Int?
     var latitude: Double?
     var longitude: Double?
-    var discount: Int?
+    var discount: Float?
     var minTime: String?
     var maxTime: String?
     var offerImage: String?
@@ -36,7 +36,7 @@ class OfferModel: NSObject, NSCoding {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(id: Int, locationId: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Int, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
+    init(id: Int, locationId: Int, name: String, rating: Float, latitude: Double, longitude: Double, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
         
         self.id = id
         self.locationId = locationId
@@ -62,7 +62,7 @@ class OfferModel: NSObject, NSCoding {
         self.distance = decoder.decodeObject(forKey: "distance") as? Int
         self.latitude = decoder.decodeObject(forKey: "latitude") as? Double
         self.longitude = decoder.decodeObject(forKey: "longitude") as? Double
-        self.discount = decoder.decodeObject(forKey: "discount") as? Int
+        self.discount = decoder.decodeObject(forKey: "discount") as? Float
         self.minTime = decoder.decodeObject(forKey: "minTime") as? String ?? ""
         self.maxTime = decoder.decodeObject(forKey: "maxTime") as? String ?? ""
         self.offerImage = decoder.decodeObject(forKey: "offerImage") as? String ?? ""

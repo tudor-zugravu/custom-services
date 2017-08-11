@@ -990,7 +990,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="LpA-f0-EeK" kind="presentation" identifier="favouritesFiltersViewController" id="6pm-L4-RzR"/>
+                                            <segue destination="LpA-f0-EeK" kind="presentation" identifier="favouritesFiltersViewController" modalTransitionStyle="crossDissolve" id="6pm-L4-RzR"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drinkUpLogo" translatesAutoresizingMaskIntoConstraints="NO" id="ypH-v1-xdN">
@@ -1964,7 +1964,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="kDh-A5-mZT"/>
-        <segue reference="O2K-jm-d0p"/>
         <segue reference="G5r-Dl-bFs"/>
+        <segue reference="6pm-L4-RzR"/>
     </inferredMetricsTieBreakers>
 </document>
