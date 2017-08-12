@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, FavouriteModelProtocol, RatingModelProtocol {
+class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, FavouriteModelProtocol, RatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol {
 
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -38,15 +38,25 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     var favourite: Bool = false
     let favouriteModel = FavouriteModel()
     let ratingModel = RatingModel()
+    let checkoutModel = CheckoutModel()
+    let appointmentsModel = CheckoutModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         favouriteModel.delegate = self
         ratingModel.delegate = self
+        checkoutModel.delegate = self
+        appointmentsModel.delegate = self
+        self.initializeDropdown()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
         
         if (UserDefaults.standard.value(forKey: "storedOffers") != nil) {
             if let data = UserDefaults.standard.data(forKey: "storedOffers"),
@@ -54,58 +64,56 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 offers = offersAux.filter({ $0.locationId == locationId})
             }
         }
-//        print(offers)
+        print(offers)
         
         titleLabel.text = offers[0].name!
         ratingLabel.text = "\(String(format: "%.1f", offers[0].rating!))"
         addressLabel.text = offers[0].address;
         timeIntervalLabel.text = "\(offers[0].minTime!) - \(offers[0].maxTime!)"
         aboutLabel.text = offers[0].about
+        checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
         
+        if UserDefaults.standard.value(forKey: "type") as! String == "service" {
+            timeIntervalStack.isHidden = false
+            timeIntervalPickerView.dataSource = self
+            timeIntervalPickerView.delegate = self
+            timeIntervalPickerView.selectRow(0, inComponent: 0, animated: false)
+        } else {
+            timeIntervalStack.isHidden = true
+        }
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             if offers.count == 1 {
-                oneCategoryDiscountLabel.text = "\(offers[0].discount!) discount"
+                oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(offers[0].discount!) discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
                 oneCategoryDiscountLabel.isHidden = false
                 categoryStack.isHidden = true
             } else {
-                categoryLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "Discount for" : "The price for"
+                categoryLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "The discount for" : "The price for"
                 oneCategoryDiscountLabel.isHidden = true
                 categoryStack.isHidden = false
                 categoryPickerView.dataSource = self
                 categoryPickerView.delegate = self
                 categoryPickerView.selectRow(0, inComponent: 0, animated: false)
+                discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))%" : "\(offers[0].discount!) GBP"
             }
         } else {
-            oneCategoryDiscountLabel.text = "\(offers[0].discount!)"
+            oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(offers[0].discount!) discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
             oneCategoryDiscountLabel.isHidden = false
             categoryStack.isHidden = true
         }
-        
+        if UserDefaults.standard.value(forKey: "type") as! String != "location" && offers[0].quantity! == 0 {
+            checkoutButton.isEnabled = false;
+            checkoutButton.alpha = 0.5
+        }
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+            ratingStack.isHidden = false
             rateLocationButton.isHidden = false
             checkoutButton.isHidden = true
         } else {
+            ratingStack.isHidden = true
             rateLocationButton.isHidden = true
             checkoutButton.isHidden = false
         }
-        
-            
-//            if discountRange != nil && discountRange != "" {
-//                priceLabel.text = "\(discountRange!)% OFF"
-//            } else {
-//                if UserDefaults.standard.value(forKey: "type") as! String == "location" {
-//                    priceLabel.text = "\(Int(discount))% OFF"
-//                } else {
-//                    priceLabel.text = "\(discount)% OFF"
-//                }
-//            }
-//        } else {
-//            if discountRange != nil && discountRange != "" {
-//                priceLabel.text = "\(discountRange!) GBP"
-//            } else {
-//                priceLabel.text = "\(discount) GBP"
-//            }
         
         //TODO: add global default photos
         logoImage.image = offers[0].offerLogo != "" ? UIImage(named: offers[0].offerLogo!) : UIImage(named: "stChristophersLogo")
@@ -115,14 +123,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         } else {
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
         }
-//        if quantity == 0 {
-//            finishedImage.image = UIImage(named: UserDefaults.standard.value(forKey: "type") as! String == "product" ? "soldOut.png" : "fullyBooked.png")
-//            finishedImage.isHidden = false
-//        } else {
-//            finishedImage.isHidden = true
-//        }
-        
-        
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -130,19 +130,33 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerView == categoryPickerView ? offers.count : 1
+        if pickerView == categoryPickerView {
+            return offers.count
+        }
+        
+        if UserDefaults.standard.bool(forKey: "hasCategories") == true && offers.count > 1 {
+            return offers[categoryPickerView.selectedRow(inComponent: 0)].quantity!
+        }
+        return offers[0].quantity!
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == categoryPickerView {
             return offers[row].category!
         }
-        return ""
+        return Utils.instance.getTime(time: row)
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == categoryPickerView {
             discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[row].discount!))%" : "\(offers[row].discount!) GBP"
+            if UserDefaults.standard.value(forKey: "type") as! String != "location" && offers[row].quantity! == 0 {
+                checkoutButton.isEnabled = false
+                checkoutButton.alpha = 0.5
+            } else {
+                checkoutButton.isEnabled = true
+                checkoutButton.alpha = 1
+            }
         }
     }
     
@@ -153,8 +167,11 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    func appointmentsReceived(_ appointments: [[String:Any]]) {
+        print(appointments)
+    }
+    
     func ratingResponse(_ result: NSString) {
-        print(result)
         if result == "true" {
             ratingLabel.text = "\(rating)"
             let alert = UIAlertController(title: "Success",
@@ -170,6 +187,72 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    func productCheckoutResponse(_ result: [String:Any]) {
+        
+        if let status = result["status"] as? String {
+            print(status)
+            switch status {
+                case "success":
+                    let alert = UIAlertController(title: "Offer purchased",
+                                                  message: "Voucher added to you receipts" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    break
+                case "offer_expired":
+                    let alert = UIAlertController(title: "Unsuccessful",
+                                                  message: "Offer has sold out" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity = 0
+                    checkoutButton.isEnabled = false
+                    checkoutButton.alpha = 0.5
+                    break
+                case "user_does_not_exist":
+                    let alert = UIAlertController(title: "Error",
+                                                  message: "You have been disconnected" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                    self.signOut(Any.self)
+                    break
+                case "same_quantity":
+                    print("checkout error: \(status)")
+                    showErrorMessage()
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    break
+                case "no_receipt":
+                    print("checkout error: \(status)")
+                    showErrorMessage()
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    break
+                case "insufficient_credit":
+                    let alert = UIAlertController(title: "Insufficient credit",
+                                                  message: "Please top up" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                    break
+                default:
+                    print("checkout error: \(status)")
+                    showErrorMessage()
+                    break
+            }
+        } else {
+            showErrorMessage()
+        }
+    }
+    
+    func showErrorMessage() {
+        let alert = UIAlertController(title: "Error",
+                                      message: "Please try again" as String, preferredStyle:.alert)
+        let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+        alert.addAction(done)
+        self.present(alert, animated: true, completion: nil)
+    }
 
     @IBAction func starButtonPressed(_ sender: AnyObject) {
         (self.view.viewWithTag(2) as? UIButton)?.setImage(UIImage(named: sender.tag >= 2 ? "starRatingFull.png" : "starRatingEmpty.png"), for: UIControlState.normal)
@@ -184,7 +267,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     @IBAction func checkoutButtonPressed(_ sender: Any) {
-        
+        let alert = UIAlertController(title: "Checkout",
+                                      message: "Purchase this offer for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP?" as String, preferredStyle:.alert)
+        let yes = UIAlertAction(title: "Yes", style: .default, handler: {
+            alert -> Void in
+            self.checkoutModel.productCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!)
+        })
+        alert.addAction(yes)
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alert.addAction(cancel)
+        self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func rateLocationButtonPressed(_ sender: Any) {
@@ -207,5 +299,29 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     @IBAction func backButtonPressed(_ sender: Any) {
         let _ = navigationController?.popViewController(animated: true)
     }
+    
+    // Create the dropdown menu
+    func initializeDropdown() {
+        dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
+            ({ () -> (Void) in
+                self.performSegue(withIdentifier: "locationDetailsProfileViewController", sender: nil)
+            }),
+            ({ () -> (Void) in print("CONTACT US!") }),
+            ({ () -> (Void) in
+                self.signOut(Any.self)
+            })])
+    }
+    
+    // Called to dismiss the keyboard from the screen
+    func dismissMenu(gestureRecognizer: UITapGestureRecognizer) {
+        if !self.dropdownMenuButton.table.frame.contains(gestureRecognizer.location(in: self.view)) && !self.dropdownMenuButton.frame.contains(gestureRecognizer.location(in: self.view)) {
+            dropdownMenuButton.hideMenu()
+        }
+    }
 
+    func signOut(_ sender: Any) {
+        
+        Utils.instance.signOut()
+        _ = self.navigationController?.popToRootViewController(animated: true)
+    }
 }

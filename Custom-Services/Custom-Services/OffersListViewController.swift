@@ -220,6 +220,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                     item.quantity = -1
                 }
                 
+                if let appointmentDuration = receivedOffers[i]["appointment_minute_duration"] as? String {
+                    item.appointmentDuration = Int(appointmentDuration)
+                } else {
+                    item.appointmentDuration = -1
+                }
+                
                 if let favourite = receivedOffers[i]["favourite"] as? String {
                         item.favourite = favourite == "1" ? true : false
                 } else {

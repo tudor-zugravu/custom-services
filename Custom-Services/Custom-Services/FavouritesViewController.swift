@@ -227,6 +227,12 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                         item.quantity = -1
                     }
                     
+                    if let appointmentDuration = receivedOffers[i]["appointment_minute_duration"] as? String {
+                        item.appointmentDuration = Int(appointmentDuration)
+                    } else {
+                        item.appointmentDuration = -1
+                    }
+                    
                     item.favourite = true
                     
                     if let logoImage = receivedOffers[i]["logo_image"] as? String {

@@ -30,6 +30,7 @@ class OfferModel: NSObject, NSCoding {
     var quantity: Int?
     var category: String?
     var discountRange: String?
+    var appointmentDuration: Int?
     
     //empty constructor
     override init()
@@ -38,7 +39,7 @@ class OfferModel: NSObject, NSCoding {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(id: Int, locationId: Int, name: String, address: String, about: String, rating: Float, latitude: Double, longitude: Double, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int) {
+    init(id: Int, locationId: Int, name: String, address: String, about: String, rating: Float, latitude: Double, longitude: Double, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, appointmentDuration: Int) {
         
         self.id = id
         self.locationId = locationId
@@ -56,6 +57,7 @@ class OfferModel: NSObject, NSCoding {
         self.offerLogo = offerLogo
         self.favourite = favourite
         self.quantity = quantity
+        self.appointmentDuration = appointmentDuration
     }
     
     required init(coder decoder: NSCoder) {
@@ -76,6 +78,7 @@ class OfferModel: NSObject, NSCoding {
         self.favourite = decoder.decodeObject(forKey: "favourite") as? Bool
         self.quantity = decoder.decodeObject(forKey: "quantity") as? Int
         self.category = decoder.decodeObject(forKey: "category") as? String ?? ""
+        self.appointmentDuration = decoder.decodeObject(forKey: "appointmentDuration") as? Int
     }
     
     func encode(with coder: NSCoder) {
@@ -96,6 +99,7 @@ class OfferModel: NSObject, NSCoding {
         coder.encode(favourite, forKey: "favourite")
         coder.encode(quantity, forKey: "quantity")
         coder.encode(category, forKey: "category")
+        coder.encode(appointmentDuration, forKey: "appointmentDuration")
     }
     
     func setDistance(location: CLLocation) {
@@ -104,6 +108,6 @@ class OfferModel: NSObject, NSCoding {
     
     //prints object's current state
     override var description: String {
-        return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Name: \(String(describing: name)), Address: \(String(describing: address)), About: \(String(describing: about)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Discount: \(String(describing: discount)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), OfferImage: \(String(describing: offerImage)), OfferLogo: \(String(describing: offerLogo)), Favourite: \(String(describing: favourite)), Quantity: \(String(describing: quantity)), Category: \(String(describing: category))"
+        return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Name: \(String(describing: name)), Address: \(String(describing: address)), About: \(String(describing: about)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Discount: \(String(describing: discount)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), OfferImage: \(String(describing: offerImage)), OfferLogo: \(String(describing: offerLogo)), Favourite: \(String(describing: favourite)), Quantity: \(String(describing: quantity)), AppointmentDuration: \(String(describing: appointmentDuration)), Category: \(String(describing: category))"
     }
 }

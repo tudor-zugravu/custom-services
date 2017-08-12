@@ -100,12 +100,12 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch row {
-        case 0:
-            return "Distance"
-        case 1:
-            return "Rating"
-        default:
-            return UserDefaults.standard.value(forKey: "type") as! String == "location" ? "Discount" : "Price"
+            case 0:
+                return "Distance"
+            case 1:
+                return "Rating"
+            default:
+                return UserDefaults.standard.value(forKey: "type") as! String == "location" ? "Discount" : "Price"
         }
     }
     
