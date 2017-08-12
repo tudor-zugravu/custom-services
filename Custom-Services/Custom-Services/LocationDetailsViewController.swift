@@ -33,13 +33,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     
     var offers: [OfferModel] = []
     var categories: [String] = []
+    var timeIntervals: [String] = []
     var locationId: Int = 0
     var rating: Int = 2
     var favourite: Bool = false
+    var startingTime: String = "08:00"
+    var duration: Int = 1
     let favouriteModel = FavouriteModel()
     let ratingModel = RatingModel()
     let checkoutModel = CheckoutModel()
-    let appointmentsModel = CheckoutModel()
+    let appointmentsModel = AppointmentsModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,8 +67,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 offers = offersAux.filter({ $0.locationId == locationId})
             }
         }
-        print(offers)
-        
         titleLabel.text = offers[0].name!
         ratingLabel.text = "\(String(format: "%.1f", offers[0].rating!))"
         addressLabel.text = offers[0].address;
@@ -74,6 +75,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
         
         if UserDefaults.standard.value(forKey: "type") as! String == "service" {
+            appointmentsModel.requestAppointments(offerId: offers[0].id!, index: 0)
+            startingTime = offers[0].minTime!
+            duration = offers[0].appointmentDuration!
             timeIntervalStack.isHidden = false
             timeIntervalPickerView.dataSource = self
             timeIntervalPickerView.delegate = self
@@ -133,29 +137,30 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         if pickerView == categoryPickerView {
             return offers.count
         }
-        
-        if UserDefaults.standard.bool(forKey: "hasCategories") == true && offers.count > 1 {
-            return offers[categoryPickerView.selectedRow(inComponent: 0)].quantity!
-        }
-        return offers[0].quantity!
+        return timeIntervals.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == categoryPickerView {
             return offers[row].category!
         }
-        return Utils.instance.getTime(time: row)
+        return timeIntervals[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == categoryPickerView {
             discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[row].discount!))%" : "\(offers[row].discount!) GBP"
             if UserDefaults.standard.value(forKey: "type") as! String != "location" && offers[row].quantity! == 0 {
+                timeIntervals.removeAll(keepingCapacity: false)
+                timeIntervalPickerView.reloadAllComponents()
                 checkoutButton.isEnabled = false
                 checkoutButton.alpha = 0.5
             } else {
                 checkoutButton.isEnabled = true
                 checkoutButton.alpha = 1
+                appointmentsModel.requestAppointments(offerId: offers[row].id!, index: row)
+                startingTime = offers[row].minTime!
+                duration = offers[row].appointmentDuration!
             }
         }
     }
@@ -167,8 +172,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
-    func appointmentsReceived(_ appointments: [[String:Any]]) {
-        print(appointments)
+    func appointmentsReceived(_ appointments: [[String:Any]], index: Int) {
+        var appointmentsAux: [Int] = []
+        
+        for i in 0 ..< appointments.count {
+            if let startingTime = Int((appointments[i]["appointment_starting"] as? String)!) {
+                appointmentsAux.append(startingTime)
+            }
+        }
+        timeIntervals = Utils.instance.getTimeIntervals(startingTime: offers[index].minTime!, endingTime: offers[index].maxTime!, duration: offers[index].appointmentDuration!, appointments: appointmentsAux)
+        timeIntervalPickerView.reloadAllComponents()
     }
     
     func ratingResponse(_ result: NSString) {
@@ -189,17 +202,20 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     func productCheckoutResponse(_ result: [String:Any]) {
-        
         if let status = result["status"] as? String {
-            print(status)
             switch status {
                 case "success":
                     let alert = UIAlertController(title: "Offer purchased",
-                                                  message: "Voucher added to you receipts" as String, preferredStyle:.alert)
+                                                  message: "Voucher added to your receipts" as String, preferredStyle:.alert)
                     let done = UIAlertAction(title: "Done", style: .default, handler: nil)
                     alert.addAction(done)
                     self.present(alert, animated: true, completion: nil)
                     UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
+                    if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                        checkoutButton.isEnabled = false
+                        checkoutButton.alpha = 0.5
+                    }
                     break
                 case "offer_expired":
                     let alert = UIAlertController(title: "Unsuccessful",
@@ -228,6 +244,11 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                     print("checkout error: \(status)")
                     showErrorMessage()
                     UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
+                    if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                        checkoutButton.isEnabled = false
+                        checkoutButton.alpha = 0.5
+                    }
                     break
                 case "insufficient_credit":
                     let alert = UIAlertController(title: "Insufficient credit",
@@ -240,6 +261,76 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                     print("checkout error: \(status)")
                     showErrorMessage()
                     break
+            }
+        } else {
+            showErrorMessage()
+        }
+    }
+    
+    func serviceCheckoutResponse(_ result: [String:Any]) {
+        if let status = result["status"] as? String {
+            switch status {
+            case "success":
+                let alert = UIAlertController(title: "Offer purchased",
+                                              message: "Voucher added to your receipts" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                timeIntervals.remove(at: self.timeIntervalPickerView.selectedRow(inComponent: 0))
+                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
+                timeIntervalPickerView.reloadAllComponents()
+                if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                    checkoutButton.isEnabled = false
+                    checkoutButton.alpha = 0.5
+                }
+                break
+            case "offer_expired":
+                let alert = UIAlertController(title: "Unsuccessful",
+                                              message: "Offer has sold out" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity = 0
+                timeIntervals.removeAll(keepingCapacity: false)
+                timeIntervalPickerView.reloadAllComponents()
+                checkoutButton.isEnabled = false
+                checkoutButton.alpha = 0.5
+                break
+            case "user_does_not_exist":
+                let alert = UIAlertController(title: "Error",
+                                              message: "You have been disconnected" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+                self.signOut(Any.self)
+                break
+            case "same_quantity":
+                print("checkout error: \(status)")
+                showErrorMessage()
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                break
+            case "no_receipt":
+                print("checkout error: \(status)")
+                showErrorMessage()
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
+                if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                    checkoutButton.isEnabled = false
+                    checkoutButton.alpha = 0.5
+                }
+                break
+            case "insufficient_credit":
+                let alert = UIAlertController(title: "Insufficient credit",
+                                              message: "Please top up" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+                break
+            default:
+                print("checkout error: \(status)")
+                showErrorMessage()
+                break
             }
         } else {
             showErrorMessage()
@@ -267,29 +358,44 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     @IBAction func checkoutButtonPressed(_ sender: Any) {
-        let alert = UIAlertController(title: "Checkout",
-                                      message: "Purchase this offer for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP?" as String, preferredStyle:.alert)
-        let yes = UIAlertAction(title: "Yes", style: .default, handler: {
-            alert -> Void in
-            self.checkoutModel.productCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!)
-        })
-        alert.addAction(yes)
-        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        alert.addAction(cancel)
-        self.present(alert, animated: true, completion: nil)
+        if UserDefaults.standard.value(forKey: "type") as! String == "product" {
+            let alert = UIAlertController(title: "Checkout",
+                                          message: "Purchase this offer for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP?" as String, preferredStyle:.alert)
+            let yes = UIAlertAction(title: "Yes", style: .default, handler: {
+                alert -> Void in
+                self.checkoutModel.productCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!)
+            })
+            alert.addAction(yes)
+            let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            alert.addAction(cancel)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Checkout",
+                                          message: "Book an appointment for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP in between \(timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])?" as String, preferredStyle:.alert)
+            let yes = UIAlertAction(title: "Yes", style: .default, handler: {
+                alert -> Void in
+                self.checkoutModel.serviceCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!, appointment: Utils.instance.getIndex(startingTime: self.startingTime, duration: self.duration, time: self.timeIntervals[self.timeIntervalPickerView.selectedRow(inComponent: 0)]))
+            })
+            alert.addAction(yes)
+            let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            alert.addAction(cancel)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
+    
     
     @IBAction func rateLocationButtonPressed(_ sender: Any) {
         let alert = UIAlertController(title: "Rating",
                                       message: "Give \(offers[0].name!) a \(rating) star rating?" as String, preferredStyle:.alert)
         let yes = UIAlertAction(title: "Yes", style: .default, handler: {
             alert -> Void in
-                self.ratingModel.sendRating(locationId: self.offers[0].locationId!, rating: self.rating)
-            })
+            self.ratingModel.sendRating(locationId: self.offers[0].locationId!, rating: self.rating)
+        })
         alert.addAction(yes)
         let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alert.addAction(cancel)
         self.present(alert, animated: true, completion: nil)
+
     }
 
     @IBAction func favouriteButtonPressed(_ sender: Any) {
