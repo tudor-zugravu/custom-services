@@ -1,8 +1,7 @@
 <?php
 require("database-config.php");
 
-$userId = $_POST['userId'];
-$hasCategories = $_POST['hasCategories'];
+$offerId = $_POST['offerId'];
 
 // Create connection
 $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
@@ -12,18 +11,8 @@ if (mysqli_connect_errno()) {
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-if($hasCategories == "true") {
-	$query = "SELECT *, COALESCE((SELECT favourite from Corelations cor WHERE cor.location_id = loc.location_id and cor.user_id = '$userId'), 0) as favourite
-			FROM Offers
-			NATURAL JOIN Locations loc
-			NATURAL JOIN Vendors
-			NATURAL JOIN Categories;";
-} else {
-	$query = "SELECT *, COALESCE((SELECT favourite from Corelations cor WHERE cor.location_id = loc.location_id and cor.user_id = '$userId'), 0) as favourite
-			FROM Offers
-			NATURAL JOIN Locations loc
-			NATURAL JOIN Vendors;";
-}
+$query = "SELECT appointment_starting FROM Receipts WHERE offer_id = $offerId;";
+
 // Check if there are results
 if ($result = mysqli_query($con, $query)) {
 	// If so, then create a results array and a temporary one
