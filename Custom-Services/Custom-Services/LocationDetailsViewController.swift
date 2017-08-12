@@ -74,21 +74,10 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         aboutLabel.text = offers[0].about
         checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
         
-        if UserDefaults.standard.value(forKey: "type") as! String == "service" {
-            appointmentsModel.requestAppointments(offerId: offers[0].id!, index: 0)
-            startingTime = offers[0].minTime!
-            duration = offers[0].appointmentDuration!
-            timeIntervalStack.isHidden = false
-            timeIntervalPickerView.dataSource = self
-            timeIntervalPickerView.delegate = self
-            timeIntervalPickerView.selectRow(0, inComponent: 0, animated: false)
-        } else {
-            timeIntervalStack.isHidden = true
-        }
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             if offers.count == 1 {
-                oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(offers[0].discount!) discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
+                oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))% discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
                 oneCategoryDiscountLabel.isHidden = false
                 categoryStack.isHidden = true
             } else {
@@ -101,7 +90,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))%" : "\(offers[0].discount!) GBP"
             }
         } else {
-            oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(offers[0].discount!) discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
+            oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))% discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
             oneCategoryDiscountLabel.isHidden = false
             categoryStack.isHidden = true
         }
@@ -117,6 +106,17 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             ratingStack.isHidden = true
             rateLocationButton.isHidden = true
             checkoutButton.isHidden = false
+        }
+        if UserDefaults.standard.value(forKey: "type") as! String == "service" {
+            appointmentsModel.requestAppointments(offerId: offers[0].id!, index: 0)
+            startingTime = offers[0].minTime!
+            duration = offers[0].appointmentDuration!
+            timeIntervalStack.isHidden = false
+            timeIntervalPickerView.dataSource = self
+            timeIntervalPickerView.delegate = self
+            timeIntervalPickerView.selectRow(0, inComponent: 0, animated: false)
+        } else {
+            timeIntervalStack.isHidden = true
         }
         
         //TODO: add global default photos
@@ -382,8 +382,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             self.present(alert, animated: true, completion: nil)
         }
     }
-    
-    
+
     @IBAction func rateLocationButtonPressed(_ sender: Any) {
         let alert = UIAlertController(title: "Rating",
                                       message: "Give \(offers[0].name!) a \(rating) star rating?" as String, preferredStyle:.alert)
@@ -395,7 +394,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alert.addAction(cancel)
         self.present(alert, animated: true, completion: nil)
-
     }
 
     @IBAction func favouriteButtonPressed(_ sender: Any) {

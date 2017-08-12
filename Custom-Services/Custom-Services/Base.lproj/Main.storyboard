@@ -721,7 +721,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Xuu-hU-lCp"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="bDr-xe-3QN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="1100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1150"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNF-aO-OdQ" userLabel="NavigationView">
@@ -786,7 +786,7 @@
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="msM-1H-5wu">
-                                <rect key="frame" x="0.0" y="72" width="375" height="976"/>
+                                <rect key="frame" x="0.0" y="72" width="375" height="1026"/>
                                 <subviews>
                                     <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zlP-pN-6ui">
                                         <rect key="frame" x="20" y="30" width="335" height="973.5"/>
@@ -1055,7 +1055,7 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="kGT-MY-wuy">
                                                 <rect key="frame" x="42.5" y="823.5" width="250" height="150"/>
                                                 <subviews>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYG-t8-Qcd">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYG-t8-Qcd">
                                                         <rect key="frame" x="0.0" y="0.0" width="250" height="40"/>
                                                         <color key="backgroundColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
@@ -1076,15 +1076,15 @@
                                                             <action selector="editButtonPressed:" destination="XWV-7o-XtR" eventType="touchUpInside" id="4o0-wv-vWu"/>
                                                         </connections>
                                                     </button>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RiH-2v-gei">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yq9-Iu-fsi">
                                                         <rect key="frame" x="0.0" y="55" width="250" height="40"/>
                                                         <color key="backgroundColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="250" id="il5-kk-Kk7"/>
-                                                            <constraint firstAttribute="height" constant="40" id="z5J-wM-dWd"/>
+                                                            <constraint firstAttribute="width" constant="250" id="AQU-Fg-bTP"/>
+                                                            <constraint firstAttribute="height" constant="40" id="Y0U-FM-vMD"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                                        <state key="normal" title="Rate location">
+                                                        <state key="normal" title="Purchase Offer">
                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </state>
                                                         <userDefinedRuntimeAttributes>
@@ -1093,9 +1093,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="checkoutButtonPressed:" destination="zKm-Zt-BgK" eventType="touchUpInside" id="JRr-RZ-S8v"/>
-                                                            <action selector="editButtonPressed:" destination="XWV-7o-XtR" eventType="touchUpInside" id="qjY-qP-NcX"/>
-                                                            <action selector="rateLocationButtonPressed:" destination="zKm-Zt-BgK" eventType="touchUpInside" id="RwK-RS-ZLm"/>
+                                                            <action selector="editButtonPressed:" destination="XWV-7o-XtR" eventType="touchUpInside" id="hwk-2n-udg"/>
+                                                            <action selector="rateLocationButtonPressed:" destination="zKm-Zt-BgK" eventType="touchUpInside" id="gof-Ky-qlz"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g5v-ul-NUl">
@@ -1132,14 +1131,14 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvR-RO-33N" userLabel="BottomBorder">
-                                <rect key="frame" x="0.0" y="1048" width="375" height="2"/>
+                                <rect key="frame" x="0.0" y="1098" width="375" height="2"/>
                                 <color key="backgroundColor" red="0.80392156859999997" green="0.84313725490000002" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="RLY-tA-O0w"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mdj-l6-ATJ" userLabel="NavigationView">
-                                <rect key="frame" x="0.0" y="1050" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="1100" width="375" height="50"/>
                                 <color key="backgroundColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="akJ-5N-Swe"/>
@@ -1167,7 +1166,7 @@
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="1100"/>
+                    <size key="freeformSize" width="375" height="1150"/>
                     <connections>
                         <outlet property="aboutLabel" destination="EFN-bs-gyx" id="wqS-VA-MS1"/>
                         <outlet property="addressLabel" destination="FKs-RG-s9N" id="hn8-ct-5aJ"/>
@@ -1181,7 +1180,7 @@
                         <outlet property="locationImage" destination="WA2-gB-VWr" id="m7J-UA-HMq"/>
                         <outlet property="logoImage" destination="A10-3g-CDy" id="2sU-vl-dmy"/>
                         <outlet property="oneCategoryDiscountLabel" destination="zgP-4U-fPO" id="Itu-i0-Kkf"/>
-                        <outlet property="rateLocationButton" destination="RiH-2v-gei" id="eT6-e6-Zb4"/>
+                        <outlet property="rateLocationButton" destination="yq9-Iu-fsi" id="AhX-gb-Jcf"/>
                         <outlet property="ratingLabel" destination="xsC-lp-fGY" id="RZ3-ye-vR2"/>
                         <outlet property="ratingStack" destination="6XT-eA-Bqi" id="oq6-Np-4tf"/>
                         <outlet property="stackView" destination="zlP-pN-6ui" id="jPS-pG-hlH"/>
@@ -1194,7 +1193,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EZ8-E3-ACa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="797.60000000000002" y="-4.497751124437781"/>
+            <point key="canvasLocation" x="798" y="-4"/>
         </scene>
         <!--Favourites View Controller-->
         <scene sceneID="9fz-OO-aRX">
