@@ -12,6 +12,8 @@ class ReceiptModel: NSObject, NSCoding {
     
     //properties
     var id: Int?
+    var locationId: Int?
+    var favourite: Bool?
     var offerId: Int?
     var name: String?
     var timeInterval: String?
@@ -26,9 +28,11 @@ class ReceiptModel: NSObject, NSCoding {
     }
     
     //construct with @name, @email and @telephone parameters
-    init(id: Int, offerId: Int, name: String, timeInterval: String, discount: Float, offerLogo: String, redeemed: Int) {
+    init(id: Int, locationId: Int, favourite: Bool, offerId: Int, name: String, timeInterval: String, discount: Float, offerLogo: String, redeemed: Int) {
         
         self.id = id
+        self.locationId = locationId
+        self.favourite = favourite
         self.offerId = offerId
         self.name = name
         self.timeInterval = timeInterval
@@ -39,6 +43,8 @@ class ReceiptModel: NSObject, NSCoding {
     
     required init(coder decoder: NSCoder) {
         self.id = decoder.decodeObject(forKey: "id") as? Int
+        self.locationId = decoder.decodeObject(forKey: "locationId") as? Int
+        self.favourite = decoder.decodeObject(forKey: "favourite") as? Bool
         self.offerId = decoder.decodeObject(forKey: "offerId") as? Int
         self.name = decoder.decodeObject(forKey: "name") as? String ?? ""
         self.timeInterval = decoder.decodeObject(forKey: "timeInterval") as? String ?? ""
@@ -48,6 +54,8 @@ class ReceiptModel: NSObject, NSCoding {
     }
     
     func encode(with coder: NSCoder) {
+        coder.encode(locationId, forKey: "locationId")
+        coder.encode(favourite, forKey: "favourite")
         coder.encode(id, forKey: "id")
         coder.encode(offerId, forKey: "offerId")
         coder.encode(name, forKey: "name")
@@ -59,6 +67,6 @@ class ReceiptModel: NSObject, NSCoding {
     
     //prints object's current state
     override var description: String {
-        return "ID: \(String(describing: id)), OfferId: \(String(describing: offerId)), Name: \(String(describing: name)), TimeInterval: \(String(describing: timeInterval)), Discount: \(String(describing: discount)), OfferLogo: \(String(describing: offerLogo)), Redeemed: \(String(describing: redeemed))"
+        return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Favourite: \(String(describing: favourite)), OfferId: \(String(describing: offerId)), Name: \(String(describing: name)), TimeInterval: \(String(describing: timeInterval)), Discount: \(String(describing: discount)), OfferLogo: \(String(describing: offerLogo)), Redeemed: \(String(describing: redeemed))"
     }
 }

@@ -356,16 +356,26 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     
     // Create the dropdown menu
     func initializeDropdown() {
-        dropdownMenuButton.initMenu(["View Profile", "View Receipts", "Sign Out"], actions: [
-            ({ () -> (Void) in
-                self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
-            }),
-            ({ () -> (Void) in
-                self.performSegue(withIdentifier: "offersReceiptsViewController", sender: nil)
-            }),
-            ({ () -> (Void) in
-                self.signOut(Any.self) 
-            })])
+        if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+            dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
+                ({ () -> (Void) in
+                    self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
+                }),
+                ({ () -> (Void) in
+                    self.signOut(Any.self)
+                })])
+        } else {
+            dropdownMenuButton.initMenu(["View Profile", "View Receipts", "Sign Out"], actions: [
+                ({ () -> (Void) in
+                    self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
+                }),
+                ({ () -> (Void) in
+                    self.performSegue(withIdentifier: "offersReceiptsViewController", sender: nil)
+                }),
+                ({ () -> (Void) in
+                    self.signOut(Any.self) 
+                })])
+        }
     }
 
     func signOut(_ sender: Any) {

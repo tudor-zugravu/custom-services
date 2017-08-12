@@ -44,9 +44,14 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     let checkoutModel = CheckoutModel()
     let appointmentsModel = AppointmentsModel()
     
+    let hour = Calendar.current.component(.hour, from: Date()) < 10 ? "0\(Calendar.current.component(.hour, from: Date()))" : "\(Calendar.current.component(.hour, from: Date()))"
+    let minute = Calendar.current.component(.minute, from: Date()) < 10 ? "0\(Calendar.current.component(.minute, from: Date()))" : "\(Calendar.current.component(.minute, from: Date()))"
+    var currentTime = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        currentTime = "\(hour):\(minute)"
         favouriteModel.delegate = self
         ratingModel.delegate = self
         checkoutModel.delegate = self
@@ -72,7 +77,18 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         addressLabel.text = offers[0].address;
         timeIntervalLabel.text = "\(offers[0].minTime!) - \(offers[0].maxTime!)"
         aboutLabel.text = offers[0].about
-        checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
+        
+        if UserDefaults.standard.value(forKey: "type") as! String != "location" {
+            if currentTime > offers[0].maxTime! {
+                checkoutButton.isEnabled = false;
+                checkoutButton.alpha = 0.5
+                checkoutButton.setTitle("Offer expired", for: UIControlState.disabled)
+            } else {
+                checkoutButton.isEnabled = true;
+                checkoutButton.alpha = 1
+                checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
+            }
+        }
         
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
@@ -156,8 +172,15 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 checkoutButton.isEnabled = false
                 checkoutButton.alpha = 0.5
             } else {
-                checkoutButton.isEnabled = true
-                checkoutButton.alpha = 1
+                if currentTime > offers[row].maxTime! {
+                    checkoutButton.isEnabled = false;
+                    checkoutButton.alpha = 0.5
+                    checkoutButton.setTitle("Offer expired", for: UIControlState.disabled)
+                } else {
+                    checkoutButton.isEnabled = true;
+                    checkoutButton.alpha = 1
+                    checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
+                }
                 appointmentsModel.requestAppointments(offerId: offers[row].id!, index: row)
                 startingTime = offers[row].minTime!
                 duration = offers[row].appointmentDuration!
@@ -406,16 +429,30 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     
     // Create the dropdown menu
     func initializeDropdown() {
-        dropdownMenuButton.initMenu(["View Profile", "Contact Us", "Sign Out"], actions: [
-            ({ () -> (Void) in
-                self.performSegue(withIdentifier: "locationDetailsProfileViewController", sender: nil)
-            }),
-            ({ () -> (Void) in
-                self.performSegue(withIdentifier: "locationDetailsReceiptsViewController", sender: nil)
-            }),
-            ({ () -> (Void) in
-                self.signOut(Any.self)
-            })])
+        if UserDefaults.standard.value(forKey: "type") as! String == "location" {
+            dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
+                ({ () -> (Void) in
+                    self.performSegue(withIdentifier: "locationDetailsProfileViewController", sender: nil)
+                }),
+                ({ () -> (Void) in
+                    self.signOut(Any.self)
+                })])
+        } else {
+            dropdownMenuButton.initMenu(["View Profile", "View Receipts", "Sign Out"], actions: [
+                ({ () -> (Void) in
+                    self.performSegue(withIdentifier: "locationDetailsProfileViewController", sender: nil)
+                }),
+                ({ () -> (Void) in
+                    if self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)! - 2] is ReceiptsViewController {
+                        _ = self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.performSegue(withIdentifier: "locationDetailsReceiptsViewController", sender: nil)
+                    }
+                }),
+                ({ () -> (Void) in
+                    self.signOut(Any.self)
+                })])
+        }
     }
     
     // Called to dismiss the keyboard from the screen

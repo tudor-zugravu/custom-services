@@ -12,9 +12,9 @@ class ReceiptsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var offerLogoImage: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var timeIntervalLabel: UILabel!
-    @IBOutlet weak var discountLabel: UILabel!
+    @IBOutlet weak var titleLabel: UnderlinedLabel!
+    @IBOutlet weak var timeIntervalLabel: UnderlinedLabel!
+    @IBOutlet weak var discountLabel: UnderlinedLabel!
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var starButton: UIButton!
     @IBOutlet weak var rateButton: UIButton!
@@ -32,10 +32,6 @@ class ReceiptsTableViewCell: UITableViewCell {
         containerView.layer.shadowOpacity = 0.6
         containerView.layer.masksToBounds = false
         containerView.clipsToBounds = false
-        availableView.layer.borderWidth = 1
-        availableView.layer.borderColor = UIColor.lightGray.cgColor
-        availableView.layer.masksToBounds = false
-        availableView.clipsToBounds = false
     }
     
     func configureCell(_ name: String, discount: Float, timeInterval: String, offerLogo: String, redeemed: Int) {
@@ -48,8 +44,7 @@ class ReceiptsTableViewCell: UITableViewCell {
             discountLabel.text = "\(discount) GBP"
         }
         
-        // TODO customize
-        if redeemed > 0 {
+        if redeemed == 1 {
             starButton.isEnabled = true
             starButton.alpha = 1
             rateButton.isEnabled = true
@@ -59,7 +54,8 @@ class ReceiptsTableViewCell: UITableViewCell {
             starButton.alpha = 0.5
             rateButton.isEnabled = false
             rateButton.alpha = 0.5
-        }        
+        }
+        availableView.backgroundColor = redeemed > 0 ? UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1) : UIColor(red: 16 / 255.0, green: 173 / 255.0, blue: 203 / 255.0, alpha: 1)
     }
 
     @IBAction func rateLocationPressed(_ sender: Any) {

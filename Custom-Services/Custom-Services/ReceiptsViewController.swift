@@ -101,52 +101,144 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         return cell
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let receiptCell = cell as! ReceiptsTableViewCell
-        receiptCell.availableView.backgroundColor = receipts[indexPath.row].redeemed! > 0 ? UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1) : UIColor(red: 16 / 255.0, green: 173 / 255.0, blue: 203 / 255.0, alpha: 1)
-    }
-    
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-
-        let redeem = UITableViewRowAction(style: .normal, title: "Redeem offer") { action, index in
-            print("redeem")
+        var title = ""
+        switch receipts[indexPath.row].redeemed! {
+        case 0:
+            title = "Redeem offer"
+            break
+        case 1:
+            title = "Offer redeemed"
+            break
+        default:
+            title = "Receipt expired"
+            break
+        }
+        let redeem = UITableViewRowAction(style: .normal, title: title) { action, index in
+            if self.receipts[indexPath.row].redeemed! == 0 {
+                let alert = UIAlertController(title: "Redeem offer",
+                                              message: "The receipt is valid only if redeemed by the vendor. Please present the phone to the vendor. Proceed?" as String, preferredStyle:.alert)
+                let yes = UIAlertAction(title: "Yes", style: .default, handler: {
+                    alert -> Void in
+                    self.receiptsModel.redeem(receiptId: self.receipts[indexPath.row].id!, row: indexPath.row)
+                })
+                alert.addAction(yes)
+                let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                alert.addAction(cancel)
+                self.present(alert, animated: true, completion: nil)
+            }
         }
         redeem.backgroundColor = receipts[indexPath.row].redeemed! > 0 ? UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1) : UIColor(red: 16 / 255.0, green: 173 / 255.0, blue: 203 / 255.0, alpha: 1)
         
         return [redeem]
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let locationDetailsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "locationDetailsViewController"))! as! LocationDetailsViewController
+        locationDetailsViewController.locationId = receipts[indexPath.row].locationId!
+        locationDetailsViewController.favourite = receipts[indexPath.row].favourite!
+        self.navigationController?.pushViewController(locationDetailsViewController , animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func redeemStatus(_ result: [String:Any], row: Int) {
+        if let status = result["status"] as? String {
+            if status == "success" {
+                refreshTable()
+                let alert = UIAlertController(title: "Offer redeemed",
+                                              message: "" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Error",
+                                              message: "There has been a problem with your receipt" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            }
+        } else {
+            let alert = UIAlertController(title: "Error",
+                                          message: "There has been a problem with your receipt" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     func receiptsReceived(_ receipts: [[String:Any]]) {
         
+        let delayedTime = Calendar.current.date(byAdding: .minute, value: -30, to: Date())
+        let year = Calendar.current.component(.year, from: delayedTime!)
+        let month = Calendar.current.component(.month, from: delayedTime!) < 10 ? "0\(Calendar.current.component(.month, from: delayedTime!))" : "\(Calendar.current.component(.month, from: delayedTime!))"
+        let day = Calendar.current.component(.day, from: delayedTime!) < 10 ? "0\(Calendar.current.component(.day, from: delayedTime!))" : "\(Calendar.current.component(.day, from: delayedTime!))"
+        let hour = Calendar.current.component(.hour, from: delayedTime!) < 10 ? "0\(Calendar.current.component(.hour, from: delayedTime!))" : "\(Calendar.current.component(.hour, from: delayedTime!))"
+        let minute = Calendar.current.component(.minute, from: delayedTime!) < 10 ? "0\(Calendar.current.component(.minute, from: delayedTime!))" : "\(Calendar.current.component(.minute, from: delayedTime!))"
+        
+        let currentDate = "\(year)-\(month)-\(day)"
+        let currentTime = "\(hour):\(minute)"
+
         var receiptsAux: [ReceiptModel] = []
         var item:ReceiptModel;
-        
         // parse the received JSON and save the contacts
         for i in 0 ..< receipts.count {
-            print(receipts)
+
             if let receiptId = Int((receipts[i]["receipt_id"] as? String)!),
+                let locationId = Int((receipts[i]["location_id"] as? String)!),
                 let offerId = Int((receipts[i]["offer_id"] as? String)!),
                 let name = receipts[i]["name"] as? String,
                 let discount = Float((receipts[i]["discount"] as? String)!),
                 let startingTime = receipts[i]["starting_time"] as? String,
                 let endingTime = receipts[i]["ending_time"] as? String,
+                let purchaseDate = receipts[i]["purchase_date"] as? String,
                 let redeemed = Int((receipts[i]["redeemed"] as? String)!)
             {
                 item = ReceiptModel()
                 item.id = receiptId
+                item.locationId = locationId
                 item.offerId = offerId
                 item.name = name
                 item.discount = discount
                 item.redeemed = redeemed
                 
+                if let favourite = receipts[i]["favourite"] as? String {
+                    item.favourite = favourite == "1" ? true : false
+                } else {
+                    item.favourite = false
+                }
+                
+                let timeInterval = purchaseDate.components(separatedBy: " ")[0]
+                
                 if UserDefaults.standard.value(forKey: "type") as! String == "product" {
-                    item.timeInterval = "\(Utils.instance.trimSeconds(time: startingTime)) - \(Utils.instance.trimSeconds(time: endingTime))"
+                    item.timeInterval = "\(timeInterval) \(Utils.instance.trimSeconds(time: startingTime)) - \(Utils.instance.trimSeconds(time: endingTime))"
+                    if currentDate <= timeInterval {
+                        if endingTime < currentTime {
+                            item.redeemed = item.redeemed == 1 ? 1 : 2
+                        }
+                    } else {
+                        item.redeemed = item.redeemed == 1 ? 1 : 2
+                    }
                 } else {
                     if let appointment = Int((receipts[i]["appointment_starting"] as? String)!),
                         let duration = Int((receipts[i]["appointment_minute_duration"] as? String)!){
-                        item.timeInterval = Utils.instance.getTimeInterval(startingTime: startingTime, duration: duration, appointment: appointment)
+                        item.timeInterval = "\(timeInterval) \(Utils.instance.getTimeInterval(startingTime: startingTime, duration: duration, appointment: appointment))"
+                        let timeComponents = item.timeInterval?.components(separatedBy: " ")
+                        if currentDate <= timeInterval {
+                            if (timeComponents?[1])! < currentTime {
+                                item.redeemed = item.redeemed == 1 ? 1 : 2
+                            }
+                        } else {
+                            item.redeemed = item.redeemed == 1 ? 1 : 2
+                        }
                     } else {
-                        item.timeInterval = "\(Utils.instance.trimSeconds(time: startingTime)) - \(Utils.instance.trimSeconds(time: endingTime))"
+                        item.timeInterval = "\(timeInterval) \(Utils.instance.trimSeconds(time: startingTime)) - \(Utils.instance.trimSeconds(time: endingTime))"
+                        if currentDate <= timeInterval {
+                            if endingTime < currentTime {
+                                item.redeemed = item.redeemed == 1 ? 1 : 2
+                            }
+                        } else {
+                            item.redeemed = item.redeemed == 1 ? 1 : 2
+                        }
                     }
                 }
                 
@@ -179,7 +271,12 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
                 receiptsAux.append(item)
             }
         }
-        self.receipts = receiptsAux
+        self.receipts = receiptsAux.sorted(by: { (receipt1, receipt2) -> Bool in
+            if receipt1.timeInterval!.compare(receipt2.timeInterval!) == .orderedAscending {
+                return true
+            }
+            return false
+        })
         
         let storedReceipts = NSKeyedArchiver.archivedData(withRootObject: self.receipts)
         UserDefaults.standard.set(storedReceipts, forKey:"storedReceipts");
