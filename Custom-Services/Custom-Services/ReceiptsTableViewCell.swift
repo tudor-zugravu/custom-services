@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ReceiptsListCellProtocol : class {
+    func didPressRatingButton(_ tag: Int)
+}
+
 class ReceiptsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var containerView: UIView!
@@ -18,6 +22,8 @@ class ReceiptsTableViewCell: UITableViewCell {
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var starButton: UIButton!
     @IBOutlet weak var rateButton: UIButton!
+    
+    weak var delegate: ReceiptsListCellProtocol?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,6 +65,6 @@ class ReceiptsTableViewCell: UITableViewCell {
     }
 
     @IBAction func rateLocationPressed(_ sender: Any) {
-        print("RATE")
+        delegate?.didPressRatingButton(self.tag)
     }
 }

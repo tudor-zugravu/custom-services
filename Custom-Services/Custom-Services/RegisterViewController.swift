@@ -85,7 +85,6 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
                 UserDefaults.standard.set(passwordTextField.text!, forKey:"password");
                 UserDefaults.standard.set(0, forKey:"credit");
                 UserDefaults.standard.set("", forKey:"profilePicture");
-                print("\(insertId) \(nameTextField.text!) \(emailTextField.text!) \(passwordTextField.text!)")
                 self.performSegue(withIdentifier: "registerTabBarViewController", sender: nil)
             }
         } else {

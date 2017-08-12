@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ReceiptsModelProtocol  {
+class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ReceiptsModelProtocol, ReceiptsListCellProtocol, CheckoutRatingModelProtocol  {
         
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -18,6 +18,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
     var filteredReceipts: [ReceiptModel] = []
     var searchOn : Bool = false
     var receiptsModel = ReceiptsModel()
+    var checkoutRatingModel = CheckoutRatingModel()
     var refreshControl: UIRefreshControl!
         
     override func viewDidLoad() {
@@ -27,6 +28,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         tableView.dataSource = self
         searchBar.delegate = self
         receiptsModel.delegate = self
+        checkoutRatingModel.delegate = self
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to reload offers")
         refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControlEvents.valueChanged)
@@ -94,6 +96,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
             return ReceiptsTableViewCell()
         }
         cell.tag = indexPath.row
+        cell.delegate = self
         
         let item: ReceiptModel = searchOn ? filteredReceipts[indexPath.row] : receipts[indexPath.row]
         cell.configureCell(item.name!, discount: item.discount!, timeInterval: item.timeInterval!, offerLogo: item.offerLogo!, redeemed: item.redeemed!)
@@ -139,6 +142,65 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         locationDetailsViewController.favourite = receipts[indexPath.row].favourite!
         self.navigationController?.pushViewController(locationDetailsViewController , animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func didPressRatingButton(_ tag: Int) {
+        let ratingPopUp = UIAlertController(title: "Rate offer",
+                                              message: "How would you rate your experience on a scale from 1 to 5?" as String, preferredStyle:.alert)
+        ratingPopUp.addTextField { (ratingTextField: UITextField!) -> Void in
+            ratingTextField.keyboardType = .numberPad
+            ratingTextField.placeholder = ""
+        }
+        let rate = UIAlertAction(title: "Save", style: .default, handler: {
+            alert -> Void in
+            let ratingTextField = ratingPopUp.textFields![0] as UITextField
+            if ratingTextField.text != nil && ratingTextField.text != "" && Int(ratingTextField.text!) != nil {
+                if Int(ratingTextField.text!)! >= 1 && Int(ratingTextField.text!)! <= 5 {
+                    self.checkoutRatingModel.sendRating(receiptId: self.receipts[tag].id!, locationId: self.receipts[tag].locationId!, rating: Int(ratingTextField.text!)!)
+                } else {
+                    let alert = UIAlertController(title: "Error",
+                                                  message: "Please enter a valid digit" as String, preferredStyle:.alert)
+                    let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                    alert.addAction(done)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                let alert = UIAlertController(title: "Error",
+                                              message: "Please enter a valid digit" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            }
+        })
+        
+        ratingPopUp.addAction(rate)
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        ratingPopUp.addAction(cancel)
+        self.present(ratingPopUp, animated: true, completion: nil)
+    }
+    
+    func ratingResponse(_ result: [String:Any]) {
+        if let status = result["status"] as? String {
+            if status == "success" {
+                let alert = UIAlertController(title: "Success",
+                                              message: "Thank you for your feedback" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Error",
+                                              message: "Please try again" as String, preferredStyle:.alert)
+                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                alert.addAction(done)
+                self.present(alert, animated: true, completion: nil)
+            }
+        } else {
+            let alert = UIAlertController(title: "Error",
+                                          message: "Please try again" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func redeemStatus(_ result: [String:Any], row: Int) {
