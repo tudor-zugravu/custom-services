@@ -410,7 +410,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             ({ () -> (Void) in
                 self.performSegue(withIdentifier: "locationDetailsProfileViewController", sender: nil)
             }),
-            ({ () -> (Void) in print("CONTACT US!") }),
+            ({ () -> (Void) in
+                self.performSegue(withIdentifier: "locationDetailsReceiptsViewController", sender: nil)
+            }),
             ({ () -> (Void) in
                 self.signOut(Any.self)
             })])

@@ -10,6 +10,10 @@
 		204CD5A97C19D1155731D5F2 /* Pods_Custom_ServicesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C59650E343F02C7E906D88 /* Pods_Custom_ServicesTests.framework */; };
 		380601D01F3925B800387274 /* LogInModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380601CF1F3925B800387274 /* LogInModel.swift */; };
 		380601D21F393B7400387274 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380601D11F393B7400387274 /* LogInViewController.swift */; };
+		3815DC221F3F35510013A55B /* ReceiptsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815DC211F3F35510013A55B /* ReceiptsTableViewCell.swift */; };
+		3815DC241F3F35F00013A55B /* ReceiptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815DC231F3F35F00013A55B /* ReceiptsViewController.swift */; };
+		3815DC261F3F39F20013A55B /* ReceiptModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815DC251F3F39F20013A55B /* ReceiptModel.swift */; };
+		3815DC281F3F3BD40013A55B /* ReceiptsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815DC271F3F3BD40013A55B /* ReceiptsModel.swift */; };
 		386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386222C81F32469C00CDB4F9 /* DropMenuButton.swift */; };
 		38742C8E1F378A74008FF09B /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38742C8D1F378A74008FF09B /* InitialViewController.swift */; };
 		38742C901F378D6D008FF09B /* SystemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38742C8F1F378D6D008FF09B /* SystemModel.swift */; };
@@ -33,7 +37,6 @@
 		38CEE2EE1F3E4E2D004A17E1 /* RatingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CEE2ED1F3E4E2D004A17E1 /* RatingModel.swift */; };
 		38CEE2F01F3E8105004A17E1 /* CheckoutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CEE2EF1F3E8105004A17E1 /* CheckoutModel.swift */; };
 		38CEE2F21F3EAB11004A17E1 /* AppointmentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CEE2F11F3EAB11004A17E1 /* AppointmentsModel.swift */; };
-		38CF352E1F3B3FD1009A81B1 /* CreditTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CF352D1F3B3FD1009A81B1 /* CreditTextField.swift */; };
 		38CF35301F3B5972009A81B1 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */; };
 		38DD46461F339BF000EFA95A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DD46451F339BF000EFA95A /* Utils.swift */; };
 		38EDCA271F307F6C00DEFA0E /* OffersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */; };
@@ -63,6 +66,10 @@
 		22B13185331BF9EE5E529021 /* Pods-Custom-ServicesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Custom-ServicesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Custom-ServicesTests/Pods-Custom-ServicesTests.release.xcconfig"; sourceTree = "<group>"; };
 		380601CF1F3925B800387274 /* LogInModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInModel.swift; sourceTree = "<group>"; };
 		380601D11F393B7400387274 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		3815DC211F3F35510013A55B /* ReceiptsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptsTableViewCell.swift; sourceTree = "<group>"; };
+		3815DC231F3F35F00013A55B /* ReceiptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptsViewController.swift; sourceTree = "<group>"; };
+		3815DC251F3F39F20013A55B /* ReceiptModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptModel.swift; sourceTree = "<group>"; };
+		3815DC271F3F3BD40013A55B /* ReceiptsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiptsModel.swift; sourceTree = "<group>"; };
 		386222C81F32469C00CDB4F9 /* DropMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropMenuButton.swift; sourceTree = "<group>"; };
 		38742C8D1F378A74008FF09B /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		38742C8F1F378D6D008FF09B /* SystemModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemModel.swift; sourceTree = "<group>"; };
@@ -92,7 +99,6 @@
 		38CEE2ED1F3E4E2D004A17E1 /* RatingModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingModel.swift; sourceTree = "<group>"; };
 		38CEE2EF1F3E8105004A17E1 /* CheckoutModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutModel.swift; sourceTree = "<group>"; };
 		38CEE2F11F3EAB11004A17E1 /* AppointmentsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppointmentsModel.swift; sourceTree = "<group>"; };
-		38CF352D1F3B3FD1009A81B1 /* CreditTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditTextField.swift; sourceTree = "<group>"; };
 		38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		38DD46451F339BF000EFA95A /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffersTableViewCell.swift; sourceTree = "<group>"; };
@@ -204,7 +210,7 @@
 			children = (
 				38EDCA261F307F6C00DEFA0E /* OffersTableViewCell.swift */,
 				38B8E87F1F3377E100769AF3 /* CategoriesTableViewCell.swift */,
-				38CF352D1F3B3FD1009A81B1 /* CreditTextField.swift */,
+				3815DC211F3F35510013A55B /* ReceiptsTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -220,6 +226,7 @@
 				389D413B1F39DF3D00EBF3A9 /* ProfileViewController.swift */,
 				38CF352F1F3B5972009A81B1 /* FavouritesViewController.swift */,
 				38CEE2E91F3E0948004A17E1 /* LocationDetailsViewController.swift */,
+				3815DC231F3F35F00013A55B /* ReceiptsViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -237,6 +244,8 @@
 				38CEE2ED1F3E4E2D004A17E1 /* RatingModel.swift */,
 				38CEE2EF1F3E8105004A17E1 /* CheckoutModel.swift */,
 				38CEE2F11F3EAB11004A17E1 /* AppointmentsModel.swift */,
+				3815DC251F3F39F20013A55B /* ReceiptModel.swift */,
+				3815DC271F3F3BD40013A55B /* ReceiptsModel.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -568,13 +577,15 @@
 				38CEE2EA1F3E0948004A17E1 /* LocationDetailsViewController.swift in Sources */,
 				38C3F59F1F30AAEC00C611B6 /* OfferModel.swift in Sources */,
 				38A5B28E1F2F7B2800D8F418 /* AppDelegate.swift in Sources */,
+				3815DC261F3F39F20013A55B /* ReceiptModel.swift in Sources */,
+				3815DC281F3F3BD40013A55B /* ReceiptsModel.swift in Sources */,
+				3815DC241F3F35F00013A55B /* ReceiptsViewController.swift in Sources */,
 				38CEE2EE1F3E4E2D004A17E1 /* RatingModel.swift in Sources */,
 				38742C8E1F378A74008FF09B /* InitialViewController.swift in Sources */,
 				38CEE2EC1F3E46C5004A17E1 /* FavouriteModel.swift in Sources */,
 				38742C921F379442008FF09B /* OffersModel.swift in Sources */,
 				38CF35301F3B5972009A81B1 /* FavouritesViewController.swift in Sources */,
 				38742C901F378D6D008FF09B /* SystemModel.swift in Sources */,
-				38CF352E1F3B3FD1009A81B1 /* CreditTextField.swift in Sources */,
 				389D413C1F39DF3D00EBF3A9 /* ProfileViewController.swift in Sources */,
 				380601D21F393B7400387274 /* LogInViewController.swift in Sources */,
 				386222C91F32469C00CDB4F9 /* DropMenuButton.swift in Sources */,
@@ -587,6 +598,7 @@
 				38CEE2F21F3EAB11004A17E1 /* AppointmentsModel.swift in Sources */,
 				38C3F59D1F30A96300C611B6 /* OffersListViewController.swift in Sources */,
 				38DD46461F339BF000EFA95A /* Utils.swift in Sources */,
+				3815DC221F3F35510013A55B /* ReceiptsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

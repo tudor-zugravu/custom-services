@@ -365,7 +365,9 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
             ({ () -> (Void) in
                 self.performSegue(withIdentifier: "favouritesProfileViewController", sender: nil)
             }),
-            ({ () -> (Void) in print("CONTACT US!") }),
+            ({ () -> (Void) in
+                self.performSegue(withIdentifier: "favouritesReceiptsViewController", sender: nil)
+            }),
             ({ () -> (Void) in
                 self.signOut(Any.self)
             })])

@@ -56,6 +56,11 @@ class Utils: NSObject {
         return (getMinutes(time: timeComponents[0]) - getMinutes(time: startingTime)) / duration
     }
     
+    func getTimeInterval(startingTime: String, duration: Int, appointment: Int) -> String {
+        let start = getMinutes(time: startingTime)
+        return "\(getHour(time: start + appointment * duration))-\(getHour(time: start + (appointment+1) * duration))"
+    }
+    
     func getTimeIntervals(startingTime: String, endingTime: String, duration: Int, appointments: [Int]) -> [String] {
         let start = getMinutes(time: startingTime)
         let end = getMinutes(time: endingTime)

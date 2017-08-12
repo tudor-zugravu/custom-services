@@ -74,11 +74,7 @@ class OffersTableViewCell: UITableViewCell {
             if discountRange != nil && discountRange != "" {
                 priceLabel.text = "\(discountRange!)% OFF"
             } else {
-                if UserDefaults.standard.value(forKey: "type") as! String == "location" {
-                    priceLabel.text = "\(Int(discount))% OFF"
-                } else {
-                    priceLabel.text = "\(discount)% OFF"
-                }
+                priceLabel.text = "\(Int(discount))% OFF"
             }
         } else {
             if discountRange != nil && discountRange != "" {
