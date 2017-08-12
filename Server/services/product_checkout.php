@@ -44,7 +44,7 @@ if (is_null($row)) {
 				$result = mysqli_query($con, $query);
 
 				if($result) {
-					$query = "INSERT INTO Receipts (receipt_id, offer_id, user_id, amount, rating) VALUES (NULL, $offerId, $userId, $price, NULL);";
+					$query = "INSERT INTO Receipts (receipt_id, offer_id, user_id, amount, rating, redeemed, purchase_date) VALUES (NULL, $offerId, $userId, $price, NULL, 0, CURRENT_TIMESTAMP);";
 					$result = mysqli_query($con, $query);
 
 					if($result) {
