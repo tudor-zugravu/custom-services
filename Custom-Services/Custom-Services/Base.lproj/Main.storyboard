@@ -694,25 +694,6 @@
             </objects>
             <point key="canvasLocation" x="-778" y="-702"/>
         </scene>
-        <!--Map-->
-        <scene sceneID="bA3-nK-a17">
-            <objects>
-                <viewController id="mSR-za-bTX" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="AUc-Vr-WTp"/>
-                        <viewControllerLayoutGuide type="bottom" id="csR-QZ-NAV"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="v8t-C6-Agu">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Map" image="mapTab" id="wka-x8-bjD"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Mqg-Uf-8jg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9" y="-3"/>
-        </scene>
         <!--Location Details View Controller-->
         <scene sceneID="A4D-yf-OO6">
             <objects>
@@ -790,7 +771,7 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="1026"/>
                                 <subviews>
                                     <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zlP-pN-6ui">
-                                        <rect key="frame" x="20" y="30" width="335" height="848.5"/>
+                                        <rect key="frame" x="20" y="30" width="335" height="973.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="bottom" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="lN0-l0-phz">
                                                 <rect key="frame" x="65" y="0.0" width="205" height="75"/>
@@ -964,10 +945,10 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="AQY-Jm-0mL">
-                                                <rect key="frame" x="67.5" y="643.5" width="200" height="0.0"/>
+                                                <rect key="frame" x="67.5" y="648.5" width="200" height="82.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select time interval:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXR-ae-sfb">
-                                                        <rect key="frame" x="20" y="0.0" width="160" height="0.0"/>
+                                                        <rect key="frame" x="20" y="0.0" width="160" height="22.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="160" id="cOw-3r-fBO"/>
                                                         </constraints>
@@ -976,7 +957,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eIM-Lc-6g5">
-                                                        <rect key="frame" x="0.0" y="0.0" width="200" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="22.5" width="200" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="60" id="5pY-kE-xHV"/>
                                                             <constraint firstAttribute="width" constant="200" id="BUg-k9-rYp"/>
@@ -985,7 +966,7 @@
                                                 </subviews>
                                             </stackView>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30% discount" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zgP-4U-fPO">
-                                                <rect key="frame" x="0.0" y="643.5" width="335" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="741" width="335" height="22.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="335" id="0sC-cK-HGI"/>
                                                 </constraints>
@@ -994,7 +975,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6XT-eA-Bqi">
-                                                <rect key="frame" x="47.5" y="648.5" width="240" height="40"/>
+                                                <rect key="frame" x="47.5" y="773.5" width="240" height="40"/>
                                                 <subviews>
                                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBk-hh-r6q">
                                                         <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -1054,7 +1035,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="kGT-MY-wuy">
-                                                <rect key="frame" x="42.5" y="698.5" width="250" height="150"/>
+                                                <rect key="frame" x="42.5" y="823.5" width="250" height="150"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYG-t8-Qcd">
                                                         <rect key="frame" x="0.0" y="0.0" width="250" height="40"/>
@@ -1516,6 +1497,129 @@
             </objects>
             <point key="canvasLocation" x="9" y="706"/>
         </scene>
+        <!--Map-->
+        <scene sceneID="gR5-IX-qVn">
+            <objects>
+                <viewController id="Jeu-Jq-pqM" customClass="MapViewController" customModule="Custom_Services" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="HZD-Bi-vRH"/>
+                        <viewControllerLayoutGuide type="bottom" id="tcF-pP-77W"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hA7-ld-omi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X3z-Ia-HGX" userLabel="NavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ncz-qy-w3t" customClass="DropMenuButton" customModule="Custom_Services" customModuleProvider="target">
+                                        <rect key="frame" x="335" y="30" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="Hag-KW-nRy"/>
+                                            <constraint firstAttribute="height" constant="30" id="KJd-nS-Eb8"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="8"/>
+                                        <state key="normal" image="menuButton">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drink Up!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xet-o2-YMd">
+                                        <rect key="frame" x="62" y="32" width="250" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="250" id="3Ax-Fn-Auk"/>
+                                            <constraint firstAttribute="height" constant="30" id="Y6m-ey-9Ae"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Aa-VM-doD" customClass="DropMenuButton" customModule="Custom_Services" customModuleProvider="target">
+                                        <rect key="frame" x="297" y="30" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="SaT-WN-mxM"/>
+                                            <constraint firstAttribute="height" constant="30" id="WCt-H0-42G"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="8"/>
+                                        <state key="normal" image="filterButton">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="LpA-f0-EeK" kind="presentation" identifier="mapFiltersViewController" modalTransitionStyle="crossDissolve" id="IjF-Xs-SDK"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drinkUpLogo" translatesAutoresizingMaskIntoConstraints="NO" id="dZo-9q-xZC">
+                                        <rect key="frame" x="10" y="30" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="6WW-ZS-JAZ"/>
+                                            <constraint firstAttribute="width" constant="30" id="fgW-p6-Q5k"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Ncz-qy-w3t" secondAttribute="trailing" constant="10" id="5Db-Ie-BAg"/>
+                                    <constraint firstAttribute="bottom" secondItem="dZo-9q-xZC" secondAttribute="bottom" constant="10" id="CCS-By-Onm"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ncz-qy-w3t" secondAttribute="bottom" constant="10" id="HHc-hE-bXp"/>
+                                    <constraint firstAttribute="bottom" secondItem="Xet-o2-YMd" secondAttribute="bottom" constant="8" id="IHu-Ao-Ngr"/>
+                                    <constraint firstAttribute="bottom" secondItem="1Aa-VM-doD" secondAttribute="bottom" constant="10" id="aDy-kH-B7G"/>
+                                    <constraint firstItem="Xet-o2-YMd" firstAttribute="centerX" secondItem="X3z-Ia-HGX" secondAttribute="centerX" id="l6D-Tw-tau"/>
+                                    <constraint firstAttribute="height" constant="70" id="o3H-w9-7yY"/>
+                                    <constraint firstItem="Ncz-qy-w3t" firstAttribute="leading" secondItem="1Aa-VM-doD" secondAttribute="trailing" constant="8" id="vRu-Pg-SPL"/>
+                                    <constraint firstItem="dZo-9q-xZC" firstAttribute="leading" secondItem="X3z-Ia-HGX" secondAttribute="leading" constant="10" id="wuj-rX-0cy"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VrS-cW-Ylz" userLabel="TopBorder">
+                                <rect key="frame" x="0.0" y="70" width="375" height="2"/>
+                                <color key="backgroundColor" red="0.80392156859999997" green="0.84313725490000002" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="IST-Tv-7mP"/>
+                                </constraints>
+                            </view>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ajt-pp-Q77">
+                                <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Bcz-6y-Idv"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qj3-1B-Bsq" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="116" width="375" height="502"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="X3z-Ia-HGX" secondAttribute="trailing" id="82h-UE-wdX"/>
+                            <constraint firstItem="VrS-cW-Ylz" firstAttribute="top" secondItem="X3z-Ia-HGX" secondAttribute="bottom" id="8Vk-ha-rrT"/>
+                            <constraint firstItem="qj3-1B-Bsq" firstAttribute="top" secondItem="ajt-pp-Q77" secondAttribute="bottom" id="BJn-ZM-Jta"/>
+                            <constraint firstAttribute="trailing" secondItem="qj3-1B-Bsq" secondAttribute="trailing" id="HOd-tT-znv"/>
+                            <constraint firstItem="ajt-pp-Q77" firstAttribute="top" secondItem="VrS-cW-Ylz" secondAttribute="bottom" id="HkW-8h-YR8"/>
+                            <constraint firstItem="X3z-Ia-HGX" firstAttribute="leading" secondItem="hA7-ld-omi" secondAttribute="leading" id="Xav-Uj-M4D"/>
+                            <constraint firstItem="tcF-pP-77W" firstAttribute="top" secondItem="qj3-1B-Bsq" secondAttribute="bottom" id="Yqn-3k-8fk"/>
+                            <constraint firstAttribute="trailing" secondItem="ajt-pp-Q77" secondAttribute="trailing" id="aCd-83-rgJ"/>
+                            <constraint firstAttribute="trailing" secondItem="VrS-cW-Ylz" secondAttribute="trailing" id="kMc-gX-cVX"/>
+                            <constraint firstItem="qj3-1B-Bsq" firstAttribute="leading" secondItem="hA7-ld-omi" secondAttribute="leading" id="orn-Bw-ieG"/>
+                            <constraint firstItem="X3z-Ia-HGX" firstAttribute="top" secondItem="hA7-ld-omi" secondAttribute="top" id="paK-si-cLM"/>
+                            <constraint firstItem="ajt-pp-Q77" firstAttribute="leading" secondItem="hA7-ld-omi" secondAttribute="leading" id="xGm-bl-3Gi"/>
+                            <constraint firstItem="VrS-cW-Ylz" firstAttribute="leading" secondItem="hA7-ld-omi" secondAttribute="leading" id="yjP-2B-NZ1"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Map" image="mapTab" id="Obl-fa-FO6"/>
+                    <connections>
+                        <outlet property="bottomConstraint" destination="Yqn-3k-8fk" id="Tbc-4K-jLV"/>
+                        <outlet property="dropdownMenuButton" destination="Ncz-qy-w3t" id="vze-Wh-mnG"/>
+                        <outlet property="mapView" destination="qj3-1B-Bsq" id="7W3-fS-6NZ"/>
+                        <outlet property="searchBar" destination="ajt-pp-Q77" id="8ae-ha-Llr"/>
+                        <segue destination="XWV-7o-XtR" kind="show" identifier="mapProfileViewController" id="IbL-k6-iRz"/>
+                        <segue destination="9FX-WX-XjP" kind="show" identifier="mapReceiptsViewController" id="pdz-md-7zI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gDU-JP-cN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8.8000000000000007" y="-3.1484257871064472"/>
+        </scene>
         <!--Initial View Controller-->
         <scene sceneID="sVf-JC-gal">
             <objects>
@@ -1908,8 +2012,8 @@
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="Juq-50-jFp"/>
-                        <segue destination="mSR-za-bTX" kind="relationship" relationship="viewControllers" id="TEt-I5-C9D"/>
-                        <segue destination="azJ-4u-fMS" kind="relationship" relationship="viewControllers" id="1cj-Xs-0f7"/>
+                        <segue destination="Jeu-Jq-pqM" kind="relationship" relationship="viewControllers" id="Ncg-bc-Yrv"/>
+                        <segue destination="azJ-4u-fMS" kind="relationship" relationship="viewControllers" id="2Gp-iK-MfC"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vPj-Ig-0Dd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1921,7 +2025,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Tyg-PI-Vvu" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="OZo-Xk-s0a">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="OZo-Xk-s0a">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2480,8 +2584,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="kDh-A5-mZT"/>
-        <segue reference="O2K-jm-d0p"/>
         <segue reference="257-8O-zt2"/>
+        <segue reference="O2K-jm-d0p"/>
         <segue reference="G5r-Dl-bFs"/>
     </inferredMetricsTieBreakers>
 </document>
