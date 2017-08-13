@@ -101,10 +101,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchOn = false
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        populateMap()
+        searchBar.resignFirstResponder()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -315,25 +313,25 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     
     func populateMap() {
         mapView.clear()
-        for offer in offers {
+        for offer in searchOn ? filteredOffers : offers {
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: CLLocationDegrees(offer.latitude!), longitude: CLLocationDegrees(offer.longitude!))
             marker.infoWindowAnchor = CGPoint(x: 0.5, y:0)
-            marker.accessibilityLabel = "\(offers.index(of: offer)!)"
+            marker.accessibilityLabel = "\(searchOn ? filteredOffers.index(of: offer)! : offers.index(of: offer)!)"
             marker.map = mapView
         }
     }
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
         let locationDetailsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "locationDetailsViewController"))! as! LocationDetailsViewController
-        locationDetailsViewController.locationId = offers[Int(marker.accessibilityLabel!)!].locationId!
-        locationDetailsViewController.favourite = offers[Int(marker.accessibilityLabel!)!].favourite!
+        locationDetailsViewController.locationId = searchOn ? filteredOffers[Int(marker.accessibilityLabel!)!].locationId! : offers[Int(marker.accessibilityLabel!)!].locationId!
+        locationDetailsViewController.favourite = searchOn ? filteredOffers[Int(marker.accessibilityLabel!)!].favourite! : offers[Int(marker.accessibilityLabel!)!].favourite!
         self.navigationController?.pushViewController(locationDetailsViewController , animated: true)
     }
     
     func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+        searchBar.resignFirstResponder()
         let index:Int! = Int(marker.accessibilityLabel!)
-        
         let item: OfferModel = searchOn ? filteredOffers[index] : offers[index]
         
         let mapMarkerView = Bundle.main.loadNibNamed("MapMarkerView", owner: self, options: nil)?[0] as! MapMarkerView
@@ -420,7 +418,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }
-        reloadTable()
     }
     
     // Called to dismiss the keyboard from the screen
