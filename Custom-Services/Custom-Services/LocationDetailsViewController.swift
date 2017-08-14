@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import CoreLocation
+import MapKit
 
-class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol {
+class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol {
 
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -34,6 +36,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     var offers: [OfferModel] = []
     var categories: [String] = []
     var timeIntervals: [String] = []
+    var coordinates: [(Double, Double)] = []
     var locationId: Int = 0
     var rating: Int = 2
     var favourite: Bool = false
@@ -43,6 +46,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     let ratingModel = RatingModel()
     let checkoutModel = CheckoutModel()
     let appointmentsModel = AppointmentsModel()
+    let directionsModel = DirectionsModel()
+    let locationManager = CLLocationManager()
     
     let hour = Calendar.current.component(.hour, from: Date()) < 10 ? "0\(Calendar.current.component(.hour, from: Date()))" : "\(Calendar.current.component(.hour, from: Date()))"
     let minute = Calendar.current.component(.minute, from: Date()) < 10 ? "0\(Calendar.current.component(.minute, from: Date()))" : "\(Calendar.current.component(.minute, from: Date()))"
@@ -56,7 +61,14 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         ratingModel.delegate = self
         checkoutModel.delegate = self
         appointmentsModel.delegate = self
+        directionsModel.delegate = self
         self.initializeDropdown()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -377,7 +389,76 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     @IBAction func getDirectionsButtonPressed(_ sender: Any) {
-        
+        let alert = UIAlertController(title: "Get directions using",
+                                      message: "" as String, preferredStyle:.alert)
+        let appleMaps = UIAlertAction(title: "Apple Maps", style: .default, handler: {
+            alert -> Void in
+            self.openMapForPlace()
+        })
+        alert.addAction(appleMaps)
+        let googleMaps = UIAlertAction(title: "Google Maps", style: .default, handler: {
+            alert -> Void in
+            UIApplication.shared.open(URL(string:"https://www.google.com/maps/dir/?api=1&destination=\(self.offers[0].latitude!),\(self.offers[0].longitude!)")!, options: [:], completionHandler: nil)
+        })
+        alert.addAction(googleMaps)
+        let augmentedReality = UIAlertAction(title: "Augmented Reality", style: .default, handler: {
+            alert -> Void in
+            if let currentLocation = self.locationManager.location {
+                self.directionsModel.requestOffers(currLatitude: currentLocation.coordinate.latitude, currLongitude: currentLocation.coordinate.longitude, destLatitude: self.offers[0].latitude!, destLongitude: self.offers[0].longitude!)
+            }
+        })
+        alert.addAction(augmentedReality)
+        let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alert.addAction(cancel)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func directionsReceived(_ directions: [[String:AnyObject]]) {
+        var coordinatesAux: [(Double, Double)] = []
+        for step in directions {
+            if let coordinates = step["end_location"] as? [String:Any] {
+                if let latitude = coordinates["lat"] as? Double,
+                    let longitude = coordinates["lng"] as? Double {
+                    coordinatesAux.append((latitude, longitude))
+                } else {
+                    print("no latitude,longitude")
+                }
+            } else {
+                print("no coordinates")
+            }
+        }
+        coordinates = coordinatesAux
+        print(coordinates)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        if locations.count > 0 {
+//            let location = locations.last!
+//            print("Accuracy: \(location.horizontalAccuracy)")
+//            
+//            //2
+//            if location.horizontalAccuracy < 100 {
+//                //3
+//                manager.stopUpdatingLocation()
+//                let span = MKCoordinateSpan(latitudeDelta: 0.014, longitudeDelta: 0.014)
+//                let region = MKCoordinateRegion(center: location.coordinate, span: span)
+//                mapView.region = region
+//                // More code later...
+//            }
+//        }
+    }
+    
+    func openMapForPlace() {
+        let coordinates = CLLocationCoordinate2D(latitude: CLLocationDegrees(offers[0].latitude!), longitude: CLLocationDegrees(offers[0].longitude!))
+        let locationDistance: CLLocationDistance = 10000
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinates, locationDistance, locationDistance)
+        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = offers[0].name!
+        mapItem.openInMaps(launchOptions: [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: coordinateRegion.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: coordinateRegion.span)
+        ])
     }
     
     @IBAction func checkoutButtonPressed(_ sender: Any) {
