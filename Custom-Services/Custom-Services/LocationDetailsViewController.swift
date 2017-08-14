@@ -11,7 +11,7 @@ import CoreLocation
 import MapKit
 import HDAugmentedReality
 
-class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol, ARVCProtocol {
+class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol {
 
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -454,6 +454,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if !(arViewController.isViewLoaded && (arViewController.view.window != nil)) && self.isVR == true {
+            self.isVR = false
+        }
         if isVR {
             if locations.count > 0 {
                 let location = locations.last!
@@ -493,7 +496,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     
     func startAR() {
         arViewController.dataSource = self
-        arViewController.delegate = self
         // Vertical offset by distance
         arViewController.presenter.distanceOffsetMode = .manual
         arViewController.presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter

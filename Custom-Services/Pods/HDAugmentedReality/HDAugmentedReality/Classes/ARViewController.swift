@@ -10,10 +10,6 @@ import UIKit
 import AVFoundation
 import CoreLocation
 
-protocol ARVCProtocol {
-    func ARVCHasBeenDismissed()
-}
-
 /**
  *      Augmented reality view controller.
  *
@@ -30,8 +26,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
 {
     /// Data source - source of annotation views for ARViewController/ARPresenter, implement it to provide annotation views.
     open weak var dataSource: ARDataSource?
-    
-    var delegate: ARVCProtocol!
     
     /// Orientation mask for view controller. Make sure orientations are enabled in project settings also.
     open var interfaceOrientationMask: UIInterfaceOrientationMask = UIInterfaceOrientationMask.all
@@ -535,7 +529,6 @@ open class ARViewController: UIViewController, ARTrackingManagerDelegate
     
     internal func closeButtonTap()
     {
-        delegate?.ARVCHasBeenDismissed()
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
