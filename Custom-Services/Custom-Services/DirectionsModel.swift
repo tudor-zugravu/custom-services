@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import CoreLocation
 
 protocol DirectionsModelProtocol: class {
-    func directionsReceived(_ directions: [[String:AnyObject]])
+    func directionsReceived(_ directions: [[String:AnyObject]], startingLocation: CLLocation)
 }
 
 class DirectionsModel: NSObject, URLSessionDataDelegate {
@@ -47,7 +48,7 @@ class DirectionsModel: NSObject, URLSessionDataDelegate {
                     if let routes = parsedData["routes"] as? [[String:AnyObject]] {
                         if let legs = routes[0]["legs"] as? [[String:AnyObject]] {
                             if let steps = legs[0]["steps"] as? [[String:AnyObject]] {
-                                self.delegate.directionsReceived(steps)
+                                self.delegate.directionsReceived(steps, startingLocation: CLLocation(latitude: currLatitude, longitude: currLongitude))
                             } else {
                                 print("no steps")
                             }

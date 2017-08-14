@@ -9,8 +9,9 @@
 import UIKit
 import CoreLocation
 import MapKit
+import HDAugmentedReality
 
-class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol {
+class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol, ARVCProtocol {
 
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -36,18 +37,24 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     var offers: [OfferModel] = []
     var categories: [String] = []
     var timeIntervals: [String] = []
-    var coordinates: [(Double, Double)] = []
+    var checkpoints: [Checkpoint] = []
+    var visibleCheckpoints: [Checkpoint] = []
     var locationId: Int = 0
     var rating: Int = 2
     var favourite: Bool = false
     var startingTime: String = "08:00"
     var duration: Int = 1
+    var noCheckpoints = 0
+    var prevCheckpoint: Checkpoint?
+    var nextCheckpoint: Checkpoint?
+    var isVR: Bool = false
     let favouriteModel = FavouriteModel()
     let ratingModel = RatingModel()
     let checkoutModel = CheckoutModel()
     let appointmentsModel = AppointmentsModel()
     let directionsModel = DirectionsModel()
     let locationManager = CLLocationManager()
+    let arViewController = ARViewController()
     
     let hour = Calendar.current.component(.hour, from: Date()) < 10 ? "0\(Calendar.current.component(.hour, from: Date()))" : "\(Calendar.current.component(.hour, from: Date()))"
     let minute = Calendar.current.component(.minute, from: Date()) < 10 ? "0\(Calendar.current.component(.minute, from: Date()))" : "\(Calendar.current.component(.minute, from: Date()))"
@@ -413,39 +420,112 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         self.present(alert, animated: true, completion: nil)
     }
     
-    func directionsReceived(_ directions: [[String:AnyObject]]) {
-        var coordinatesAux: [(Double, Double)] = []
+    func directionsReceived(_ directions: [[String:AnyObject]], startingLocation: CLLocation) {
+        var checkpointsAux: [Checkpoint] = [Checkpoint(location: startingLocation, checkpointLabel: "Starting Point", color: UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1))]
+        var index = 0
         for step in directions {
             if let coordinates = step["end_location"] as? [String:Any] {
                 if let latitude = coordinates["lat"] as? Double,
                     let longitude = coordinates["lng"] as? Double {
-                    coordinatesAux.append((latitude, longitude))
+                    if index == directions.count - 1 {
+                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Final destination", color: UIColor(red: 47 / 255.0, green: 208 / 255.0, blue: 102 / 255.0, alpha: 1)))
+                    } else {
+                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Checkpoint \(index + 1)", color: UIColor(red: 229 / 255.0, green: 242 / 255.0, blue: 0, alpha: 1)))
+                    }
                 } else {
                     print("no latitude,longitude")
                 }
             } else {
                 print("no coordinates")
             }
+            index += 1
         }
-        coordinates = coordinatesAux
-        print(coordinates)
+        checkpoints = checkpointsAux
+        noCheckpoints = checkpoints.count
+        prevCheckpoint = checkpoints[0]
+        nextCheckpoint = checkpoints[1]
+        if checkpoints.count > 4 {
+            visibleCheckpoints = [checkpoints.first!, checkpoints[1], checkpoints.last!]
+        } else {
+            visibleCheckpoints = checkpoints
+        }
+        startAR()
+        isVR = true
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        if locations.count > 0 {
-//            let location = locations.last!
-//            print("Accuracy: \(location.horizontalAccuracy)")
-//            
-//            //2
-//            if location.horizontalAccuracy < 100 {
-//                //3
-//                manager.stopUpdatingLocation()
-//                let span = MKCoordinateSpan(latitudeDelta: 0.014, longitudeDelta: 0.014)
-//                let region = MKCoordinateRegion(center: location.coordinate, span: span)
-//                mapView.region = region
-//                // More code later...
-//            }
-//        }
+        if isVR {
+            if locations.count > 0 {
+                let location = locations.last!
+                if location.horizontalAccuracy < 20 {
+                    if nextCheckpoint != nil {
+                        if Double(location.distance(from: nextCheckpoint!.location)) < 10 {
+                            if checkpoints.index(of: nextCheckpoint!) == checkpoints.count - 1 {
+                                arViewController.dismiss(animated: true, completion: nil)
+                                isVR = false
+                                let alert = UIAlertController(title: "Navigation completed",
+                                                              message: "You have reached your destination" as String, preferredStyle:.alert)
+                                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                                alert.addAction(done)
+                                self.present(alert, animated: true, completion: nil)
+                            } else {
+                                let index = checkpoints.index(of: nextCheckpoint!)!
+                                prevCheckpoint = nextCheckpoint!
+                                nextCheckpoint = checkpoints[index + 1]
+                                checkpoints[index - 1].color = UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1)
+                                if checkpoints.count > 4 {
+                                    if index < checkpoints.count - 2 {
+                                        visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!, checkpoints.last!]
+                                    } else {
+                                        visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!]
+                                    }
+                                } else {
+                                    visibleCheckpoints = checkpoints
+                                }
+                            }
+                            arViewController.setAnnotations(visibleCheckpoints)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func startAR() {
+        arViewController.dataSource = self
+        arViewController.delegate = self
+        // Vertical offset by distance
+        arViewController.presenter.distanceOffsetMode = .manual
+        arViewController.presenter.distanceOffsetMultiplier = 0.1   // Pixels per meter
+        arViewController.presenter.distanceOffsetMinThreshold = 5 // Doesn't raise annotations that are nearer than this
+        // Filtering for performance
+        arViewController.presenter.maxDistance = 50000               // Don't show annotations if they are farther than this
+        arViewController.presenter.maxVisibleAnnotations = 5      // Max number of annotations on the screen
+        // Stacking
+        arViewController.presenter.verticalStackingEnabled = true
+        // Location precision
+        arViewController.trackingManager.userDistanceFilter = 15
+        arViewController.trackingManager.reloadDistanceFilter = 50
+        // Ui
+        arViewController.uiOptions.closeButtonEnabled = true
+        // Interface orientation
+        arViewController.interfaceOrientationMask = .all
+        // Setting annotations
+        arViewController.setAnnotations(visibleCheckpoints)
+        // Presenting controller
+        
+        self.present(arViewController, animated: true, completion: nil)
+    }
+    
+    func ar(_ arViewController: ARViewController, viewForAnnotation: ARAnnotation) -> ARAnnotationView
+    {
+        // Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
+        let checkpointView = CheckpointView()
+        if let checkpoint = (checkpoints.filter{ $0.title == viewForAnnotation.title! }.first) {
+            checkpointView.backgroundColor = checkpoint.color
+        }
+        checkpointView.frame = CGRect(x: 0,y: 0,width: 250,height: 50)
+        return checkpointView;
     }
     
     func openMapForPlace() {

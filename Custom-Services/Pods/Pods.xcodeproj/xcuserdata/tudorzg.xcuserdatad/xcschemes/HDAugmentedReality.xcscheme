@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'DA36770A22BCAA17B96037A788BDB4B9'
-               BlueprintName = 'SwiftRangeSlider'
+               BlueprintIdentifier = '382C7D67433438B0C53590FA15DA83C6'
+               BlueprintName = 'HDAugmentedReality'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'SwiftRangeSlider.framework'>
+               BuildableName = 'HDAugmentedReality.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

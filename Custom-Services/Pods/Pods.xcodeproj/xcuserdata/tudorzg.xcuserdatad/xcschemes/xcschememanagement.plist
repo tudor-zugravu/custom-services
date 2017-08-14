@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>HDAugmentedReality.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Custom-Services.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,12 +47,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>265E088C25CA1CADD1C5FA39FD6C2378</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>312B3E952FE0D7D7ECFB3CFF8C2E6CD1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>85E7C0C9B541127B214A6FAA84118E4F</key>
+		<key>382C7D67433438B0C53590FA15DA83C6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -72,7 +82,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D577027EE0402E289DCC1DC65574F826</key>
+		<key>DA36770A22BCAA17B96037A788BDB4B9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -24,7 +24,7 @@
                                 <constraint firstAttribute="height" constant="24" id="Ljc-vP-6Mp"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" red="0.18346174530000001" green="0.81415965030000004" blue="0.40171089640000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="WLn-tB-d4m">
