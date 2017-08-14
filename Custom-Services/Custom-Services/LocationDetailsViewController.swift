@@ -11,7 +11,7 @@ import CoreLocation
 import MapKit
 import HDAugmentedReality
 
-class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol {
+class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol, CheckpointViewDelegate {
 
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -421,16 +421,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     func directionsReceived(_ directions: [[String:AnyObject]], startingLocation: CLLocation) {
-        var checkpointsAux: [Checkpoint] = [Checkpoint(location: startingLocation, checkpointLabel: "Starting Point", color: UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1))]
+        var checkpointsAux: [Checkpoint] = [Checkpoint(location: startingLocation, checkpointLabel: "Starting Point", color: "red")]
         var index = 0
         for step in directions {
             if let coordinates = step["end_location"] as? [String:Any] {
                 if let latitude = coordinates["lat"] as? Double,
                     let longitude = coordinates["lng"] as? Double {
                     if index == directions.count - 1 {
-                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Final destination", color: UIColor(red: 47 / 255.0, green: 208 / 255.0, blue: 102 / 255.0, alpha: 1)))
+                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Final destination", color: "green"))
                     } else {
-                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Checkpoint \(index + 1)", color: UIColor(red: 229 / 255.0, green: 242 / 255.0, blue: 0, alpha: 1)))
+                        checkpointsAux.append(Checkpoint(location: CLLocation(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), checkpointLabel: "Checkpoint \(index + 1)", color: "yellow"))
                     }
                 } else {
                     print("no latitude,longitude")
@@ -442,6 +442,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
         checkpoints = checkpointsAux
         noCheckpoints = checkpoints.count
+        if checkpoints.count > 2 {
+            checkpoints[1].title = "Next checkpoint.yellow"
+        }
         prevCheckpoint = checkpoints[0]
         nextCheckpoint = checkpoints[1]
         if checkpoints.count > 4 {
@@ -451,47 +454,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
         startAR()
         isVR = true
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if !(arViewController.isViewLoaded && (arViewController.view.window != nil)) && self.isVR == true {
-            self.isVR = false
-        }
-        if isVR {
-            if locations.count > 0 {
-                let location = locations.last!
-                if location.horizontalAccuracy < 20 {
-                    if nextCheckpoint != nil {
-                        if Double(location.distance(from: nextCheckpoint!.location)) < 10 {
-                            if checkpoints.index(of: nextCheckpoint!) == checkpoints.count - 1 {
-                                arViewController.dismiss(animated: true, completion: nil)
-                                isVR = false
-                                let alert = UIAlertController(title: "Navigation completed",
-                                                              message: "You have reached your destination" as String, preferredStyle:.alert)
-                                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
-                                alert.addAction(done)
-                                self.present(alert, animated: true, completion: nil)
-                            } else {
-                                let index = checkpoints.index(of: nextCheckpoint!)!
-                                prevCheckpoint = nextCheckpoint!
-                                nextCheckpoint = checkpoints[index + 1]
-                                checkpoints[index - 1].color = UIColor(red: 235 / 255.0, green: 46 / 255.0, blue: 32 / 255.0, alpha: 1)
-                                if checkpoints.count > 4 {
-                                    if index < checkpoints.count - 2 {
-                                        visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!, checkpoints.last!]
-                                    } else {
-                                        visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!]
-                                    }
-                                } else {
-                                    visibleCheckpoints = checkpoints
-                                }
-                            }
-                            arViewController.setAnnotations(visibleCheckpoints)
-                        }
-                    }
-                }
-            }
-        }
     }
     
     func startAR() {
@@ -523,11 +485,78 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     {
         // Annotation views should be lightweight views, try to avoid xibs and autolayout all together.
         let checkpointView = CheckpointView()
-        if let checkpoint = (checkpoints.filter{ $0.title == viewForAnnotation.title! }.first) {
-            checkpointView.backgroundColor = checkpoint.color
-        }
+        checkpointView.delegate = self
         checkpointView.frame = CGRect(x: 0,y: 0,width: 250,height: 50)
         return checkpointView;
+    }
+    
+    func proceedToNextCheckpoint() {
+        let index = checkpoints.index(of: nextCheckpoint!)!
+        if index == checkpoints.count - 1 {
+            arViewController.dismiss(animated: true, completion: nil)
+            isVR = false
+            let alert = UIAlertController(title: "Navigation completed",
+                                          message: "You have reached your destination" as String, preferredStyle:.alert)
+            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+            alert.addAction(done)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            checkpoints[index].title = "Previous checkpoint.red"
+            prevCheckpoint = nextCheckpoint!
+            checkpoints[index + 1].title = "Next checkpoint.yellow"
+            nextCheckpoint = checkpoints[index + 1]
+            if checkpoints.count > 4 {
+                if index < checkpoints.count - 2 {
+                    visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!, checkpoints.last!]
+                } else {
+                    visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!]
+                }
+            } else {
+                visibleCheckpoints = checkpoints
+            }
+            arViewController.setAnnotations(visibleCheckpoints)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if !(arViewController.isViewLoaded && (arViewController.view.window != nil)) && self.isVR == true {
+            self.isVR = false
+        }
+        if isVR {
+            if locations.count > 0 {
+                let location = locations.last!
+                if location.horizontalAccuracy < 20 {
+                    if nextCheckpoint != nil {
+                        if Double(location.distance(from: checkpoints.last!.location)) < 20 {
+                            arViewController.dismiss(animated: true, completion: nil)
+                            isVR = false
+                            let alert = UIAlertController(title: "Navigation completed",
+                                                          message: "You have reached your destination" as String, preferredStyle:.alert)
+                            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+                            alert.addAction(done)
+                            self.present(alert, animated: true, completion: nil)
+                        } else if Double(location.distance(from: nextCheckpoint!.location)) < 20 {
+                            let index = checkpoints.index(of: nextCheckpoint!)!
+                            
+                            checkpoints[index].title = "Previous checkpoint.red"
+                            prevCheckpoint = nextCheckpoint!
+                            checkpoints[index + 1].title = "Next checkpoint.yellow"
+                            nextCheckpoint = checkpoints[index + 1]
+                            if checkpoints.count > 4 {
+                                if index < checkpoints.count - 2 {
+                                    visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!, checkpoints.last!]
+                                } else {
+                                    visibleCheckpoints = [checkpoints.first!, prevCheckpoint!, nextCheckpoint!]
+                                }
+                            } else {
+                                visibleCheckpoints = checkpoints
+                            }
+                            arViewController.setAnnotations(visibleCheckpoints)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func openMapForPlace() {

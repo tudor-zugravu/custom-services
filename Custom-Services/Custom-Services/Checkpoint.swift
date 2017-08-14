@@ -11,10 +11,10 @@ import CoreLocation
 import HDAugmentedReality
 
 class Checkpoint: ARAnnotation {
-    var color: UIColor = UIColor.white
+    var color = "yellow"
     
-    init(location: CLLocation, checkpointLabel: String, color: UIColor) {
+    init(location: CLLocation, checkpointLabel: String, color: String) {
         self.color = color
-        super.init(identifier: nil, title: checkpointLabel, location: location)!
+        super.init(identifier: nil, title: "\(checkpointLabel).\(color)", location: location)!
     }
 }
