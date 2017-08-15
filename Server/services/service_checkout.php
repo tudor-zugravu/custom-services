@@ -50,6 +50,7 @@ if (is_null($row)) {
 
 					if($result) {
 						$status->status = "success";
+						$status->insertId = mysqli_insert_id($con);
 					} else {
 						$status->status = "no_receipt";
 					}
