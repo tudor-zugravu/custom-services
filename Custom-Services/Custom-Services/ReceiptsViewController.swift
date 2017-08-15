@@ -14,6 +14,10 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet var mainView: UIView!
+    @IBOutlet weak var bottomView: UIView!
+    
     var receipts: [ReceiptModel] = []
     var filteredReceipts: [ReceiptModel] = []
     var searchOn : Bool = false
@@ -39,6 +43,8 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         searchOn = false
         searchBar.text = ""
         
+        customizeAppearance()
+        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -55,6 +61,12 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        bottomView.backgroundColor = Utils.instance.mainColour
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -334,7 +346,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
             }
         }
         self.receipts = receiptsAux.sorted(by: { (receipt1, receipt2) -> Bool in
-            if receipt1.timeInterval!.compare(receipt2.timeInterval!) == .orderedDescending {
+            if receipt1.id! > receipt2.id! {
                 return true
             }
             return false

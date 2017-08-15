@@ -35,6 +35,12 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     @IBOutlet weak var rateLocationButton: UIButton!
     @IBOutlet weak var checkoutButton: UIButton!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var getDirectionsButton: UIButton!
+    @IBOutlet weak var bottomView: UIView!
+    
     var offers: [OfferModel] = []
     var categories: [String] = []
     var timeIntervals: [String] = []
@@ -42,6 +48,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     var visibleCheckpoints: [Checkpoint] = []
     var locationId: Int = 0
     var rating: Int = 2
+    var selectedCategory: Int = 0
     var favourite: Bool = false
     var startingTime: String = "08:00"
     var duration: Int = 1
@@ -80,12 +87,12 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        customizeAppearance()
         
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
         if (UserDefaults.standard.value(forKey: "storedOffers") != nil) {
             if let data = UserDefaults.standard.data(forKey: "storedOffers"),
                 let offersAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [OfferModel] {
@@ -126,7 +133,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))%" : "\(offers[0].discount!) GBP"
             }
         } else {
-            oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))% discount for \(offers[0].category!)" : "\(offers[0].discount!) GBP for \(offers[0].category!)"
+            oneCategoryDiscountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[0].discount!))% discount" : "\(offers[0].discount!) GBP"
             oneCategoryDiscountLabel.isHidden = false
             categoryStack.isHidden = true
         }
@@ -155,14 +162,34 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             timeIntervalStack.isHidden = true
         }
         
-        //TODO: add global default photos
-        logoImage.image = offers[0].offerLogo != "" ? UIImage(named: offers[0].offerLogo!) : UIImage(named: "stChristophersLogo")
-        locationImage.image = offers[0].offerImage != "" ? UIImage(named: offers[0].offerImage!) : UIImage(named: "stChristophersImage")
+        if offers[0].offerLogo! != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offers[0].offerLogo!)").path
+            self.logoImage.image = UIImage(contentsOfFile: filename)
+        } else {
+            self.logoImage.image = UIImage(named: "ban")
+        }
+        if offers[0].offerImage! != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offers[0].offerImage!)").path
+            self.locationImage.image = UIImage(contentsOfFile: filename)
+        } else {
+            self.locationImage.image = UIImage(named: "ban")
+        }
+        
         if (favourite == true) {
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
         } else {
             favouriteButton.setImage(UIImage(named: "emptyHeart.png"), for: UIControlState.normal)
         }
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        scrollView.backgroundColor = Utils.instance.backgroundColour
+        checkoutButton.backgroundColor = Utils.instance.mainColour
+        rateLocationButton.backgroundColor = Utils.instance.mainColour
+        getDirectionsButton.backgroundColor = Utils.instance.mainColour
+        bottomView.backgroundColor = Utils.instance.mainColour
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -185,6 +212,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView == categoryPickerView {
+            selectedCategory = row
             discountLabel.text = UserDefaults.standard.value(forKey: "type") as! String == "location" ? "\(Int(offers[row].discount!))%" : "\(offers[row].discount!) GBP"
             if UserDefaults.standard.value(forKey: "type") as! String != "location" && offers[row].quantity! == 0 {
                 timeIntervals.removeAll(keepingCapacity: false)
@@ -201,10 +229,35 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                     checkoutButton.alpha = 1
                     checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
                 }
-                appointmentsModel.requestAppointments(offerId: offers[row].id!, index: row)
-                startingTime = offers[row].minTime!
-                duration = offers[row].appointmentDuration!
+                if UserDefaults.standard.value(forKey: "type") as! String == "service" {
+                    appointmentsModel.requestAppointments(offerId: offers[row].id!, index: row)
+                    startingTime = offers[row].minTime!
+                    duration = offers[row].appointmentDuration!
+                }
             }
+        } else {
+            checkTimeInterval(time: timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])
+        }
+    }
+    
+    func checkTimeInterval(time: String) {
+        var DateArray = time.components(separatedBy: CharacterSet(charactersIn: "-:"))
+        var components = DateComponents()
+        components.year = Calendar.current.component(.year, from: Date())
+        components.month = Calendar.current.component(.month, from: Date())
+        components.day = Calendar.current.component(.day, from: Date())
+        components.hour = Int(DateArray[0])!
+        components.minute = Int(DateArray[1])!
+        components.second = Calendar.current.component(.second, from: Date())
+        let date = Calendar.current.date(from: components)!
+        if date.timeIntervalSinceNow < 10 {
+            checkoutButton.setTitle("Expired time interval", for: UIControlState.disabled)
+            checkoutButton.isEnabled = false
+            checkoutButton.alpha = 0.5
+        } else {
+            checkoutButton.setTitle("Fully booked", for: UIControlState.disabled)
+            checkoutButton.isEnabled = true
+            checkoutButton.alpha = 1
         }
     }
     
@@ -225,6 +278,13 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
         timeIntervals = Utils.instance.getTimeIntervals(startingTime: offers[index].minTime!, endingTime: offers[index].maxTime!, duration: offers[index].appointmentDuration!, appointments: appointmentsAux)
         timeIntervalPickerView.reloadAllComponents()
+        if timeIntervals.count == 0 {
+            checkoutButton.setTitle("Fully booked", for: UIControlState.disabled)
+            checkoutButton.isEnabled = false
+            checkoutButton.alpha = 0.5
+        } else {
+            checkTimeInterval(time: timeIntervals[0])
+        }
     }
     
     func ratingResponse(_ result: NSString) {
@@ -253,14 +313,14 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                     let done = UIAlertAction(title: "Done", style: .default, handler: nil)
                     alert.addAction(done)
                     self.present(alert, animated: true, completion: nil)
-                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
-                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
-                    if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
+                    offers[selectedCategory].quantity! -= 1
+                    if offers[selectedCategory].quantity! == 0 {
                         checkoutButton.isEnabled = false
                         checkoutButton.alpha = 0.5
                     }
                     if let insertId = result["insertId"] as? Int {
-                        setNotification(offer: offers[categoryPickerView.selectedRow(inComponent: 0)], id: insertId)
+                        setNotification(offer: offers[selectedCategory], id: insertId)
                     }
                     break
                 case "offer_expired":
@@ -269,7 +329,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                     let done = UIAlertAction(title: "Done", style: .default, handler: nil)
                     alert.addAction(done)
                     self.present(alert, animated: true, completion: nil)
-                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity = 0
+                    offers[selectedCategory].quantity = 0
                     checkoutButton.isEnabled = false
                     checkoutButton.alpha = 0.5
                     break
@@ -284,14 +344,14 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 case "same_quantity":
                     print("checkout error: \(status)")
                     showErrorMessage()
-                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
                     break
                 case "no_receipt":
                     print("checkout error: \(status)")
                     showErrorMessage()
-                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
-                    offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
-                    if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                    UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
+                    offers[selectedCategory].quantity! -= 1
+                    if offers[selectedCategory].quantity! == 0 {
                         checkoutButton.isEnabled = false
                         checkoutButton.alpha = 0.5
                     }
@@ -322,13 +382,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 let done = UIAlertAction(title: "Done", style: .default, handler: nil)
                 alert.addAction(done)
                 self.present(alert, animated: true, completion: nil)
-                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
                 timeIntervals.remove(at: self.timeIntervalPickerView.selectedRow(inComponent: 0))
-                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
+                offers[selectedCategory].quantity! -= 1
                 timeIntervalPickerView.reloadAllComponents()
-                if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                if offers[selectedCategory].quantity! == 0 {
                     checkoutButton.isEnabled = false
                     checkoutButton.alpha = 0.5
+                }
+                if let insertId = result["insertId"] as? Int {
+                    setNotification(offer: offers[selectedCategory], id: insertId)
                 }
                 break
             case "offer_expired":
@@ -337,7 +400,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 let done = UIAlertAction(title: "Done", style: .default, handler: nil)
                 alert.addAction(done)
                 self.present(alert, animated: true, completion: nil)
-                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity = 0
+                offers[selectedCategory].quantity = 0
                 timeIntervals.removeAll(keepingCapacity: false)
                 timeIntervalPickerView.reloadAllComponents()
                 checkoutButton.isEnabled = false
@@ -354,14 +417,14 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             case "same_quantity":
                 print("checkout error: \(status)")
                 showErrorMessage()
-                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
                 break
             case "no_receipt":
                 print("checkout error: \(status)")
                 showErrorMessage()
-                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[categoryPickerView.selectedRow(inComponent: 0)].discount!, forKey: "credit")
-                offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! -= 1
-                if offers[categoryPickerView.selectedRow(inComponent: 0)].quantity! == 0 {
+                UserDefaults.standard.set(UserDefaults.standard.value(forKey: "credit") as! Float - offers[selectedCategory].discount!, forKey: "credit")
+                offers[selectedCategory].quantity! -= 1
+                if offers[selectedCategory].quantity! == 0 {
                     checkoutButton.isEnabled = false
                     checkoutButton.alpha = 0.5
                 }
@@ -399,20 +462,16 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             hour = Int(DateArray[0])!
             minute = Int(DateArray[1])!
         } else {
-            let DateArray = timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)].components(separatedBy: "-:")
+            let DateArray = timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)].components(separatedBy: CharacterSet(charactersIn: "-:"))
             hour = Int(DateArray[0])!
             minute = Int(DateArray[1])!
-            print(timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])
-            print(hour)
-            print(minute)
         }
         var components = DateComponents()
-        let DateArray = offer.minTime!.components(separatedBy: ":")
         components.year = Calendar.current.component(.year, from: Date())
         components.month = Calendar.current.component(.month, from: Date())
         components.day = Calendar.current.component(.day, from: Date())
-        components.hour = Int(DateArray[0])!
-        components.minute = Int(DateArray[1])!
+        components.hour = hour
+        components.minute = minute
         components.second = Calendar.current.component(.second, from: Date())
         let date = Calendar.current.date(from: components)!
         var timeInterval = 10.0
@@ -424,10 +483,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         notification.body = "Your receipt is due soon"
         notification.categoryIdentifier = "appointmentDue.category"
         notification.sound = UNNotificationSound.default()
-        print(timeInterval)
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: "newAppointment\(id)", content: notification, trigger: trigger)
-        
         UNUserNotificationCenter.current().add(request){
             (error) in
             if error != nil{
@@ -623,11 +680,12 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     
     @IBAction func checkoutButtonPressed(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "type") as! String == "product" {
+            
             let alert = UIAlertController(title: "Checkout",
-                                          message: "Purchase this offer for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP?" as String, preferredStyle:.alert)
+                                          message: "Purchase this offer for \(offers[selectedCategory].discount!) GBP?" as String, preferredStyle:.alert)
             let yes = UIAlertAction(title: "Yes", style: .default, handler: {
                 alert -> Void in
-                self.checkoutModel.productCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!)
+                self.checkoutModel.productCheckout(offerId: self.offers[self.selectedCategory].id!)
             })
             alert.addAction(yes)
             let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
@@ -635,10 +693,10 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
             self.present(alert, animated: true, completion: nil)
         } else {
             let alert = UIAlertController(title: "Checkout",
-                                          message: "Book an appointment for \(offers[categoryPickerView.selectedRow(inComponent: 0)].discount!) GBP in between \(timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])?" as String, preferredStyle:.alert)
+                                          message: "Book an appointment for \(offers[selectedCategory].discount!) GBP in between \(timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])?" as String, preferredStyle:.alert)
             let yes = UIAlertAction(title: "Yes", style: .default, handler: {
                 alert -> Void in
-                self.checkoutModel.serviceCheckout(offerId: self.offers[self.categoryPickerView.selectedRow(inComponent: 0)].id!, appointment: Utils.instance.getIndex(startingTime: self.startingTime, duration: self.duration, time: self.timeIntervals[self.timeIntervalPickerView.selectedRow(inComponent: 0)]))
+                self.checkoutModel.serviceCheckout(offerId: self.offers[self.selectedCategory].id!, appointment: Utils.instance.getIndex(startingTime: self.startingTime, duration: self.duration, time: self.timeIntervals[self.timeIntervalPickerView.selectedRow(inComponent: 0)]))
             })
             alert.addAction(yes)
             let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)

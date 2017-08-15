@@ -27,7 +27,7 @@ class ReceiptsTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        self.backgroundColor = Utils.instance.backgroundColour
         //cell layout
         containerView.layer.cornerRadius = 10
         containerView.layer.borderWidth = 1
@@ -43,7 +43,12 @@ class ReceiptsTableViewCell: UITableViewCell {
     func configureCell(_ name: String, discount: Float, timeInterval: String, offerLogo: String, redeemed: Int) {
         titleLabel.text = name
         timeIntervalLabel.text = timeInterval
-        offerLogoImage.image = offerLogo != "" ? UIImage(named: offerLogo) : UIImage(named: "stChristophersLogo")
+        if offerLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerLogo)").path
+            self.offerLogoImage.image = UIImage(contentsOfFile: filename)
+        } else {
+            self.offerLogoImage.image = UIImage(named: "ban")
+        }
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             discountLabel.text = "\(Int(discount))% OFF"
         } else {

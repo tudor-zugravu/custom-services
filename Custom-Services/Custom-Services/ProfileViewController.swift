@@ -20,6 +20,11 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     @IBOutlet weak var addCreditButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var changePasswordButton: UIButton!
+    @IBOutlet weak var bottomView: UIView!
+    
     let apiClient = BTAPIClient(authorization: "sandbox_44pm2mq7_9579dnmk65pnbf2z")
     let profileModel = ProfileModel()
     var newPass: String = ""
@@ -38,6 +43,8 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        customizeAppearance()
+        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -89,6 +96,15 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        editButton.backgroundColor = Utils.instance.mainColour
+        changePasswordButton.backgroundColor = Utils.instance.mainColour
+        addCreditButton.backgroundColor = Utils.instance.mainColour
+        bottomView.backgroundColor = Utils.instance.mainColour
     }
 
     @IBAction func editButtonPressed(_ sender: Any) {

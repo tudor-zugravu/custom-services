@@ -18,7 +18,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
-    @IBOutlet weak var mainLogoPicture: UIImageView!
+    @IBOutlet weak var navigationLogo: UIImageView!
     @IBOutlet var mainView: UIView!
     @IBOutlet weak var mainTabBarItem: UITabBarItem!
     
@@ -90,10 +90,22 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
         mainTitleLabel.text = Utils.instance.mainTitle
-        mainLogoPicture.image = Utils.instance.mainLogo != "" ? UIImage(named: Utils.instance.mainLogo) : UIImage(named: "banWhite")
         mainTabBarItem.title = Utils.instance.mainTabBarItemLabel
-        mainTabBarItem.image = Utils.instance.mainTabBarItemLogo != "" ? UIImage(named: Utils.instance.mainTabBarItemLogo) : UIImage(named: "banTab")?.withRenderingMode(.alwaysOriginal)
         
+        if Utils.instance.navigationLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
+            navigationLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            navigationLogo.image = UIImage(named: "banWhite")
+        }
+        if Utils.instance.mainTabBarItemLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.mainTabBarItemLogo)").path
+            mainTabBarItem.image = UIImage(contentsOfFile: filename)
+            mainTabBarItem.selectedImage = UIImage(contentsOfFile: filename)
+        } else {
+            mainTabBarItem.image = UIImage(named: "banTab")
+            mainTabBarItem.selectedImage = UIImage(named: "banTab")
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -188,23 +200,25 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             offers[tag].favourite = offers[tag].favourite! ? false : true
-            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
-                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
-                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
-                    points = pointsAux
+            if Utils.instance.geolocationNotifications {
+                if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                    if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                        let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                        points = pointsAux
+                    }
                 }
+                if offers[tag].favourite! {
+                    let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                    points.append(point)
+                    startMonitoring(point: point)
+                } else {
+                    let point = points.filter({ $0.id == offers[tag].id!})[0]
+                    points.remove(at: points.index(of: point)!)
+                    stopMonitoring(point: point)
+                }
+                let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+                UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
             }
-            if offers[tag].favourite! {
-                let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
-                points.append(point)
-                startMonitoring(point: point)
-            } else {
-                let point = points.filter({ $0.id == offers[tag].id!})[0]
-                points.remove(at: points.index(of: point)!)
-                stopMonitoring(point: point)
-            }
-            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
-            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
         }
     }
     
@@ -379,25 +393,27 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func reloadPoints() {
-        if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
-            if let data = UserDefaults.standard.data(forKey: "storedPoints"),
-                let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
-                points = pointsAux
+        if Utils.instance.geolocationNotifications {
+            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                    points = pointsAux
+                }
             }
-        }
-        for point in points {
-            stopMonitoring(point: point)
-        }
-        points = []
-        for offer in offers {
-            if offer.favourite! {
-                let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
-                points.append(point)
-                startMonitoring(point: point)
+            for point in points {
+                stopMonitoring(point: point)
             }
+            points = []
+            for offer in offers {
+                if offer.favourite! {
+                    let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                    points.append(point)
+                    startMonitoring(point: point)
+                }
+            }
+            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
         }
-        let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
-        UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
     }
     
     func refreshTable() {
@@ -477,7 +493,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             print("nope")
             return
         }
-        print("start monitoring for \(point.id!)")
         let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id!)")
         region.notifyOnEntry = true
         region.notifyOnExit = false
@@ -485,7 +500,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func stopMonitoring(point: PointModel) {
-        print("stop monitoring for \(point.id!)")
         for region in locationManager.monitoredRegions {
             guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id!)" else { continue }
             locationManager.stopMonitoring(for: circularRegion)

@@ -25,6 +25,14 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var allCategoriesSwitch: UISwitch!
     @IBOutlet weak var tableView: UITableView!
     
+    
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var navigationLogo: UIImageView!
+    @IBOutlet weak var bottomView: UIView!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var searchButton: UIButton!
+    
     // TODO: Customize categories here
     var categories: [String] = []
     
@@ -62,6 +70,27 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
             tableView.dataSource = self
             allCategoriesSwitch.isOn = allCategories
             tableView.isHidden = allCategories ? true : false
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        customizeAppearance()
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        bottomView.backgroundColor = Utils.instance.mainColour
+        searchButton.backgroundColor = Utils.instance.mainColour
+        distanceSlider.tintColor = Utils.instance.mainColour
+        timeIntervalSlider.trackHighlightTintColor = Utils.instance.mainColour
+        
+        if Utils.instance.navigationLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
+            navigationLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            navigationLogo.image = UIImage(named: "banWhite")
         }
     }
 

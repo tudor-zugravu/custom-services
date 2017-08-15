@@ -16,6 +16,12 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var bottomView: UIView!
+    
     let registerModel = RegisterModel()
     
     override func viewDidLoad() {
@@ -33,12 +39,21 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        customizeAppearance()
     }
     
     // COPIED
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        bottomView.backgroundColor = Utils.instance.mainColour
+        registerButton.backgroundColor = Utils.instance.mainColour
     }
     
     @IBAction func registerButtonPressed(_ sender: Any) {

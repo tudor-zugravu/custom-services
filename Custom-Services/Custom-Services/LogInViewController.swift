@@ -14,6 +14,14 @@ class LogInViewController: UIViewController, LogInModelProtocol {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var mainLogo: UIImageView!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var bottomView: UIView!
+    
     let logInModel = LogInModel()
     
     override func viewDidLoad() {
@@ -31,12 +39,30 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        customizeAppearance()
     }
     
     // COPIED
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        bottomView.backgroundColor = Utils.instance.mainColour
+        loginButton.backgroundColor = Utils.instance.mainColour
+        registerButton.backgroundColor = Utils.instance.mainColour
+        
+        if Utils.instance.mainLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.mainLogo)").path
+            mainLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            mainLogo.image = UIImage(named: "ban")
+        }
     }
         
     @IBAction func loginButtonPressed(_ sender: Any) {

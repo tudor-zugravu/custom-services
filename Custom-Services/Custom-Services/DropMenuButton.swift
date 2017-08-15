@@ -193,8 +193,8 @@ class DropMenuButton: UIButton, UITableViewDelegate, UITableViewDataSource
         bgColorView.backgroundColor = UIColor.lightGray
         
         let cell = UITableViewCell(frame: CGRect(x: 0, y: 0, width: rowWidth, height: rowHeight))
-        // TODO: SET COLOUR DYNAMICALLY
-        cell.backgroundColor = UIColor.init(red: 16/255.0, green: 173/255.0, blue: 203/255.0, alpha: 1)
+
+        cell.backgroundColor = Utils.instance.mainColour
         cell.selectedBackgroundView = bgColorView
         cell.separatorInset = UIEdgeInsetsMake(0, rowWidth, 0, rowWidth)
         cell.addSubview(itemLabel)

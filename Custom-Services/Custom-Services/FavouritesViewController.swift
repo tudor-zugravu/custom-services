@@ -16,6 +16,11 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var navigationLogo: UIImageView!
+    @IBOutlet var mainView: UIView!
+    
     var categories: [String] = []
     let offersModel = OffersModel()
     let favouriteModel = FavouriteModel()
@@ -57,6 +62,8 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         searchOn = false
         searchBar.text = ""
         
+        customizeAppearance()
+        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -81,6 +88,19 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         offers = []
         filteredOffers = []
         tableView.reloadData()
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        
+        if Utils.instance.navigationLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
+            navigationLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            navigationLogo.image = UIImage(named: "banWhite")
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -171,29 +191,31 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             offers[tag].favourite = offers[tag].favourite! ? false : true
-            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
-                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
-                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
-                    points = pointsAux
+            if Utils.instance.geolocationNotifications {
+                if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                    if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                        let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                        points = pointsAux
+                    }
                 }
-            }
-            if offers[tag].favourite! {
-                let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
-                points.append(point)
-                startMonitoring(point: point)
-            } else {
-                let point = points.filter({ $0.id == offers[tag].id!})[0]
-                points.remove(at: points.index(of: point)!)
-                stopMonitoring(point: point)
-            }
-            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
-            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
-            if offers[tag].favourite == false {
-                if filteredOffers.contains(offers[tag]) {
-                    filteredOffers.remove(at: filteredOffers.index(of: offers[tag])!)
+                if offers[tag].favourite! {
+                    let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                    points.append(point)
+                    startMonitoring(point: point)
+                } else {
+                    let point = points.filter({ $0.id == offers[tag].id!})[0]
+                    points.remove(at: points.index(of: point)!)
+                    stopMonitoring(point: point)
                 }
-                offers.remove(at: tag)
-                tableView.reloadData()
+                let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+                UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
+                if offers[tag].favourite == false {
+                    if filteredOffers.contains(offers[tag]) {
+                        filteredOffers.remove(at: filteredOffers.index(of: offers[tag])!)
+                    }
+                    offers.remove(at: tag)
+                    tableView.reloadData()
+                }
             }
         }
     }
@@ -371,25 +393,27 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func reloadPoints() {
-        if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
-            if let data = UserDefaults.standard.data(forKey: "storedPoints"),
-                let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
-                points = pointsAux
+        if Utils.instance.geolocationNotifications {
+            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                    points = pointsAux
+                }
             }
-        }
-        for point in points {
-            stopMonitoring(point: point)
-        }
-        points = []
-        for offer in offers {
-            if offer.favourite! {
-                let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
-                points.append(point)
-                startMonitoring(point: point)
+            for point in points {
+                stopMonitoring(point: point)
             }
+            points = []
+            for offer in offers {
+                if offer.favourite! {
+                    let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                    points.append(point)
+                    startMonitoring(point: point)
+                }
+            }
+            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
         }
-        let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
-        UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
     }
     
     func refreshTable() {

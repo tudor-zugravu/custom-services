@@ -16,10 +16,13 @@ class Utils: NSObject {
     var mainColour: UIColor = UIColor.white
     var opaqueColour: UIColor = UIColor.white
     var backgroundColour: UIColor = UIColor.white
+    var cellBackgroundColour: UIColor = UIColor.white
     var mainTitle: String = ""
     var mainLogo: String = ""
+    var navigationLogo: String = ""
     var mainTabBarItemLabel: String = ""
     var mainTabBarItemLogo: String = ""
+    var geolocationNotifications: Bool = false
     
     fileprivate override init() {
         
@@ -33,14 +36,17 @@ class Utils: NSObject {
         return UIColor(red: CGFloat((hexValue >> 16) & 0xff) / 255.0, green:CGFloat((hexValue >> 8) & 0xff) / 255.0, blue:CGFloat(hexValue & 0xff) / 255.0, alpha: 1)
     }
     
-    func setCustomisationParameters(mainColour: Int, opaqueColour: Int, backgroundColour: Int, mainTitle: String, mainLogo: String, mainTabBarItemLabel: String, mainTabBarItemLogo: String) {
+    func setCustomisationParameters(mainColour: Int, opaqueColour: Int, backgroundColour: Int, cellBackgroundColour: Int, mainTitle: String, mainLogo: String, navigationLogo: String, mainTabBarItemLabel: String, mainTabBarItemLogo: String, geolocationNotifications: Bool) {
         self.mainColour = self.getUIColourFromHex(hexValue: mainColour)
         self.opaqueColour = self.getUIColourFromHex(hexValue: opaqueColour)
         self.backgroundColour = self.getUIColourFromHex(hexValue: backgroundColour)
+        self.cellBackgroundColour = self.getUIColourFromHex(hexValue: cellBackgroundColour)
         self.mainTitle = mainTitle
         self.mainLogo = mainLogo
+        self.navigationLogo = navigationLogo
         self.mainTabBarItemLabel = mainTabBarItemLabel
         self.mainTabBarItemLogo = mainTabBarItemLogo
+        self.geolocationNotifications = geolocationNotifications
     }
 
     func getTime(time: Int) -> String {

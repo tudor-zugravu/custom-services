@@ -17,6 +17,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var navigationLogo: UIImageView!
+    
+    
     var categories: [String] = []
     let offersModel = OffersModel()
     var offers: [OfferModel] = []
@@ -54,6 +59,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         searchOn = false
         searchBar.text = ""
         
+        customizeAppearance()
+        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -76,6 +83,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         offers = []
         filteredOffers = []
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        
+        if Utils.instance.navigationLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
+            navigationLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            navigationLogo.image = UIImage(named: "banWhite")
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -362,8 +381,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
             }
         }
         
-        //TODO: add global default photos
-        mapMarkerView.logoImage.image = item.offerLogo! != "" ? UIImage(named: item.offerLogo!) : UIImage(named: "stChristophersLogo")
+        if item.offerLogo! != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(item.offerLogo!)").path
+            mapMarkerView.logoImage.image = UIImage(contentsOfFile: filename)
+        } else {
+            mapMarkerView.logoImage.image = UIImage(named: "ban")
+        }
         return mapMarkerView
     }
     

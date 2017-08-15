@@ -46,7 +46,8 @@ class OffersTableViewCell: UITableViewCell {
     }
     
     func customizeAppearance() {
-        containerView.backgroundColor = Utils.instance.backgroundColour
+        self.backgroundColor = Utils.instance.backgroundColour
+        containerView.backgroundColor = Utils.instance.cellBackgroundColour
         opaqueView.backgroundColor = Utils.instance.opaqueColour
     }
     
@@ -91,9 +92,18 @@ class OffersTableViewCell: UITableViewCell {
         }
         timeLabel.text = "\(minTime) - \(maxTime)"
         
-        //TODO: add global default photos
-        self.offerImage.image = offerImage != "" ? UIImage(named: offerImage) : UIImage(named: "stChristophersImage")
-        self.offerLogo.image = offerLogo != "" ? UIImage(named: offerLogo) : UIImage(named: "stChristophersLogo")
+        if offerImage != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)").path
+            self.offerImage.image = UIImage(contentsOfFile: filename)
+        } else {
+            self.offerImage.image = UIImage(named: "ban")
+        }
+        if offerLogo != "" {
+            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerLogo)").path
+            self.offerLogo.image = UIImage(contentsOfFile: filename)
+        } else {
+            self.offerLogo.image = UIImage(named: "ban")
+        }
         if (favourite == true) {
             isFavourite = true
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
