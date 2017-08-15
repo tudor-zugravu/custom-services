@@ -178,7 +178,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
             if offers[tag].favourite! {
-                let point = PointModel(id: offers[tag].id!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
                 points.append(point)
                 startMonitoring(point: point)
             } else {
@@ -383,7 +383,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         points = []
         for offer in offers {
             if offer.favourite! {
-                let point = PointModel(id: offer.id!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
                 points.append(point)
                 startMonitoring(point: point)
             }
@@ -469,7 +469,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
             print("nope")
             return
         }
-        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id)")
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id!)")
         region.notifyOnEntry = true
         region.notifyOnExit = false
         locationManager.startMonitoring(for: region)
@@ -477,7 +477,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     
     func stopMonitoring(point: PointModel) {
         for region in locationManager.monitoredRegions {
-            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id)" else { continue }
+            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id!)" else { continue }
             locationManager.stopMonitoring(for: circularRegion)
         }
     }

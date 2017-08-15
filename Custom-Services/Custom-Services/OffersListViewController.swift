@@ -92,7 +92,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         mainTitleLabel.text = Utils.instance.mainTitle
         mainLogoPicture.image = Utils.instance.mainLogo != "" ? UIImage(named: Utils.instance.mainLogo) : UIImage(named: "banWhite")
         mainTabBarItem.title = Utils.instance.mainTabBarItemLabel
-        mainTabBarItem.image = Utils.instance.mainTabBarItemLogo != "" ? UIImage(named: Utils.instance.mainTabBarItemLogo) : UIImage(named: "banTab")
+        mainTabBarItem.image = Utils.instance.mainTabBarItemLogo != "" ? UIImage(named: Utils.instance.mainTabBarItemLogo) : UIImage(named: "banTab")?.withRenderingMode(.alwaysOriginal)
+        
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -194,7 +195,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
             if offers[tag].favourite! {
-                let point = PointModel(id: offers[tag] !, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                let point = PointModel(id: offers[tag].locationId!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
                 points.append(point)
                 startMonitoring(point: point)
             } else {
@@ -390,7 +391,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         points = []
         for offer in offers {
             if offer.favourite! {
-                let point = PointModel(id: offer.id!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                let point = PointModel(id: offer.locationId!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
                 points.append(point)
                 startMonitoring(point: point)
             }
@@ -476,17 +477,17 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             print("nope")
             return
         }
-        print("start monitoring for \(point.id)")
-        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id)")
+        print("start monitoring for \(point.id!)")
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id!)")
         region.notifyOnEntry = true
         region.notifyOnExit = false
         locationManager.startMonitoring(for: region)
     }
     
     func stopMonitoring(point: PointModel) {
-        print("stop monitoring for \(point.id)")
+        print("stop monitoring for \(point.id!)")
         for region in locationManager.monitoredRegions {
-            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id)" else { continue }
+            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id!)" else { continue }
             locationManager.stopMonitoring(for: circularRegion)
         }
     }
