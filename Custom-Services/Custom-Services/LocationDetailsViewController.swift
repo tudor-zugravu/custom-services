@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 import HDAugmentedReality
+import UserNotifications
 
 class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol, CheckpointViewDelegate {
 
@@ -258,6 +259,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                         checkoutButton.isEnabled = false
                         checkoutButton.alpha = 0.5
                     }
+                    if let insertId = result["insertId"] as? Int {
+                        setNotification(offer: offers[categoryPickerView.selectedRow(inComponent: 0)], id: insertId)
+                    }
                     break
                 case "offer_expired":
                     let alert = UIAlertController(title: "Unsuccessful",
@@ -385,6 +389,51 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         let done = UIAlertAction(title: "Done", style: .default, handler: nil)
         alert.addAction(done)
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func setNotification(offer: OfferModel, id: Int) {
+        var minute = 0
+        var hour = 0
+        if UserDefaults.standard.value(forKey: "type") as! String != "service" {
+            let DateArray = offer.minTime!.components(separatedBy: ":")
+            hour = Int(DateArray[0])!
+            minute = Int(DateArray[1])!
+        } else {
+            let DateArray = timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)].components(separatedBy: "-:")
+            hour = Int(DateArray[0])!
+            minute = Int(DateArray[1])!
+            print(timeIntervals[timeIntervalPickerView.selectedRow(inComponent: 0)])
+            print(hour)
+            print(minute)
+        }
+        var components = DateComponents()
+        let DateArray = offer.minTime!.components(separatedBy: ":")
+        components.year = Calendar.current.component(.year, from: Date())
+        components.month = Calendar.current.component(.month, from: Date())
+        components.day = Calendar.current.component(.day, from: Date())
+        components.hour = Int(DateArray[0])!
+        components.minute = Int(DateArray[1])!
+        components.second = Calendar.current.component(.second, from: Date())
+        let date = Calendar.current.date(from: components)!
+        var timeInterval = 10.0
+        if date.timeIntervalSinceNow > 900 {
+            timeInterval = date.timeIntervalSinceNow - 900
+        }
+        let notification = UNMutableNotificationContent()
+        notification.title = "\(offer.name!)"
+        notification.body = "Your receipt is due soon"
+        notification.categoryIdentifier = "appointmentDue.category"
+        notification.sound = UNNotificationSound.default()
+        print(timeInterval)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
+        let request = UNNotificationRequest(identifier: "newAppointment\(id)", content: notification, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request){
+            (error) in
+            if error != nil{
+                print ("Add notification error: \(error?.localizedDescription)")
+            }
+        }
     }
 
     @IBAction func starButtonPressed(_ sender: AnyObject) {

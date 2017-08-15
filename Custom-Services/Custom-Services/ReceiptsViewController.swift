@@ -334,7 +334,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
             }
         }
         self.receipts = receiptsAux.sorted(by: { (receipt1, receipt2) -> Bool in
-            if receipt1.timeInterval!.compare(receipt2.timeInterval!) == .orderedAscending {
+            if receipt1.timeInterval!.compare(receipt2.timeInterval!) == .orderedDescending {
                 return true
             }
             return false

@@ -16,6 +16,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var navigationView: UIView!
+    @IBOutlet weak var mainTitleLabel: UILabel!
+    @IBOutlet weak var mainLogoPicture: UIImageView!
+    @IBOutlet var mainView: UIView!
+    @IBOutlet weak var mainTabBarItem: UITabBarItem!
+    
     var categories: [String] = []
     let offersModel = OffersModel()
     let favouriteModel = FavouriteModel()
@@ -31,6 +37,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     var searchOn : Bool = false
     let locationManager = CLLocationManager()
     var refreshControl: UIRefreshControl!
+    var points: [PointModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,21 +53,19 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.delegate = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        customizeAppearance()
         searchOn = false
         searchBar.text = ""
-        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -79,6 +84,15 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         offers = []
         filteredOffers = []
         tableView.reloadData()
+    }
+    
+    func customizeAppearance() {
+        navigationView.backgroundColor = Utils.instance.mainColour
+        mainView.backgroundColor = Utils.instance.backgroundColour
+        mainTitleLabel.text = Utils.instance.mainTitle
+        mainLogoPicture.image = Utils.instance.mainLogo != "" ? UIImage(named: Utils.instance.mainLogo) : UIImage(named: "banWhite")
+        mainTabBarItem.title = Utils.instance.mainTabBarItemLabel
+        mainTabBarItem.image = Utils.instance.mainTabBarItemLogo != "" ? UIImage(named: Utils.instance.mainTabBarItemLogo) : UIImage(named: "banTab")
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -173,6 +187,23 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             offers[tag].favourite = offers[tag].favourite! ? false : true
+            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                    points = pointsAux
+                }
+            }
+            if offers[tag].favourite! {
+                let point = PointModel(id: offers[tag] !, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                points.append(point)
+                startMonitoring(point: point)
+            } else {
+                let point = points.filter({ $0.id == offers[tag].id!})[0]
+                points.remove(at: points.index(of: point)!)
+                stopMonitoring(point: point)
+            }
+            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
         }
     }
     
@@ -287,6 +318,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 offersAux.append(item)
             }
         }
+        
         offers = offersAux
         
         if let currentLocation = locationManager.location {
@@ -294,10 +326,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 offer.setDistance(location: currentLocation)
             }
         }
-        
-        let storedOffers = NSKeyedArchiver.archivedData(withRootObject: offers)
-        UserDefaults.standard.set(storedOffers, forKey:"storedOffers");
-        
+        let storedOffersAux = NSKeyedArchiver.archivedData(withRootObject: offers)
+        UserDefaults.standard.set(storedOffersAux, forKey:"storedOffers");
         reloadTable()
         if refreshControl.isRefreshing {
             refreshControl.endRefreshing()
@@ -343,6 +373,30 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         offers = Utils.instance.removeDuplicateLocations(offers: offers, onlyAvailableOffers: onlyAvailableOffers)
         offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
         tableView.reloadData()
+        
+        reloadPoints()
+    }
+    
+    func reloadPoints() {
+        if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+            if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                points = pointsAux
+            }
+        }
+        for point in points {
+            stopMonitoring(point: point)
+        }
+        points = []
+        for offer in offers {
+            if offer.favourite! {
+                let point = PointModel(id: offer.id!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                points.append(point)
+                startMonitoring(point: point)
+            }
+        }
+        let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+        UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
     }
     
     func refreshTable() {
@@ -415,5 +469,33 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
             dropdownMenuButton.hideMenu()
         }
         view.endEditing(true)
+    }
+    
+    func startMonitoring(point: PointModel) {
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            print("nope")
+            return
+        }
+        print("start monitoring for \(point.id)")
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id)")
+        region.notifyOnEntry = true
+        region.notifyOnExit = false
+        locationManager.startMonitoring(for: region)
+    }
+    
+    func stopMonitoring(point: PointModel) {
+        print("stop monitoring for \(point.id)")
+        for region in locationManager.monitoredRegions {
+            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id)" else { continue }
+            locationManager.stopMonitoring(for: circularRegion)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        print("Monitoring failed for region with identifier: \(region!.identifier)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location Manager failed with the following error: \(error)")
     }
 }

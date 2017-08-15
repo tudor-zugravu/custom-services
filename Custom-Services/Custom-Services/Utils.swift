@@ -7,10 +7,19 @@
 //
 
 import Foundation
+import UIKit
 
 private let _instance = Utils()
 
 class Utils: NSObject {
+    
+    var mainColour: UIColor = UIColor.white
+    var opaqueColour: UIColor = UIColor.white
+    var backgroundColour: UIColor = UIColor.white
+    var mainTitle: String = ""
+    var mainLogo: String = ""
+    var mainTabBarItemLabel: String = ""
+    var mainTabBarItemLogo: String = ""
     
     fileprivate override init() {
         
@@ -18,6 +27,20 @@ class Utils: NSObject {
     
     class var instance: Utils {
         return _instance
+    }
+    
+    func getUIColourFromHex(hexValue:Int) -> UIColor {
+        return UIColor(red: CGFloat((hexValue >> 16) & 0xff) / 255.0, green:CGFloat((hexValue >> 8) & 0xff) / 255.0, blue:CGFloat(hexValue & 0xff) / 255.0, alpha: 1)
+    }
+    
+    func setCustomisationParameters(mainColour: Int, opaqueColour: Int, backgroundColour: Int, mainTitle: String, mainLogo: String, mainTabBarItemLabel: String, mainTabBarItemLogo: String) {
+        self.mainColour = self.getUIColourFromHex(hexValue: mainColour)
+        self.opaqueColour = self.getUIColourFromHex(hexValue: opaqueColour)
+        self.backgroundColour = self.getUIColourFromHex(hexValue: backgroundColour)
+        self.mainTitle = mainTitle
+        self.mainLogo = mainLogo
+        self.mainTabBarItemLabel = mainTabBarItemLabel
+        self.mainTabBarItemLogo = mainTabBarItemLogo
     }
 
     func getTime(time: Int) -> String {
@@ -77,7 +100,6 @@ class Utils: NSObject {
     }
     
     func filterOffers(offers: [OfferModel], distance: Int, minTime: String, maxTime: String, sortBy: Int, onlyAvailableOffers: Bool, allCategories: Bool, allowedCategories: [String]) -> [OfferModel] {
-        
         return offers.filter({ (offer) -> Bool in
             if offer.distance! > distance * 1000 {
                 return false
@@ -159,7 +181,6 @@ class Utils: NSObject {
     }
     
     func removeDuplicateLocations(offers: [OfferModel], onlyAvailableOffers: Bool) -> [OfferModel] {
-        
         guard let firstOffer = offers.first else {
             return [] // Empty array
         }
@@ -184,7 +205,7 @@ class Utils: NSObject {
                 if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id && offer.discount != currentOffer.discount {
                     currentOffer.quantity! += offer.quantity!
                     if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
-                        let discounts = currentOffer.discountRange?.components(separatedBy: "-")
+                        let discounts = currentOffer.discountRange?.components(separatedBy: " - ")
                         if Float(discounts![0])! - offer.discount! > 0 {
                             if UserDefaults.standard.value(forKey: "type") as! String == "location" {
                                 currentOffer.discountRange = "\(Int(offer.discount!)) - \(discounts![1])"
@@ -212,7 +233,7 @@ class Utils: NSObject {
             } else if UserDefaults.standard.value(forKey: "type") as! String == "location" {
                 if offer.locationId == currentOffer.locationId && offer.id != currentOffer.id && offer.discount != currentOffer.discount {
                     if currentOffer.discountRange != nil && currentOffer.discountRange != "" {
-                        let discounts = currentOffer.discountRange?.components(separatedBy: "-")
+                        let discounts = currentOffer.discountRange?.components(separatedBy: " - ")
                         if Float(discounts![0])! - offer.discount! > 0 {
                             if UserDefaults.standard.value(forKey: "type") as! String == "location" {
                                 currentOffer.discountRange = "\(Int(offer.discount!)) - \(discounts![1])"

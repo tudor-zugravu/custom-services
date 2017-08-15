@@ -35,7 +35,7 @@ class OfferModel: NSObject, NSCoding {
     //empty constructor
     override init()
     {
-        
+        self.distance = 0
     }
     
     //construct with @name, @email and @telephone parameters
@@ -104,6 +104,9 @@ class OfferModel: NSObject, NSCoding {
     
     func setDistance(location: CLLocation) {
         self.distance = Int(round(location.distance(from: CLLocation(latitude: self.latitude!, longitude: self.longitude!))))
+        if self.distance == nil {
+            self.distance = 0
+        }
     }
     
     //prints object's current state

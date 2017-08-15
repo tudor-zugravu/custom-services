@@ -95,10 +95,10 @@ class LogInViewController: UIViewController, LogInModelProtocol {
                                 try? data.write(to: filename)
                                 UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
                             } else {
-                                UserDefaults.standard.set(profilePicture, forKey:"");
+                                UserDefaults.standard.set("", forKey:"profilePicture");
                             }
                         } else {
-                            UserDefaults.standard.set(profilePicture, forKey:"");
+                            UserDefaults.standard.set("", forKey:"profilePicture");
                         }
                     }
                 }

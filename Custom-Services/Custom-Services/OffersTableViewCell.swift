@@ -26,12 +26,13 @@ class OffersTableViewCell: UITableViewCell {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var opaqueView: UIView!
     
+    
     weak var delegate: OfferListCellProtocol?
     var isFavourite: Bool = true
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        customizeAppearance()
         //cell layout
         containerView.layer.cornerRadius = 10
         containerView.layer.borderWidth = 1
@@ -42,6 +43,11 @@ class OffersTableViewCell: UITableViewCell {
         containerView.layer.shadowOpacity = 0.6
         containerView.layer.masksToBounds = false
         containerView.clipsToBounds = false
+    }
+    
+    func customizeAppearance() {
+        containerView.backgroundColor = Utils.instance.backgroundColour
+        opaqueView.backgroundColor = Utils.instance.opaqueColour
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

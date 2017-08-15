@@ -51,6 +51,72 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                     self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
                 }
             }
+            
+            
+            
+            
+            
+            
+            
+            var mainLogo = ""
+            var mainTabBarItemLogo = ""
+            
+//            if let auxImage = systemData["main_logo"] as? String {
+            if true {
+                let auxImage = "drinkUpMainLogo.png"
+                let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(auxImage)")
+                if FileManager.default.fileExists(atPath: filename.path) {
+                    mainLogo = auxImage
+                } else {
+                    // Download the profile picture, if exists
+                    if let url = URL(string: "http://46.101.29.197/system_images/\(auxImage)") {
+                        if let data = try? Data(contentsOf: url) {
+                            var auxPic: UIImage
+                            auxPic = UIImage(data: data)!
+                            if let data = UIImagePNGRepresentation(auxPic) {
+                                try? data.write(to: filename)
+                                mainLogo = auxImage
+                            } else {
+                                mainLogo = ""
+                            }
+                        } else {
+                            mainLogo = ""
+                        }
+                    }
+                }
+            } else {
+                mainLogo = ""
+            }
+            
+            //            if let auxImage = systemData["main_tab"] as? String {
+            if true {
+                let auxImage = "drinkUpMainTab.png"
+                let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(auxImage)")
+                if FileManager.default.fileExists(atPath: filename.path) {
+                    mainTabBarItemLogo = auxImage
+                } else {
+                    // Download the profile picture, if exists
+                    if let url = URL(string: "http://46.101.29.197/system_images/\(auxImage)") {
+                        if let data = try? Data(contentsOf: url) {
+                            var auxPic: UIImage
+                            auxPic = UIImage(data: data)!
+                            if let data = UIImagePNGRepresentation(auxPic) {
+                                try? data.write(to: filename)
+                                mainTabBarItemLogo = auxImage
+                                print("yep....")
+                            } else {
+                                mainTabBarItemLogo = ""
+                            }
+                        } else {
+                            mainTabBarItemLogo = ""
+                        }
+                    }
+                }
+            } else {
+                mainTabBarItemLogo = ""
+            }
+            
+            Utils.instance.setCustomisationParameters(mainColour: Int("EB2E20", radix: 16)!, opaqueColour: Int("FDEAE9", radix: 16)!, backgroundColour: Int("FFFFFF", radix: 16)!, mainTitle: "Drink Up!", mainLogo: mainLogo, mainTabBarItemLabel: "Locals", mainTabBarItemLogo: mainTabBarItemLogo)
         }
     }
 

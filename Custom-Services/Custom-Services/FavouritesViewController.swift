@@ -20,6 +20,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     let offersModel = OffersModel()
     let favouriteModel = FavouriteModel()
     var offers: [OfferModel] = []
+    var points: [PointModel] = []
     var filteredOffers: [OfferModel] = []
     var maxDistance: Int = 50
     var minTime: String = "08:00"
@@ -170,6 +171,23 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             offers[tag].favourite = offers[tag].favourite! ? false : true
+            if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+                if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                    let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                    points = pointsAux
+                }
+            }
+            if offers[tag].favourite! {
+                let point = PointModel(id: offers[tag].id!, name: offers[tag].name!, latitude: offers[tag].latitude!, longitude: offers[tag].longitude!, radius: CLLocationDistance(100.0))
+                points.append(point)
+                startMonitoring(point: point)
+            } else {
+                let point = points.filter({ $0.id == offers[tag].id!})[0]
+                points.remove(at: points.index(of: point)!)
+                stopMonitoring(point: point)
+            }
+            let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+            UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
             if offers[tag].favourite == false {
                 if filteredOffers.contains(offers[tag]) {
                     filteredOffers.remove(at: filteredOffers.index(of: offers[tag])!)
@@ -291,6 +309,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
         }
+        
         offers = offersAux
         
         if let currentLocation = locationManager.location {
@@ -346,8 +365,31 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         offers = Utils.instance.sortOffers(offers: offers, sortBy: 0)
         offers = Utils.instance.removeDuplicateLocations(offers: offers, onlyAvailableOffers: onlyAvailableOffers)
         offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
-        
         tableView.reloadData()
+    
+        reloadPoints()
+    }
+    
+    func reloadPoints() {
+        if (UserDefaults.standard.value(forKey: "storedPoints") != nil) {
+            if let data = UserDefaults.standard.data(forKey: "storedPoints"),
+                let pointsAux = NSKeyedUnarchiver.unarchiveObject(with: data) as? [PointModel] {
+                points = pointsAux
+            }
+        }
+        for point in points {
+            stopMonitoring(point: point)
+        }
+        points = []
+        for offer in offers {
+            if offer.favourite! {
+                let point = PointModel(id: offer.id!, name: offer.name!, latitude: offer.latitude!, longitude: offer.longitude!, radius: CLLocationDistance(100.0))
+                points.append(point)
+                startMonitoring(point: point)
+            }
+        }
+        let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
+        UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
     }
     
     func refreshTable() {
@@ -420,6 +462,32 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
             dropdownMenuButton.hideMenu()
         }
         view.endEditing(true)
+    }
+    
+    func startMonitoring(point: PointModel) {
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            print("nope")
+            return
+        }
+        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: point.latitude!, longitude: point.longitude!), radius: point.radius!, identifier: "\(point.id)")
+        region.notifyOnEntry = true
+        region.notifyOnExit = false
+        locationManager.startMonitoring(for: region)
+    }
+    
+    func stopMonitoring(point: PointModel) {
+        for region in locationManager.monitoredRegions {
+            guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == "\(point.id)" else { continue }
+            locationManager.stopMonitoring(for: circularRegion)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        print("Monitoring failed for region with identifier: \(region!.identifier)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location Manager failed with the following error: \(error)")
     }
 }
 
