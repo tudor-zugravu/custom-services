@@ -1,0 +1,51 @@
+html, body {
+    height: 100%;
+}
+.header {
+	height: 10%;
+	border-bottom: solid 1px #CDD7DC;
+}
+.content {
+	background-color: #FFFFFF;
+	height: 85%;
+}
+.footer {
+	height: 5%;
+	border-top: solid 1px #CDD7DC;
+}
+.side-menu {
+	border-right: solid 1px #CDD7DC;
+}
+.welcome-label {
+	margin-top: 40px;
+	text-align: center;
+	color: #FFFFFF;
+}
+.login {
+	margin-top: 150px;
+}
+.login-main-logo {
+	width: 100%;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+.error-logo {
+	width: 100%;
+	margin-top: 100px;
+	margin-bottom: 20px;
+}
+.button {
+	border: 1px solid #CDD7DC;
+	color: #FFFFFF;
+}
+.button:hover {
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    border-width: 0px;
+    cursor: pointer;
+    color: #FFFFFF;
+}
+#error-message {
+	margin-bottom: 20px;
+	text-align: center;
+	color: #686868;
+}

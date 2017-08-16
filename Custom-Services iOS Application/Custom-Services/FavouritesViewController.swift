@@ -1,16 +1,16 @@
 //
-//  VendorsListViewController.swift
+//  FavouritesViewController.swift
 //  Custom-Services
 //
-//  Created by Tudor Zugravu on 01/08/2017.
+//  Created by Tudor Zugravu on 09/08/2017.
 //  Copyright © 2017 Tudor Zugravu. All rights reserved.
 //
 
 import UIKit
 import CoreLocation
 
-class OffersListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol, FavouriteModelProtocol {
-
+class FavouritesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol, FavouriteModelProtocol {
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
@@ -20,12 +20,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var navigationLogo: UIImageView!
     @IBOutlet var mainView: UIView!
-    @IBOutlet weak var mainTabBarItem: UITabBarItem!
     
     var categories: [String] = []
     let offersModel = OffersModel()
     let favouriteModel = FavouriteModel()
     var offers: [OfferModel] = []
+    var points: [PointModel] = []
     var filteredOffers: [OfferModel] = []
     var maxDistance: Int = 50
     var minTime: String = "08:00"
@@ -37,7 +37,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     var searchOn : Bool = false
     let locationManager = CLLocationManager()
     var refreshControl: UIRefreshControl!
-    var points: [PointModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,22 +52,27 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.delegate = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        customizeAppearance()
         searchOn = false
         searchBar.text = ""
+        
+        customizeAppearance()
+        
         // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+        
         // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             offersModel.requestOffers(hasCategories: true)
@@ -90,21 +94,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
         mainTitleLabel.text = Utils.instance.mainTitle
-        mainTabBarItem.title = Utils.instance.mainTabBarItemLabel
         
         if Utils.instance.navigationLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
             navigationLogo.image = UIImage(contentsOfFile: filename)
         } else {
             navigationLogo.image = UIImage(named: "banWhite")
-        }
-        if Utils.instance.mainTabBarItemLogo != "" {
-            let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.mainTabBarItemLogo)").path
-            mainTabBarItem.image = UIImage(contentsOfFile: filename)
-            mainTabBarItem.selectedImage = UIImage(contentsOfFile: filename)
-        } else {
-            mainTabBarItem.image = UIImage(named: "banTab")
-            mainTabBarItem.selectedImage = UIImage(named: "banTab")
         }
     }
     
@@ -157,10 +152,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let locationDetailsViewController = (self.storyboard?.instantiateViewController(withIdentifier: "locationDetailsViewController"))! as! LocationDetailsViewController
-        locationDetailsViewController.locationId = offers[indexPath.row].locationId!
-        locationDetailsViewController.favourite = offers[indexPath.row].favourite!
-        self.navigationController?.pushViewController(locationDetailsViewController , animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -169,10 +160,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "offersFiltersViewController") {
+        if (segue.identifier == "favouritesFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
-
+            
             popoverFiltersViewController.categories = categories
             popoverFiltersViewController.minTime = minTime
             popoverFiltersViewController.maxTime = maxTime
@@ -218,11 +209,19 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 }
                 let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
                 UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
+                if offers[tag].favourite == false {
+                    if filteredOffers.contains(offers[tag]) {
+                        filteredOffers.remove(at: filteredOffers.index(of: offers[tag])!)
+                    }
+                    offers.remove(at: tag)
+                    tableView.reloadData()
+                }
             }
         }
     }
     
     func offersReceived(_ receivedOffers: [[String:Any]]) {
+        
         var offersAux: [OfferModel] = []
         var item:OfferModel;
         
@@ -239,98 +238,97 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 let endingTime = receivedOffers[i]["ending_time"] as? String,
                 let rating = Float((receivedOffers[i]["rating"] as? String)!),
                 let latitude = Double((receivedOffers[i]["latitude"] as? String)!),
-                let longitude = Double((receivedOffers[i]["longitude"] as? String)!)
-            {
-                item = OfferModel()
-                item.id = offerId
-                item.locationId = locationId
-                item.name = name
-                item.address = address
-                item.about = about
-                item.rating = Float(rating)
-                item.discount = Float(discount)
-                item.minTime = Utils.instance.trimSeconds(time: startingTime)
-                item.maxTime = Utils.instance.trimSeconds(time: endingTime)
-                item.latitude = Double(latitude)
-                item.longitude = Double(longitude)
+                let longitude = Double((receivedOffers[i]["longitude"] as? String)!),
+                let favourite = receivedOffers[i]["favourite"] as? String {
                 
-                if UserDefaults.standard.bool(forKey: "hasCategories") == true {
-                    if let category = receivedOffers[i]["category"] as? String {
-                        item.category = category
-                    }
-                }
-                
-                if let quantity = receivedOffers[i]["quantity"] as? String {
-                    item.quantity = Int(quantity)
-                } else {
-                    item.quantity = -1
-                }
-                
-                if let appointmentDuration = receivedOffers[i]["appointment_minute_duration"] as? String {
-                    item.appointmentDuration = Int(appointmentDuration)
-                } else {
-                    item.appointmentDuration = -1
-                }
-                
-                if let favourite = receivedOffers[i]["favourite"] as? String {
-                        item.favourite = favourite == "1" ? true : false
-                } else {
-                    item.favourite = false
-                }
-
-                if let logoImage = receivedOffers[i]["logo_image"] as? String {
+                if favourite == "1" {
+                    item = OfferModel()
+                    item.id = offerId
+                    item.locationId = locationId
+                    item.name = name
+                    item.address = address
+                    item.about = about
+                    item.rating = Float(rating)
+                    item.discount = Float(discount)
+                    item.minTime = Utils.instance.trimSeconds(time: startingTime)
+                    item.maxTime = Utils.instance.trimSeconds(time: endingTime)
+                    item.latitude = Double(latitude)
+                    item.longitude = Double(longitude)
                     
-                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(logoImage)")
-                    if FileManager.default.fileExists(atPath: filename.path) {
-                        item.offerLogo = logoImage
+                    if UserDefaults.standard.bool(forKey: "hasCategories") == true {
+                        if let category = receivedOffers[i]["category"] as? String {
+                            item.category = category
+                        }
+                    }
+                    
+                    if let quantity = receivedOffers[i]["quantity"] as? String {
+                        item.quantity = Int(quantity)
                     } else {
-                        // Download the profile picture, if exists
-                        if let url = URL(string: "http://46.101.29.197/vendor_images/\(logoImage)") {
-                            if let data = try? Data(contentsOf: url) {
-                                var logoImg: UIImage
-                                logoImg = UIImage(data: data)!
-                                if let data = UIImagePNGRepresentation(logoImg) {
-                                    try? data.write(to: filename)
-                                    item.offerLogo = logoImage
+                        item.quantity = -1
+                    }
+                    
+                    if let appointmentDuration = receivedOffers[i]["appointment_minute_duration"] as? String {
+                        item.appointmentDuration = Int(appointmentDuration)
+                    } else {
+                        item.appointmentDuration = -1
+                    }
+                    
+                    item.favourite = true
+                    
+                    if let logoImage = receivedOffers[i]["logo_image"] as? String {
+                        
+                        let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(logoImage)")
+                        if FileManager.default.fileExists(atPath: filename.path) {
+                            item.offerLogo = logoImage
+                        } else {
+                            // Download the profile picture, if exists
+                            if let url = URL(string: "http://46.101.29.197/resources/vendor_images/\(logoImage)") {
+                                if let data = try? Data(contentsOf: url) {
+                                    var logoImg: UIImage
+                                    logoImg = UIImage(data: data)!
+                                    if let data = UIImagePNGRepresentation(logoImg) {
+                                        try? data.write(to: filename)
+                                        item.offerLogo = logoImage
+                                    } else {
+                                        item.offerLogo = ""
+                                    }
                                 } else {
                                     item.offerLogo = ""
                                 }
-                            } else {
-                                item.offerLogo = ""
                             }
                         }
-                    }
-                } else {
-                    item.offerLogo = ""
-                }
-                
-                if let offerImage = receivedOffers[i]["image"] as? String {
-                    
-                    let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)")
-                    if FileManager.default.fileExists(atPath: filename.path) {
-                        item.offerImage = offerImage
                     } else {
-                        // Download the profile picture, if exists
-                        if let url = URL(string: "http://46.101.29.197/vendor_images/\(offerImage)") {
-                            if let data = try? Data(contentsOf: url) {
-                                var offerImg: UIImage
-                                offerImg = UIImage(data: data)!
-                                if let data = UIImagePNGRepresentation(offerImg) {
-                                    try? data.write(to: filename)
-                                    item.offerImage = offerImage
+                        item.offerLogo = ""
+                    }
+                    
+                    if let offerImage = receivedOffers[i]["image"] as? String {
+                        
+                        let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)")
+                        if FileManager.default.fileExists(atPath: filename.path) {
+                            item.offerImage = offerImage
+                        } else {
+                            // Download the profile picture, if exists
+                            if let url = URL(string: "http://46.101.29.197/resources/vendor_images/\(offerImage)") {
+                                if let data = try? Data(contentsOf: url) {
+                                    var offerImg: UIImage
+                                    offerImg = UIImage(data: data)!
+                                    if let data = UIImagePNGRepresentation(offerImg) {
+                                        try? data.write(to: filename)
+                                        item.offerImage = offerImage
+                                    } else {
+                                        item.offerImage = ""
+                                    }
                                 } else {
                                     item.offerImage = ""
                                 }
-                            } else {
-                                item.offerImage = ""
                             }
                         }
+                    } else {
+                        item.offerImage = ""
                     }
-                } else {
-                    item.offerImage = ""
+                    
+                    offersAux.append(item)
                 }
-                
-                offersAux.append(item)
             }
         }
         
@@ -341,8 +339,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 offer.setDistance(location: currentLocation)
             }
         }
-        let storedOffersAux = NSKeyedArchiver.archivedData(withRootObject: offers)
-        UserDefaults.standard.set(storedOffersAux, forKey:"storedOffers");
+        
+        let storedOffers = NSKeyedArchiver.archivedData(withRootObject: offers)
+        UserDefaults.standard.set(storedOffers, forKey:"storedOffers");
+        
         reloadTable()
         if refreshControl.isRefreshing {
             refreshControl.endRefreshing()
@@ -350,7 +350,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool) {
-
+        
         self.maxDistance = distance
         self.minTime = lowerTimeInterval
         self.maxTime = higherTimeInterval
@@ -388,7 +388,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         offers = Utils.instance.removeDuplicateLocations(offers: offers, onlyAvailableOffers: onlyAvailableOffers)
         offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
         tableView.reloadData()
-        
+    
         reloadPoints()
     }
     
@@ -430,7 +430,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
                 ({ () -> (Void) in
-                    self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
+                    self.performSegue(withIdentifier: "favouritesProfileViewController", sender: nil)
                 }),
                 ({ () -> (Void) in
                     self.signOut(Any.self)
@@ -438,23 +438,23 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         } else {
             dropdownMenuButton.initMenu(["View Profile", "View Receipts", "Sign Out"], actions: [
                 ({ () -> (Void) in
-                    self.performSegue(withIdentifier: "offersProfileViewController", sender: nil)
+                    self.performSegue(withIdentifier: "favouritesProfileViewController", sender: nil)
                 }),
                 ({ () -> (Void) in
-                    self.performSegue(withIdentifier: "offersReceiptsViewController", sender: nil)
+                    self.performSegue(withIdentifier: "favouritesReceiptsViewController", sender: nil)
                 }),
                 ({ () -> (Void) in
-                    self.signOut(Any.self) 
+                    self.signOut(Any.self)
                 })])
         }
     }
-
+    
     func signOut(_ sender: Any) {
         
         Utils.instance.signOut()
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
-
+    
     // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
@@ -514,3 +514,4 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         print("Location Manager failed with the following error: \(error)")
     }
 }
+
