@@ -44,8 +44,22 @@ if (is_null($row)) {
     $_SESSION['has_credit'] = true;
   }
 
-  if (strcmp($row->has_categories, "1")) {
-    $_SESSION['has_categories'] = true;
+  if ($row->has_categories == "1") {
+    $query = "SELECT * FROM Categories";
+    if ($result = mysqli_query($con, $query)) {
+      $resultArray = array();
+      $tempArray = array();
+     
+      while($row = $result->fetch_object()) {
+        $tempArray = $row;
+        array_push($resultArray, $tempArray);
+      }
+     
+      $_SESSION['categories'] = $resultArray;
+      $_SESSION['has_categories'] = true;
+    } else {
+      $_SESSION['has_categories'] = false;
+    }
   } else {
     $_SESSION['has_categories'] = false;
   }

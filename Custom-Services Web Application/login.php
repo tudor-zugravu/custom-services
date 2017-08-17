@@ -41,7 +41,7 @@ session_start();
             <div class="row">
               <div class="col-3"></div>
               <div class="col-6">
-                <img src="resources/system_images/<?php echo $_SESSION['main_logo']?>" class="login-main-logo"/>
+                <img src="resources/system_images/<?php echo $_SESSION['main_logo']?>" class="main-logo"/>
               </div>
               <div class="col-3"></div>
             </div>

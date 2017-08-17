@@ -26,7 +26,7 @@ class FavouriteModel: NSObject, URLSessionDataDelegate {
             self.data = NSMutableData()
             
             // Setting up the server session with the URL and the request
-            let url: URL = URL(string: "http://46.101.29.197/services/update_favourite.php")!
+            let url: URL = URL(string: "https://custom-services.co.uk/services/update_favourite.php")!
             let session = URLSession.shared
             var request = URLRequest(url:url)
             request.httpMethod = "POST"

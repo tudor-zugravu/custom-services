@@ -73,7 +73,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                     profilePictureImage.image = UIImage(contentsOfFile: filename.path)
                 } else {
                     // Download the profile picture, if exists
-                    if let url = URL(string: "http://46.101.29.197/resources/profile_pictures/\(profilePicture)") {
+                    if let url = URL(string: "https://custom-services.co.uk/resources/profile_pictures/\(profilePicture)") {
                         if let data = try? Data(contentsOf: url) {
                             var profilePic: UIImage
                             profilePic = UIImage(data: data)!

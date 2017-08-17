@@ -27,7 +27,7 @@ class CheckoutModel: NSObject, URLSessionDataDelegate {
             self.data = NSMutableData()
             
             // Setting up the server session with the URL and the request
-            let url: URL = URL(string: "http://46.101.29.197/services/product_checkout.php")!
+            let url: URL = URL(string: "https://custom-services.co.uk/services/product_checkout.php")!
             let session = URLSession.shared
             var request = URLRequest(url:url)
             request.httpMethod = "POST"
@@ -71,7 +71,7 @@ class CheckoutModel: NSObject, URLSessionDataDelegate {
             self.data = NSMutableData()
             
             // Setting up the server session with the URL and the request
-            let url: URL = URL(string: "http://46.101.29.197/services/service_checkout.php")!
+            let url: URL = URL(string: "https://custom-services.co.uk/services/service_checkout.php")!
             let session = URLSession.shared
             var request = URLRequest(url:url)
             request.httpMethod = "POST"

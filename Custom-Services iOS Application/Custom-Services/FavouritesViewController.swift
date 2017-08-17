@@ -282,7 +282,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                             item.offerLogo = logoImage
                         } else {
                             // Download the profile picture, if exists
-                            if let url = URL(string: "http://46.101.29.197/resources/vendor_images/\(logoImage)") {
+                            if let url = URL(string: "https://custom-services.co.uk/resources/vendor_images/\(logoImage)") {
                                 if let data = try? Data(contentsOf: url) {
                                     var logoImg: UIImage
                                     logoImg = UIImage(data: data)!
@@ -308,7 +308,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
                             item.offerImage = offerImage
                         } else {
                             // Download the profile picture, if exists
-                            if let url = URL(string: "http://46.101.29.197/resources/vendor_images/\(offerImage)") {
+                            if let url = URL(string: "https://custom-services.co.uk/resources/vendor_images/\(offerImage)") {
                                 if let data = try? Data(contentsOf: url) {
                                     var offerImg: UIImage
                                     offerImg = UIImage(data: data)!
