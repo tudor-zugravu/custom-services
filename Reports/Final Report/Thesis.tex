@@ -1,0 +1,115 @@
+%&latexf
+\documentclass[]{kclthesis}  % [releaseproject] will check release,
+							 % [notreleaseproject] will check not release.
+
+% nomenclature 
+%\usepackage[intoc]{nomencl}
+% glossaries
+\usepackage[toc, acronym]{glossaries} 
+
+\linespread{1.5}
+\newfam\msbfam
+\def\Bbb#1{\fam\msbfam\relax#1}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{exa}{Example}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newcommand{\ind}{1\hspace{-2.1mm}{1}} %Indicator Function
+\newcommand{\I}{\mathtt{i}}
+\newcommand{\D}{\mathrm{d}}
+\newcommand{\E}{\mathrm{e}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\atanh}{\mathrm{arctanh}}
+\def\equalDistrib{\,{\buildrel \Delta \over =}\,}
+\numberwithin{equation}{section}
+\def\blue#1{\textcolor{blue}{#1}}
+\def\red#1{\textcolor{red}{#1}}
+
+% customize your general setup here
+\title{Domain Specific Sales System Generator with Augmented Reality}
+\author{Tudor Zugravu}
+\modulecode{7CCSMPRJ}
+\submissiontitle{Final Project Report}
+\studentnumber{1671159}
+\programme{Advanced Software Engineering with Management}
+\supervisor{Andrew Holyer}
+\wordcount{0}
+
+
+%\makenomenclature
+\makeglossaries
+
+
+
+
+\begin{document}
+\pagenumbering{gobble}
+
+
+%%%%%% depends what you like, might try out the other frontpage as well
+\maketitle 		% official styled layout
+\maketitleTwo 	% adapted layout which looks nicer from my point of view.
+
+%%%%%% empty page after main page.
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+%%%%%% Abstract
+\include{contents/abstract}
+%%%%%% Table of contents
+
+\pagenumbering{roman}
+\setcounter{tocdepth}{4}
+\tableofcontents
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{structure/figures_tables}
+\include{structure/acknowledgements}
+\fancyhead{}
+\fancyfoot{}
+\pagestyle{fancy} 
+%\fancyhead{\sffamily\small \thepage}
+%\fancyhead{\sffamily\small \nouppercase{\rightmark}}
+\fancyhead[RO,LE]{\sffamily\small \thepage}
+\fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.0pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Main content
+\pagenumbering{arabic}
+\include{contents/introduction}
+\include{contents/background}
+\include{contents/main}
+\include{contents/conclusion}
+
+\include{contents/nomenclature}
+%%%%% References
+\bibliographystyle{ieeetr}
+\bibliography{bibs/sample1, bibs/sample2} 
+%%%%% Declaration
+%\include{structure/declaration}
+%%%%% Appendix 
+\appendix
+\include{appendix/app_1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
