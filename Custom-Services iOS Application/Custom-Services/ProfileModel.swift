@@ -26,7 +26,7 @@ class ProfileModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://custom-services.co.uk/services/update_user_details.php")!
+        let url: URL = URL(string: "\(Utils.serverAddress)/services/update_user_details.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.httpMethod = "POST"
@@ -67,7 +67,7 @@ class ProfileModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://custom-services.co.uk/services/change_password.php")!
+        let url: URL = URL(string: "\(Utils.serverAddress)/services/change_password.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.httpMethod = "POST"
@@ -108,7 +108,7 @@ class ProfileModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://custom-services.co.uk/services/payment.php")!
+        let url: URL = URL(string: "\(Utils.serverAddress)/services/payment.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData

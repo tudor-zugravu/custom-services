@@ -1,6 +1,7 @@
 <?php
-require("database-config.php");
+require("config.php");
 
+$name = strtolower($_POST['name']); 
 $email = strtolower($_POST['email']);
 $password = $_POST['password'];
 
@@ -12,16 +13,10 @@ if (mysqli_connect_errno()) {
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-$query = "SELECT * FROM Users WHERE email = '$email' AND password = '$password';";
+$query = "INSERT INTO `Users` (`user_id`, `name`, `email`, `password`, `profile_picture`, `credit`) VALUES (NULL, '$name', '$email', '$password', NULL, '0');";
 $result = mysqli_query($con, $query);
-$row = $result->fetch_object();
-// Check if there are results
-if (is_null($row)) {
-	$status->status = "failed";
-	echo json_encode($status);
-} else {
-	echo json_encode($row);
-}
+$status->insertId = mysqli_insert_id($con);
+echo json_encode($status);
  
 // Close connections
 mysqli_close($con);

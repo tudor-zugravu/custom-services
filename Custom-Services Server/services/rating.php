@@ -1,5 +1,5 @@
 <?php
-require("database-config.php");
+require("config.php");
 
 $receiptId = $_POST['receiptId'];
 $locationId = $_POST['locationId'];

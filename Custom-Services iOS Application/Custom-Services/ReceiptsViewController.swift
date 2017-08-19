@@ -323,7 +323,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
                         item.offerLogo = logoImage
                     } else {
                         // Download the profile picture, if exists
-                        if let url = URL(string: "https://custom-services.co.uk/resources/vendor_images/\(logoImage)") {
+                        if let url = URL(string: "\(Utils.serverAddress)/resources/vendor_images/\(logoImage)") {
                             if let data = try? Data(contentsOf: url) {
                                 var logoImg: UIImage
                                 logoImg = UIImage(data: data)!

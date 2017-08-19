@@ -58,7 +58,7 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                     mainLogo = auxImage
                 } else {
                     // Download the profile picture, if exists
-                    if let url = URL(string: "https://custom-services.co.uk/resources/system_images/\(auxImage)") {
+                    if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
                             auxPic = UIImage(data: data)!
@@ -83,7 +83,7 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                     navigationLogo = auxImage
                 } else {
                     // Download the profile picture, if exists
-                    if let url = URL(string: "https://custom-services.co.uk/resources/system_images/\(auxImage)") {
+                    if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
                             auxPic = UIImage(data: data)!
@@ -108,7 +108,7 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                     mainTabBarItemLogo = auxImage
                 } else {
                     // Download the profile picture, if exists
-                    if let url = URL(string: "https://custom-services.co.uk/resources/system_images/\(auxImage)") {
+                    if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
                             auxPic = UIImage(data: data)!

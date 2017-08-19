@@ -113,7 +113,7 @@ class LogInViewController: UIViewController, LogInModelProtocol {
                     UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
                 } else {
                     // Download the profile picture, if exists
-                    if let url = URL(string: "https://custom-services.co.uk/resources/profile_pictures/\(profilePicture)") {
+                    if let url = URL(string: "\(Utils.serverAddress)/resources/profile_pictures/\(profilePicture)") {
                         if let data = try? Data(contentsOf: url) {
                             var profilePic: UIImage
                             profilePic = UIImage(data: data)!

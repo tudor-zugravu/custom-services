@@ -1,5 +1,5 @@
 <?php
-require("database-config.php");
+require("config.php");
 require_once('../libraries/braintree-php-3.23.1/lib/Braintree.php');
 
 Braintree_Configuration::environment('sandbox');

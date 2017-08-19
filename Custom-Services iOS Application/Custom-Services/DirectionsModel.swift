@@ -25,7 +25,7 @@ class DirectionsModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://maps.googleapis.com/maps/api/directions/json?origin=\(currLatitude),\(currLongitude)&destination=\(destLatitude),\(destLongitude)&mode=walking&key=AIzaSyDq0NHQJFAFPFGrQzEiizNliDANjt3pe7k")!
+        let url: URL = URL(string: "https://maps.googleapis.com/maps/api/directions/json?origin=\(currLatitude),\(currLongitude)&destination=\(destLatitude),\(destLongitude)&mode=walking&key=\(Utils.googleAPIKey)")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.httpMethod = "GET"

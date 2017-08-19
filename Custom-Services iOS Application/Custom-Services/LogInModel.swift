@@ -24,7 +24,7 @@ class LogInModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://custom-services.co.uk/services/login.php")!
+        let url: URL = URL(string: "\(Utils.serverAddress)/services/login.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.httpMethod = "POST"

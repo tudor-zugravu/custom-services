@@ -1,5 +1,7 @@
 <?php
-require("database-config.php");
+require("config.php");
+
+$offerId = $_POST['offerId'];
 
 // Create connection
 $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
@@ -8,8 +10,9 @@ $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 if (mysqli_connect_errno()) {
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
- 
-$query = "SELECT * FROM Categories";
+
+$query = "SELECT appointment_starting FROM Receipts WHERE offer_id = $offerId;";
+
 // Check if there are results
 if ($result = mysqli_query($con, $query)) {
 	// If so, then create a results array and a temporary one
@@ -26,8 +29,6 @@ if ($result = mysqli_query($con, $query)) {
  
 	// Finally, encode the array to JSON and output the results
 	echo json_encode($resultArray);
-} else {
-	echo json_encode(array());
 }
  
 // Close connections

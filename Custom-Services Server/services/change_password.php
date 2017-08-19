@@ -1,5 +1,5 @@
 <?php
-require("database-config.php");
+require("config.php");
 
 $userId = $_POST['userId'];
 $oldPassword = $_POST['oldPassword'];

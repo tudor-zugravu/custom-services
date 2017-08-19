@@ -27,7 +27,7 @@ class ReceiptsModel: NSObject, URLSessionDataDelegate {
             self.data = NSMutableData()
             
             // Setting up the server session with the URL and the request
-            let url: URL = URL(string: "https://custom-services.co.uk/services/receipts.php")!
+            let url: URL = URL(string: "\(Utils.serverAddress)/services/receipts.php")!
             let session = URLSession.shared
             var request = URLRequest(url:url)
             request.httpMethod = "POST"
@@ -68,7 +68,7 @@ class ReceiptsModel: NSObject, URLSessionDataDelegate {
         self.data = NSMutableData()
         
         // Setting up the server session with the URL and the request
-        let url: URL = URL(string: "https://custom-services.co.uk/services/redeem_offer.php")!
+        let url: URL = URL(string: "\(Utils.serverAddress)/services/redeem_offer.php")!
         let session = URLSession.shared
         var request = URLRequest(url:url)
         request.httpMethod = "POST"

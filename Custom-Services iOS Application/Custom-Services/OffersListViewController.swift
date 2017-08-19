@@ -212,9 +212,11 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                     points.append(point)
                     startMonitoring(point: point)
                 } else {
-                    let point = points.filter({ $0.id == offers[tag].id!})[0]
-                    points.remove(at: points.index(of: point)!)
-                    stopMonitoring(point: point)
+                    if points.filter({ $0.id == offers[tag].id!}).count > 0 {
+                        let point = points.filter({ $0.id == offers[tag].id!})[0]
+                        points.remove(at: points.index(of: point)!)
+                        stopMonitoring(point: point)
+                    }
                 }
                 let storedPoints = NSKeyedArchiver.archivedData(withRootObject: points)
                 UserDefaults.standard.set(storedPoints, forKey:"storedPoints");
@@ -285,7 +287,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                         item.offerLogo = logoImage
                     } else {
                         // Download the profile picture, if exists
-                        if let url = URL(string: "https://custom-services.co.uk/resources/vendor_images/\(logoImage)") {
+                        if let url = URL(string: "\(Utils.serverAddress)/resources/vendor_images/\(logoImage)") {
                             if let data = try? Data(contentsOf: url) {
                                 var logoImg: UIImage
                                 logoImg = UIImage(data: data)!
@@ -311,7 +313,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                         item.offerImage = offerImage
                     } else {
                         // Download the profile picture, if exists
-                        if let url = URL(string: "https://custom-services.co.uk/resources/vendor_images/\(offerImage)") {
+                        if let url = URL(string: "\(Utils.serverAddress)/resources/vendor_images/\(offerImage)") {
                             if let data = try? Data(contentsOf: url) {
                                 var offerImg: UIImage
                                 offerImg = UIImage(data: data)!

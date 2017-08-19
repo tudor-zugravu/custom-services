@@ -1,7 +1,9 @@
 <?php
-require("database-config.php");
+require("config.php");
  
-$receiptId = $_POST['receiptId'];
+$userId = $_POST['userId'];
+$name = $_POST['name'];
+$email = $_POST['email'];
 
 // Create connection
 $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
@@ -11,23 +13,19 @@ if (mysqli_connect_errno()) {
   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
  
-$query = "SELECT * FROM Receipts WHERE receipt_id = '$receiptId';";
+$query = "SELECT * FROM Users WHERE user_id = '$userId';";
 
 // Check if there are results
 $result = mysqli_query($con, $query);
 $row = $result->fetch_object();
 // Check if there are results
 if (is_null($row)) {
-	$status->status = "receipt_does_not_exist";
+	$status->error = "user_does_not_exist";
 	echo json_encode($status);
 } else {
-	$query = "UPDATE Receipts SET redeemed = 1 WHERE receipt_id = $receiptId;";
+	$query = "UPDATE Users SET name = '$name', email = '$email' WHERE user_id = $userId;";
 	$result = mysqli_query($con, $query);
-	if($result) {
-		$status->status = "success";
-	} else {
-		$status->status = "error";
-	}
+	$status->status = $result;
 	echo json_encode($status);
 }
  

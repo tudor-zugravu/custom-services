@@ -1,5 +1,5 @@
 <?php
-require("database-config.php");
+require("config.php");
 
 $userId = $_POST['userId'];
 $offerId = $_POST['offerId'];
@@ -51,14 +51,18 @@ if (is_null($row)) {
 					if($result) {
 						$status->status = "success";
 						$status->insertId = mysqli_insert_id($con);
+						$status->credit = $credit;
 					} else {
 						$status->status = "no_receipt";
+						$status->credit = $credit;
 					}
 				} else {
 					$status->status = "same_quantity";
+					$status->credit = $credit;
 				}
 			} else {
 				$status->status = "not_credited";
+				$status->credit = $credit;
 			}
 		} else {
 			$status->status = "insufficient_credit";
