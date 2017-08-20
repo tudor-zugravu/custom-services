@@ -1,84 +1,84 @@
 \section{Main Result}
-The chapter reports the contribution of your work.  For example, it could contain the following sub-sections to summarise the contribution of the project: Theoretical Development, Analysis and Design, Implementation and Experimental Work, Results, Observation and Discussion.
+This chapter provides a detailed description of the process through which the proposed system has been generated. Starting from the requirements elicitation process until the implementation and testing phases, the step by step workflow of the project is reported in the following sections.
 
-\subsection{Maths}
-\begin{equation}\label{eq:BS}
-\frac{\D S_t}{S_t} = r \D t + \sigma \D W_t,
-\qquad S_0>0,
-\end{equation}
+\subsection{Analysis and Design}
+The scope of this project is to develop a platform that provides customisable software products tailored for correlating vendors and customers in the form of both a web platform and a mobile application. To ensure that both the designing and the implementation phases converge to the successful attainment of the project's goals, project management techniques have been applied. As a result, a number of deliverables have been created in order to help identify the specific requirements of both the main and generated systems, as well as to plan and organise the development phase. These deliverables consist of the Conditions of Satisfaction, the Project Overview Statement, the Requirements Breakdown Structure, the Work Package Breakdown and the project's development schedule. 
 
-The equation $\sigma = m a$ follows easily~\cite{Doe11}.
+\subsubsection{The scoping process}
+The analysis of the project's scope lead to the identification of the Conditions of Satisfaction, which provide the means of establishing when the project has reached the end stage. The COS outlined for this project are:\\\\
+1. A fully-functional solution is generated in less than 10 minutes.\\
+2. The customers are provided with two different means of using the system.\\
+3. The system customisation options cover most types of vendors.\\\\
 
+Having determined the success criteria of the project, the properties of the end system could be established. Derived from the scope of the project, the core functionalities of the system comprise the high-level requirements, which form a necessary and sufficient set for the attainment of the goal \cite{holyer_2016}.\\\\
+1. A complete system is delivered based upon specific requirements and features.\\
+2. The solution presents a list of offers for the chosen product or service categories based upon distance, rating score or offer value.\\
+3. The chosen offer can be purchased and redeemed at the location.\\
 
-\subsection{Glossary and acronyms}
+This provided a sufficient base for generating an initial Requirements Breakdown Structure. The initial step for identifying the basic features of the system was decomposing the high-level requirements into necessary functions and sub-functions. However, due to the complexity and dynamic nature of the end-solution, the set of system requirements has been constantly adapted throughout the development process. The final form of the Requirements Breakdown Structure is:\\\\
+1. A complete system is delivered based upon specific requirements and features.\\
+\indent	1.1. A customisation platform is provided to the client.\\
+\indent\indent		1.1.1. The client can choose a system based upon location, product or service.\\
+\indent\indent		1.1.2. The system must be suitable for offers of different categories.\\
+\indent\indent		1.1.2. The client can customise the appearance of the end-system.\\
+\indent	1.2. iOS and Web applications, server and database templates are created.\\
+\indent\indent		1.2.1. Database templates matching any combination of customisation criteria are designed.\\
+\indent\indent		1.2.2. A server component template is created.\\
+\indent\indent		1.2.3. An iOS application template is created.\\
+\indent\indent		1.2.4. A Web application template is created.\\
+\indent	1.3. The necessary and sufficient set of features and functionalities for the generated system are identified.\\
+\indent\indent		1.3.1. Any type of solution provides rating, directions and offer description functionalities.\\
+\indent\indent		1.3.2. Product or service based solutions offer the possibility of offer purchasing.\\
+\indent\indent		1.3.3. Service based solutions provide an appointment management system.\\
+2. The solution presents a list of offers for the chosen product or service categories based upon distance, rating score or offer value.\\
+\indent	2.1. An updated list of offers is presented, specifying the distance from the customer's current position.\\
+\indent\indent		2.1.1. The system can locate the customer's current position.\\
+\indent\indent		2.1.2. Customers can view all the offers within a 50 kilometre radius.\\
+\indent	2.2. The customer can filter the list of offers.\\
+\indent\indent		2.2.1. The list can be sorted by proximity, rating score or offer value.\\
+\indent\indent		2.2.2. Customers can manage their favourite locations list.\\
+3. The chosen offer can be viewed, purchased and redeemed at the location.\\
+\indent	3.1. The solution provides details about the vendor and the location.\\
+\indent\indent		3.1.1. The customers can view the description, rating mark and available offers for any location.\\
+\indent\indent		3.1.2. The system provides directions to the location via GPS or through Augmented Reality.\\
+\indent\indent		3.1.3. Customers can provide a rating mark after purchasing an offer.\\
+\indent	3.2. Customers can purchase offers with credit and debit cards.\\
+\indent\indent		3.2.1. Customers can add credit to their accounts.\\
+\indent\indent		3.2.2. The vendors are transferred the value of an offer when purchased.\\
+\indent\indent		3.2.3. The customers receive receipts for their purchases.\\
 
-\Glspl{Linux} and other Unix operating systems are better then Windows because they support \gls{lvm} out of the box~\cite{Joh11}\insertref{A ref is missing here}. 
+Following this set of requirements ensured the generation of autonomous systems suitable for any type of product or service. The presentation components provide all the important functionalities needed in customers' search for the best suited offer, as well as a platform for loyalisation by enabling them to select their favourite vendor locations. In addition, this Requirements Breakdown Structure helped in identifying the customisation criteria necessary for covering most of a potential client's requests. As a result, a Project Overview Statement was written in order to record and maintain a reference to the initial decisions for the project.\\
 
-\subsection{Figures}
-Here is an example~\cite{JohSil05} of how to inserta picture:
+The next step towards identifying the best suited approach to developing the system was prioritising the Scope Triangle. The scope of the project is the most critical aspect, as it must target the needs of a large number of both customers and vendors, thus making it prone to revisions. The system's quality is of close importance, as it is essential to acquiring and maintaining a good customer base. Having less than three months for all of the phases of development, the time for creating such an extensive project is short, proving to be the third most critical aspect. Despite that, the priority is developing an extensive and reliable system. The resource availability and the cost could prove to be an issue in the development of a complete solution. However, these aspects are least likely to change as they are clearly outlined from the beginning.\\
 
-\begin{figure}[!ht]
-\centering
-\subfigure{\includegraphics[scale=0.2]{figures/Picture.eps}}
-\caption{This is the caption for the figure.}
-\label{fig:Pict}
-\end{figure}
+\begin{center}
+    \begin{tabular}{ | l | p{1.2cm} | p{1.2cm} | p{1.2cm} | p{1.2cm} | p{1.2cm} |}
+    \hline
+    Variable / Priority & Critical (1) & (2) & (3) & (4) & Flexible (5) \\ \hline
+    Scope & x &  &  &  &  \\ \hline
+    Quality &  & x &  &  &  \\ \hline
+    Time &  &  & x &  &  \\ \hline
+    Cost &  &  &  & x &  \\ \hline
+    Resource availability &  &  &  &  & x \\
+    \hline
+    \end{tabular}
+\end{center}
 
+While the project started with a clear goal, the solution was not yet fully identified at the time. Even though a minimum set of requirements was identified, both the main and the generated systems were not clearly outlined. In addition, further functionalities for such a retail system could and have been identified further on. Based upon these factors, the analysis conducted previously, as well as on the importance of the project and the amount of time available, the chosen approach towards developing the systems was the Agile Project Management. Thus, the Adaptive Project Management Life Cycle was adopted, outlining the conclusion of the project's scoping phase. 
 
-\begin{figure}[!ht]
-\centering
-\missingfigure{If you know there will be a figure, but you still need to create it.}
-\caption{This is the caption for the figure which is not even present.}
-\label{fig:PictMis}
-\end{figure}
+\subsubsection{The planning process}
+Having identified the initial requirements for the system, a project plan was outlined in order to organise the following stages of the development process. This provided a clear roadmap for the sequence of steps that needed to be followed as to minimise uncertainty and increase efficiency. However, as the Adaptive lifecycle was chosen as the PMLC, identifying clear tasks and creating an overall schedule was hindered by the large complexity. The approach of solving this issue and maintaining awareness of the progress and results is described in this section.\\
 
+As the depth of the Requirements Breakdown Structure was not known after the features level, the solution could not be clearly defined yet. Thus, the planning process started with documenting and creating an initial plan using a board and sticky notes. This task provided a good initial approach, as it helped in transforming the features of the RBS into work packages and to estimate the duration and complexity of each and every one of them. This was followed by organising the identified work packages using a software tool in order to maintain persistency and to enhance the visual aspect of the schedule.\\
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\todo{This is a small Todo, please take care!}
+Not having an explicit description of the solution, the work packages were arranged into different development phases, in accordance to Agile development guidelines \cite{wysocki_2013}. All phases ended with a feedback loop to assess their completion, helping to determine if the next phase could start or if a new cycle of the current step should be launched to further shape the work packages involved. Following this model aided in managing the complexity and uncertainty of the project, every cycle converging to a complete solution. Five development stages were planned, each starting with a partial perception of it's expected result and based upon certain assumptions about the input received and completion level of the previous cycles, thus establishing the five major milestones of the project. Aiming both to fulfil already existing tasks and to identify new functionalities for the system resulted in the definition and completion of the end system.\\
 
-or two side-by-side pictures:
+The first phase was the most crucial as it's main purpose was to identify and perform the abstraction of all the business entities involved in the system. In addition, the data structures had to be clearly defined in order to start designing a coherent database structure. This was particularly challenging as the elements this system targeted were subjective and based upon customer preferences, so the requirements analysis performed had to be extensive. Further on, the server component had to be designed and implemented as it was responsible for all the generated system's business logic, acting as a middle point between the database and both the iOS and Web clients. The first milestone was considered reached when the server, the database and a rudimentary iOS mobile application were created and the communication between them was functional, these components representing the deliverables of the initial stage.\\
 
-\begin{figure}[!ht]
-\centering
-\subfigure{\includegraphics[scale=0.3]{figures/Picture.eps}}
-\hspace{15pt}
-\subfigure{\includegraphics[scale=0.3]{figures/Picture.eps}}
+The second phase comprised the work packages related to the iOS application template. The launching of this stage implied that the server was active and that the system's functionalities were already implemented. Thus, the iOS client development stage would revolve around presenting the information received from the server and the specific mobile features of the system. However, this was expected to be a time consuming and of a high importance process as this component is the main interaction point with potential customers. In addition, the augmented reality feature increased the level of uncertainty for this cycle. The deliverable of this phase was a fully functional iOS mobile application template, upon the completion of which the second milestone was considered to be reached.\\
 
-\caption{Another caption}
-\label{fig:Pict2}
-\end{figure}
+The third phase of the project schedule plans the work packages responsible for the creation of the Web application and the generation platform. This stage was expected to be less complex than the iOS application development, as a number of features were not included in this client platform, as they had to make use of particular hardware functionalities not available to a browser, such as geometric sensors and video camera usage. However, the main generation system proved to be more complex than expected, requiring an extra cycle for the completion of this phase. The milestone was reached when all of the established features were implemented, the deliverable being a functional client Web interface template and a generation system.\\
 
-
-
-\subsection{Table}
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet\explainindetail{This needs further explanation}.
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{|l|rl|}
-		\hline
-		Something & Someother & Thing \\
-  		Seems & to be & good\\
-  		\hline
-  	\end{tabular}
-  	\caption{Random data for a table.}
-\end{table}
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-
-\section{Model calibration}
-\subsection{What is calibration?}
-Here is an example of a matrix\cite{website:fermentas-lambda} in $A\in\mathcal{M}_n(\RR)$:
-$$
-A = 
-\begin{pmatrix}
-a_{11} & a_{12} & \ldots & a_{1n}\\
-a_{21} & \ddots & \ddots  & \vdots\\
-\vdots &  \ddots & \ddots  & \vdots\\
-a_{n1} &  \ldots &  \ldots & a_{1n}.
-\end{pmatrix}
-$$
-
-\subsection{Numerical methods for calibration}
-...
+The fourth and fifth phases consisted of deploying, debugging and testing the overall system, thus being dependent on the deliverables from the previous cycles. Extra time was allocated for each work package involved, as neither of the components were yet extensively tested. Thus, a time margin was granted for fixing any system or logic issue that became visible. Reaching the milestone of the fifth stage implied that the project's solution was identified and created, this being asserted by evaluating the system based upon the success criteria of the Conditions of Satisfaction.\\
 
 

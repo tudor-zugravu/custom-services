@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  19 AUG 2017 18:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  20 AUG 2017 18:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -951,7 +951,7 @@ LaTeX Font Info:    Try loading font information for U+wasy on input line 61.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 )
-<img/kcl.png, id=71, 170.6375pt x 112.42pt>
+<img/kcl.png, id=59, 170.6375pt x 112.42pt>
 File: img/kcl.png Graphic file (type png)
  <use img/kcl.png>
 Package pdftex.def Info: img/kcl.png used on input line 61.
@@ -1065,83 +1065,107 @@ less on input line 86.
  (./contents/background.tex) [2
 
 
-]
+] [3]
 \openout2 = `contents/main.aux'.
 
 
 (./contents/main.tex
+Underfull \hbox (badness 10000) in paragraph at lines 8--12
 
-LaTeX Warning: Citation `Doe11' on page 3 undefined on input line 10.
-
-
-LaTeX Warning: Citation `Joh11' on page 3 undefined on input line 15.
-
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 15.
-
-LaTeX Warning: Citation `JohSil05' on page 3 undefined on input line 18.
-
-Package epstopdf Info: Source file: <figures/Picture.eps>
-(epstopdf)                    date: 2016-02-10 22:48:53
-(epstopdf)                    size: 72678 bytes
-(epstopdf)             Output file: <figures/Picture-eps-converted-to.pdf>
-(epstopdf)                    date: 2016-02-22 18:50:42
-(epstopdf)                    size: 13676 bytes
-(epstopdf)             Command: <repstopdf --outfile=figures/Picture-eps-conver
-ted-to.pdf figures/Picture.eps>
-(epstopdf)             \includegraphics on input line 22.
-Package epstopdf Info: Output file is already uptodate.
-<figures/Picture-eps-converted-to.pdf, id=148, 557.08125pt x 557.08125pt>
-File: figures/Picture-eps-converted-to.pdf Graphic file (type pdf)
-
-<use figures/Picture-eps-converted-to.pdf>
-Package pdftex.def Info: figures/Picture-eps-converted-to.pdf used on input lin
-e 22.
-(pdftex.def)             Requested size: 111.41428pt x 111.41428pt.
- [3
+ []
 
 
- <./figures/Picture-eps-converted-to.pdf>]
-Package epstopdf Info: Source file: <figures/Picture.eps>
-(epstopdf)                    date: 2016-02-10 22:48:53
-(epstopdf)                    size: 72678 bytes
-(epstopdf)             Output file: <figures/Picture-eps-converted-to.pdf>
-(epstopdf)                    date: 2016-02-22 18:50:42
-(epstopdf)                    size: 13676 bytes
-(epstopdf)             Command: <repstopdf --outfile=figures/Picture-eps-conver
-ted-to.pdf figures/Picture.eps>
-(epstopdf)             \includegraphics on input line 42.
-Package epstopdf Info: Output file is already uptodate.
-File: figures/Picture-eps-converted-to.pdf Graphic file (type pdf)
- <use figures/Picture-eps-converted-to.pdf>
-Package pdftex.def Info: figures/Picture-eps-converted-to.pdf used on input lin
-e 42.
-(pdftex.def)             Requested size: 167.12566pt x 167.12566pt.
-Package epstopdf Info: Source file: <figures/Picture.eps>
-(epstopdf)                    date: 2016-02-10 22:48:53
-(epstopdf)                    size: 72678 bytes
-(epstopdf)             Output file: <figures/Picture-eps-converted-to.pdf>
-(epstopdf)                    date: 2016-02-22 18:50:42
-(epstopdf)                    size: 13676 bytes
-(epstopdf)             Command: <repstopdf --outfile=figures/Picture-eps-conver
-ted-to.pdf figures/Picture.eps>
-(epstopdf)             \includegraphics on input line 44.
-Package epstopdf Info: Output file is already uptodate.
-File: figures/Picture-eps-converted-to.pdf Graphic file (type pdf)
+Underfull \hbox (badness 10000) in paragraph at lines 8--12
 
-<use figures/Picture-eps-converted-to.pdf>
-Package pdftex.def Info: figures/Picture-eps-converted-to.pdf used on input lin
-e 44.
-(pdftex.def)             Requested size: 167.12566pt x 167.12566pt.
- [4]
+ []
 
-LaTeX Warning: Citation `website:fermentas-lambda' on page 5 undefined on input
- line 70.
 
-) [5]
+Underfull \hbox (badness 10000) in paragraph at lines 8--12
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--17
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--17
+
+ []
+
+[4
+
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 18--49
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 18--49
+
+ []
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 52--53
+
+ []
+
+
+Overfull \hbox (1.77892pt too wide) in paragraph at lines 57--57
+[]\OT1/cmr/m/n/10.95 Critical
+ []
+
+
+Overfull \hbox (3.7256pt too wide) in paragraph at lines 57--57
+[]\OT1/cmr/m/n/10.95 Flexible
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 72--73
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
+
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--81
+
+ []
+
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
+
+ []
+
+) [10]
 \openout2 = `contents/conclusion.aux'.
 
- (./contents/conclusion.tex) [6
+ (./contents/conclusion.tex) [11
 
 
 ]
@@ -1154,63 +1178,48 @@ LaTeX Warning: Citation `website:fermentas-lambda' on page 5 undefined on input
 
 No file Thesis.gls.
 No file Thesis.acr.
-[7
+[12
 
 
-])
-No file Thesis.bbl.
-\openout2 = `appendix/app_1.aux'.
-
-(./appendix/app_1.tex) [8
-
+]) (./Thesis.bbl) [13
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 115.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 115.
- (./Thesis.aux (./contents/abstract.aux)
-(./structure/figures_tables.aux) (./structure/acknowledgements.aux)
-(./contents/introduction.aux) (./contents/background.aux) (./contents/main.aux)
-(./contents/conclusion.aux) (./contents/nomenclature.aux) (./appendix/app_1.aux
-))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 115.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 115.
+\openout2 = `appendix/app_1.aux'.
+
+ (./appendix/app_1.tex) [14
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 117.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 117.
+ (./Thesis.aux
+(./contents/abstract.aux) (./structure/figures_tables.aux)
+(./structure/acknowledgements.aux) (./contents/introduction.aux)
+(./contents/background.aux) (./contents/main.aux) (./contents/conclusion.aux)
+(./contents/nomenclature.aux) (./appendix/app_1.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 117.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 117.
 Package rerunfilecheck Info: File `Thesis.out' has not changed.
-(rerunfilecheck)             Checksum: E9A8C492C2760D32D822BBA87AC4C151;1010.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 115.
+(rerunfilecheck)             Checksum: 98128AAB8EE2D186FE7040E3E899DBC3;841.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 117.
  ) 
 Here is how much of TeX's memory you used:
- 21482 strings out of 492995
- 385353 string characters out of 6132704
- 520972 words of memory out of 5000000
- 24478 multiletter control sequences out of 15000+600000
- 11663 words of font info for 44 fonts, out of 8000000 for 9000
+ 21353 strings out of 492995
+ 382543 string characters out of 6132704
+ 517394 words of memory out of 5000000
+ 24357 multiletter control sequences out of 15000+600000
+ 12009 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,11n,78p,1919b,731s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{glo:lvm} has been referenced but does not exist, 
-replaced by a fixed one
-
-pdfTeX warning (dest): name{glo:Linux} has been referenced but does not exist, 
-replaced by a fixed one
-
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
-/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
-cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local
-/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Thesis.pdf (16 pages, 181269 bytes).
+ 69i,11n,59p,1919b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on Thesis.pdf (22 pages, 145346 bytes).
 PDF statistics:
- 242 PDF objects out of 1000 (max. 8388607)
- 207 compressed objects within 3 object streams
- 46 named destinations out of 1000 (max. 500000)
- 151 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 212 PDF objects out of 1000 (max. 8388607)
+ 178 compressed objects within 2 object streams
+ 38 named destinations out of 1000 (max. 500000)
+ 122 words of extra memory for PDF output out of 10000 (max. 10000000)
 
