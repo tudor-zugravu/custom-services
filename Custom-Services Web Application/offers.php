@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+require("services/config.php");
+
 if (isset($_SESSION['logged_in'])) {
   if ($_SESSION['logged_in'] != "false") {
     
@@ -25,6 +27,7 @@ if (isset($_SESSION['logged_in'])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <script src="assets/js/bootstrap.min.js"></script>
   <script src="assets/js/bootstrap-slider.min.js"></script>
+  <script src="https://js.braintreegateway.com/web/dropin/1.6.1/js/dropin.min.js"></script>
   <script src="assets/js/script.js"></script>
   <style>
     .custom-main-colour {
@@ -155,6 +158,17 @@ if (isset($_SESSION['logged_in'])) {
             </div>
           </div>
 
+          <div class="row" id="receipts-container" style="display: none; height: 100%;">
+            <div class="col-12" style="height: 100%;">
+              <div class="row top-blur"></div>
+              <div class="row" style="height: 100%;">
+                <div class="col-12" id="receipts-display">
+                </div>
+              </div>
+              <div class="row bottom-blur"></div>
+            </div>
+          </div>
+
           <div class="row" id="details-container" style="display: none; height: 100%;">
             <div class="col-12" style="height: 100%;">
               <div class="row top-blur"></div>
@@ -243,9 +257,9 @@ if (isset($_SESSION['logged_in'])) {
                   </div>
                   <div class="row" id="details-rating-section">
                     <div class="col-5"></div>
-                    <div class="col-2 details-selectors" style="display: none;"> 
+                    <div class="col-2 details-selectors"> 
                       <div class="row" id="details-rating"> 
-                        <div class="col-1"></div>
+                        <div class="col-1 no-padding"></div>
                         <div class="col-2 details-rating-star full-star" style="background-size:100%;"></div>
                         <div class="col-2 details-rating-star full-star" style="background-size:100%;"></div>
                         <div class="col-2 details-rating-star empty-star" style="background-size:100%;"></div>
@@ -258,7 +272,7 @@ if (isset($_SESSION['logged_in'])) {
                   </div>
                   <div class="row">
                     <div class="col-5"></div>
-                    <div class="col-2 details-general"> 
+                    <div class="col-2 details-selectors"> 
                       <div class="row"> 
                         <a href="" id="purchase-offer" class="btn btn-default form-control custom-main-colour button details-selectors" role="button"> Purchase offer </a>
                       </div>
@@ -278,12 +292,61 @@ if (isset($_SESSION['logged_in'])) {
           </div>
         </div>
         <div class="col-2 side-menu-container">
-          <div class="profile-menu custom-opaque-colour">
-            
-
-            //TODO
-
-
+          <div class="row profile-menu custom-opaque-colour">
+            <div class="col-12 no-display" id="profile-container">          
+              <div class="row add-padding">
+                <div class="col-12 profile-picture-container">
+                  <a href="index.php" id="profile-picture-button">
+                    <img id="profile-picture" src="resources/profile_pictures/<?php if($_SESSION['profile_picture'] == "") {echo "profile_placeholder.png";} else {echo $_SESSION['profile_picture'];} ?>" class="navigation-logo"/>
+                  </a>
+                </div>
+              </div>
+              <div class="row add-padding">
+                <div class="col-12 account-details">
+                  <form action="profile_picture_upload.php" method="post" enctype="multipart/form-data" class="no-display" id="upload-form">
+                      <input type="file" name="fileToUpload" id="fileToUpload" class="btn btn-default form-control custom-main-colour button account-button">
+                      <input type="submit" value="Upload Image" id="upload-image-button" name="submit" class="btn btn-default form-control custom-main-colour button account-button">
+                  </form>
+                  <form id="account-details-form" action="" method="post" role="form">
+                    <div class="form-group">
+                      <input type="text" name="account-name" id="account-name" tabindex="1" class="form-control account-details-input" placeholder="<?php echo $_SESSION['name']?>" value="<?php echo $_SESSION['name']?>" disabled>
+                    </div>
+                    <div class="form-group">
+                      <input type="email" name="account-email" id="account-email" tabindex="1" class="form-control account-details-input" placeholder="<?php echo $_SESSION['email']?>" value="<?php echo $_SESSION['email']?>" disabled>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="account-credit" id="account-credit" tabindex="1" class="form-control" placeholder="<?php echo $_SESSION['name']?>" value="<?php echo $_SESSION['credit']?> GBP" disabled>
+                    </div>
+                    <div class="form-group password-form no-display" id="account-password-container">
+                    <input type="password" name="account-password" id="account-password" tabindex="2" class="form-control" placeholder="Current password">
+                  </div>
+                  <div class="form-group password-form no-display">
+                    <input type="password" name="account-new-password" id="account-new-password" tabindex="2" class="form-control" placeholder="New password">
+                  </div>
+                  <div class="form-group password-form no-display">
+                    <input type="password" name="account-confirm-password" id="account-confirm-password" tabindex="2" class="form-control" placeholder="Verify password">
+                  </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-12 account-button">
+                          <input type="submit" name="account-edit-button" id="account-edit-button" tabindex="3" class="btn btn-default form-control custom-main-colour button" value="Edit profile">
+                        </div>
+                        <div class="col-12 account-button">
+                          <a href="#" id="account-change-password" class="btn btn-default form-control custom-main-colour button" role="button">Change password</a>
+                        </div>
+                        <div class="col-12 account-button">
+                          <a href="#" id="account-add-credit" class="btn btn-default form-control custom-main-colour button" role="button">Add credit </a>
+                        </div>
+                        <div id="dropin-container"></div>
+                        <div class="col-12 account-button">
+                          <a href="#" id="payment-submit" class="btn btn-default form-control custom-main-colour button no-display" role="button">Proceed </a>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -310,8 +373,6 @@ if (isset($_SESSION['logged_in'])) {
         $("#time-interval-label").text(getTime(slideEvt.value.newValue[0]) + " - " + getTime(slideEvt.value.newValue[1]));
       });
     </script>
-    <script async defer
-       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAV_j2P9H-iYPgG72iZl_bl1qFon7jMjOk">
-    </script>
+    <?php echo '<script async defer src="https://maps.googleapis.com/maps/api/js?key=' . GOOGLE_API_KEY . '"></script>'; ?>
   </body>
 </html>

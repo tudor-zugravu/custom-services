@@ -4,6 +4,7 @@ html, body {
 }
 .container-fluid {
 	height: 100%;
+	width: 100%;
 }
 .header {
 	height: 8%;
@@ -90,6 +91,7 @@ html, body {
 	padding:0px;
 	margin-left: 50px;
 	height: 100%;
+	margin-right: 0px;
 }
 #filtering-options {
 	width: 250px;
@@ -368,8 +370,6 @@ html, body {
 	margin-top: 5px;
 	width: 150px;
 }
-
-
 .details-rating-star {
 	height: 35px;
 }
@@ -387,18 +387,128 @@ html, body {
 	pointer-events: none;
 	cursor: default;
 }
-
-
-
-
-
-
-
-
-
-
-
-
+.profile-picture-container {
+	width: 100%;
+}
+.profile-picture-button {
+	width: 50%;
+	margin-left: 25%;
+}
+#profile-picture {
+	width: 50%;
+	height: auto;
+	border-radius: 50%;
+	margin-left: 25%;
+	margin-top: 70px;
+	box-shadow: 0 2px 3px 0 rgba(0,0,0,0.24), 0 10px 30px 0 rgba(0,0,0,0.19);
+}
+.account-details {
+	width: 100%;
+	margin-top: 40px;
+}
+.no-display {
+	display: none;
+}
+.account-button {
+	margin-top: 10px;
+}
+.add-padding {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+#profile-container {
+	height: 100%;
+	overflow-y: scroll;
+    overflow-x:hidden;
+}
+#fileToUpload {
+	font-size: 14px !important;
+}
+#account-details-form {
+	margin-top: 20px;
+}
+.receipt-cell {
+	margin-top: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	box-shadow: 0 2px 3px 0 rgba(0,0,0,0.24), 0 10px 30px 0 rgba(0,0,0,0.19);
+	height: 100px;
+	border: solid 1px #CDD7DC;
+	border-radius: 25px;
+	background-color: #EFECE3;
+}
+.receipt-logo {
+	width: 70px;
+	height: 70px;
+	margin-top: 15px;
+	margin-left: 20px;
+	border-radius: 35px;
+}
+.receipt-title {
+	text-decoration: underline;
+	font-size: 22px !important;
+	color: #000000;
+	margin: auto;
+	margin-top: 17px;
+	margin-bottom: 0px;
+	text-align: left;
+}
+.receipt-time-interval {
+	text-decoration: underline;
+	font-size: 18px;
+	color: #686868;
+	text-align: left;
+}
+.redeem-button {
+	height: 80px;
+	margin-top: 10px;
+	padding-top: 30px;
+	border-radius: 15px;
+}
+.receipt-price {
+	text-align: right;
+}
+.rate-receipt {
+	text-align: right;
+	margin-right: 5px;
+	cursor: pointer;
+	font-size: 18px;
+}
+.receipt-rating-logo {
+	width:20px;
+	height:20px;
+	margin-top: -5px;
+	margin-left: 0px;
+}
+.receipt-rating-button {
+	color: #1011A7;
+}
+.receipt-rating-button:hover {
+	cursor: pointer !important;
+}
+.min-top-margin {
+	margin-top: 10px;
+}
+.disabled-colour {
+	background-color: #EB2E20 !important;
+}
+#receipts-display {
+	padding-top: 30px;
+	padding-bottom: 60px;
+	height: 100%;
+	margin-top: -40px;
+	overflow-y: scroll;
+    overflow-x:hidden;
+}
+.disabled-receipt-button {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: default;
+	color: #686868;
+}
+.redeem-button-main-colour {
+	background-color: #10ADCB;
+}
 
 
 

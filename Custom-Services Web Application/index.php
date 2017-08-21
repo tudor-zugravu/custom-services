@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require("services/database-config.php");
+require("services/config.php");
 
 // Create connection
 $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);

@@ -18,11 +18,13 @@ function trimSeconds(time) {
 
 $(function() {
 	var userId = 0;
+	var credit = 0;
 	var hasCategories = false;
 	var systemType = "location";
 	var categories = [];
 	var allowedCategories = [];
     var offers = [];
+    var receipts = [];
     var filteredOffers = [];
     var locationOffers = [];
     var maxDistance = 50;
@@ -35,7 +37,22 @@ $(function() {
     var viewingFavourites = false;
     var currentLocation;
     var startingTime, duration;
-    var selectedCategory = "";
+    var selectedCategory = 0;
+    var selectedTimeInterval = 0;
+    var appointments = [];
+    var timeIntervals = [];
+    var checkedStars = 2;
+    var braintreeInstance;
+    var creditAmount = 0;
+    var viewingReceipts = false;
+
+    function showReceipts() {	
+		document.getElementById('receipts-display').innerHTML = "";
+		for (var i = 0; i < receipts.length; i++) {
+			var receiptCell = '<div class="row receipt-cell"><div class="col-6 receipt-details"><div class="row"><div class="col-2 no-padding"><img src="resources/vendor_images/' + receipts[i].logoImage + '" class="receipt-logo cell-button receipts-button-' + i + '"/></div><div class="col-10 no-padding"> <p class="receipt-title cell-button receipts-button-' + i + '"> ' + receipts[i].name + ' </p><p class="receipt-time-interval"> ' + receipts[i].timeInterval + ' </p></div></div></div><div class="col-2 cell-button receipts-button-' + i + '"></div><div class="col-2"><div class="row"><div class="col-12 no-padding"> <p class="receipt-title receipt-price"> ' + receipts[i].discount + ' GBP </p></div></div><div class="row min-top-margin"><div class="col-5"></div><div class="col-6 no-padding"><p class="rate-receipt ' + (receipts[i].redeemed == 1 ? ("receipt-rating-button receipt-rating-button-" + i) : "disabled-receipt-button") + '"> Rate Offer</p></div><div class="col-1 no-padding"><img src="resources/system_images/ratingFull.png" class="receipt-rating-logo ' + (receipts[i].redeemed == 1 ? ("receipt-rating-button receipt-rating-button-" + i) : "disabled-receipt-button") + '"/></div></div></div><div class="col-2 redeem-button-container"><div class="btn btn-default form-control ' + (receipts[i].redeemed == 0 ? "redeem-button-main-colour" : "disabled-colour") + ' disabled-details-button button redeem-button redeem-button-' + i + '"> ' + (receipts[i].redeemed == 0 ? "Receipt available" : (receipts[i].redeemed == 1 ? "Offer redeemed" : "Offer expired")) + '</div></div></div>';
+			document.getElementById('receipts-display').innerHTML += receiptCell;
+		}
+	}
 
 	function reloadTable() {
 		filteredOffers = offers;
@@ -212,58 +229,63 @@ $(function() {
         
         for (var i = numberOfFirsts + 1; i < filteredOffers.length; i++) {
             if (systemType != "location" && (onlyAvailableOffers ? filteredOffers[i].quantity > 0 : true)) {
-                if (filteredOffers[i].locationId == currentOffer.locationId && filteredOffers[i].id != currentOffer.id && filteredOffers[i].discount != currentOffer.discount) {
-                    currentOffer.quantity += filteredOffers[i].quantity;
-                    if (currentOffer.discountRange != null && currentOffer.discountRange != "") {
-                        var discounts = currentOffer.discountRange.split(" - ");
-                        if (parseFloat(discounts[0]) - filteredOffers[i].discount > 0) {
-                            if (systemType == "location") {
-                                currentOffer.discountRange = parseInt(filteredOffers[i].discount) + " - " + discounts[1];
-                            } else {
-                                currentOffer.discountRange = filteredOffers[i].discount + " - " + discounts[1];
-                            }
-                        } else if (parseFloat(discounts[1]) - filteredOffers[i].discount < 0) {
-                            if (systemType == "location") {
-                                currentOffer.discountRange = discounts[0] + " - " + parseInt(filteredOffers[i].discount);
-                            } else {
-                                currentOffer.discountRange = discounts[0] + " - " + filteredOffers[i].discount;
-                            }
-                        }
-                    } else {
-                        if (systemType == "location") {
-                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? parseInt(filteredOffers[i].discount) + " - " + parseInt(currentOffer.discount) : parseInt(currentOffer.discount) + " - " + parseInt(filteredOffers[i].discount);
-                        } else {
-                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? filteredOffers[i].discount + " - " + currentOffer.discount : currentOffer.discount + " - " + filteredOffers[i].discount;
-                        }
-                    }
+                if (filteredOffers[i].locationId == currentOffer.locationId && filteredOffers[i].id != currentOffer.id) {
+                    if (filteredOffers[i].discount != currentOffer.discount) {
+	                    if (currentOffer.discountRange != null && currentOffer.discountRange != "") {
+	                        var discounts = currentOffer.discountRange.split(" - ");
+	                        if (parseFloat(discounts[0]) - filteredOffers[i].discount > 0) {
+	                            if (systemType == "location") {
+	                                currentOffer.discountRange = parseInt(filteredOffers[i].discount) + " - " + discounts[1];
+	                            } else {
+	                                currentOffer.discountRange = filteredOffers[i].discount + " - " + discounts[1];
+	                            }
+	                        } else if (parseFloat(discounts[1]) - filteredOffers[i].discount < 0) {
+	                            if (systemType == "location") {
+	                                currentOffer.discountRange = discounts[0] + " - " + parseInt(filteredOffers[i].discount);
+	                            } else {
+	                                currentOffer.discountRange = discounts[0] + " - " + filteredOffers[i].discount;
+	                            }
+	                        }
+	                    } else {
+	                        if (systemType == "location") {
+	                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? parseInt(filteredOffers[i].discount) + " - " + parseInt(currentOffer.discount) : parseInt(currentOffer.discount) + " - " + parseInt(filteredOffers[i].discount);
+	                        } else {
+	                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? filteredOffers[i].discount + " - " + currentOffer.discount : currentOffer.discount + " - " + filteredOffers[i].discount;
+	                        }
+	                    }
+	                }
+	                currentOffer.quantity += filteredOffers[i].quantity;
                 } else {
                     currentOffer = filteredOffers[i];
                     uniqueOffers.push(currentOffer); // Found a different element
                 }
             } else if (systemType == "location") {
-                if (filteredOffers[i].locationId == currentOffer.locationId && filteredOffers[i].id != currentOffer.id && filteredOffers[i].discount != currentOffer.discount) {
-                    if (currentOffer.discountRange != null && currentOffer.discountRange != "") {
-                        var discounts = currentOffer.discountRange.split(" - ");
-                        if (parseFloat(discounts[0]) - filteredOffers[i].discount > 0) {
-                            if (systemType == "location") {
-                                currentOffer.discountRange = parseInt(filteredOffers[i].discount) + " - " + discounts[1];
-                            } else {
-                                currentOffer.discountRange = filteredOffers[i].discount + " - " + discounts[1];
-                            }
-                        } else if (parseFloat(discounts[1]) - filteredOffers[i].discount < 0) {
-                            if (systemType == "location") {
-                                currentOffer.discountRange = discounts[0] + " - " + parseInt(filteredOffers[i].discount);
-                            } else {
-                                currentOffer.discountRange = discounts[0] + " - " + filteredOffers[i].discount;
-                            }
-                        }
-                    } else {
-                        if (systemType == "location") {
-                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? parseInt(filteredOffers[i].discount) + " - " + parseInt(currentOffer.discount) : parseInt(currentOffer.discount) + " - " + parseInt(filteredOffers[i].discount);
-                        } else {
-                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? filteredOffers[i].discount + " - " + currentOffer.discount : currentOffer.discount + " - " + filteredOffers[i].discount;
-                        }
-                    }
+                if (filteredOffers[i].locationId == currentOffer.locationId && filteredOffers[i].id != currentOffer.id) {
+                	if (filteredOffers[i].discount != currentOffer.discount) {
+	                    if (currentOffer.discountRange != null && currentOffer.discountRange != "") {
+	                        var discounts = currentOffer.discountRange.split(" - ");
+	                        if (parseFloat(discounts[0]) - filteredOffers[i].discount > 0) {
+	                            if (systemType == "location") {
+	                                currentOffer.discountRange = parseInt(filteredOffers[i].discount) + " - " + discounts[1];
+	                            } else {
+	                                currentOffer.discountRange = filteredOffers[i].discount + " - " + discounts[1];
+	                            }
+	                        } else if (parseFloat(discounts[1]) - filteredOffers[i].discount < 0) {
+	                            if (systemType == "location") {
+	                                currentOffer.discountRange = discounts[0] + " - " + parseInt(filteredOffers[i].discount);
+	                            } else {
+	                                currentOffer.discountRange = discounts[0] + " - " + filteredOffers[i].discount;
+	                            }
+	                        }
+	                    } else {
+	                        if (systemType == "location") {
+	                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? parseInt(filteredOffers[i].discount) + " - " + parseInt(currentOffer.discount) : parseInt(currentOffer.discount) + " - " + parseInt(filteredOffers[i].discount);
+	                        } else {
+	                            currentOffer.discountRange = currentOffer.discount > filteredOffers[i].discount ? filteredOffers[i].discount + " - " + currentOffer.discount : currentOffer.discount + " - " + filteredOffers[i].discount;
+	                        }
+	                    }
+	                }
+	                currentOffer.quantity += filteredOffers[i].quantity;
                 } else {
                     currentOffer = filteredOffers[i];
                     uniqueOffers.push(currentOffer); // Found a different element
@@ -329,6 +351,7 @@ $(function() {
 		        		var completionHandler = function() {
 					        window.location.replace("index.php");
 					    }
+					    credit = parseFloat(response.credit);
 			            SetSessionVariables({ 
 			            	'logged_in': true,
 					        'user_id': response.user_id, 
@@ -407,39 +430,57 @@ $(function() {
 	});
 
 	$('.side-menu-button').click(function(e) {
-		$('.side-menu-button').removeClass("active");
-		$(e.target).addClass("active");
+		if ($(e.target).attr('id') != "menu-button-4") {
+			$('.side-menu-button').removeClass("active");
+			$(e.target).addClass("active");
+		}
 		switch($(e.target).attr('id')) {
 			case "menu-button-1":
 				$('#map-container').hide();
 				$('#details-container').hide();
+				$('#receipts-container').hide();
 				$('#offers-container').show();
+				viewingReceipts = false;
 				viewingFavourites = false;
-				reloadTable();
+				requestOffers();
 				$('#filtering-options').show();
 				break;
 			case "menu-button-2":
 				$('#offers-container').hide();
 				$('#details-container').hide();
+				$('#receipts-container').hide();
 				$('#map-container').show();
+				viewingReceipts = false;
 				viewingFavourites = false;
-				reloadTable();
+				requestOffers();
 				initMap();
 				$('#filtering-options').show();
 				break;
 			case "menu-button-3":
 				$('#map-container').hide();
 				$('#details-container').hide();
+				$('#receipts-container').hide();
 				$('#offers-container').show();
 				viewingFavourites = true;
-				reloadTable();
+				viewingReceipts = false;
+				requestOffers();
 				$('#filtering-options').show();
 				break;
 			case "menu-button-4":
-				console.log("4");
+				if ($('#profile-container').hasClass('no-display')) {
+					$('#profile-container').removeClass('no-display');
+				} else {
+					$('#profile-container').addClass('no-display');
+				}
 				break;
 			default:
-				console.log("5");
+				$('#map-container').hide();
+				$('#details-container').hide();
+				$('#offers-container').hide();
+				$('#receipts-container').show();
+				viewingReceipts = true;
+				requestReceipts();
+				$('#filtering-options').hide();
 		}
 	});
 
@@ -550,6 +591,87 @@ $(function() {
 		});
 	}
 
+	function requestReceipts() {
+		$.ajax({
+	        url: "services/receipts.php",
+	        type: "POST",
+	        dataType : "json",
+	        data: { 
+	        	'userId': userId
+		    },
+	        success : function (response) {
+	        	// console.log(response);
+
+	        	var currDate = new Date();
+				var hour = currDate.getHours();
+				if (parseInt(hour) < 10) { hour = "0" + hour; }
+				var minute = currDate.getMinutes();
+				if (parseInt(minute) < 10) { minute = "0" + minute; }
+				var year = currDate.getFullYear();
+				var month = parseInt(currDate.getMonth()) + 1;
+				if (parseInt(month) < 10) { month = "0" + month; }
+				var day = currDate.getDate();
+				if (parseInt(day) < 10) { day = "0" + day; }
+				var currentDate = year + "-" + month + "-" + day;
+				var currentTime = hour + ":" + minute;
+
+	        	var receiptsAux = [];
+	        	for (var i = 0; i < response.length; i++) {
+	        		var receipt = {};
+
+	        		receipt.id = parseInt(response[i]['receipt_id']);
+	        		receipt.locationId = response[i]['location_id'];
+	        		receipt.offerId = response[i]['offer_id'];
+	        		receipt.name = response[i]['name'];
+	        		receipt.discount = parseFloat(response[i]['discount']);
+	        		receipt.startingTime = trimSeconds(response[i]['starting_time']);
+	        		receipt.endingTime = trimSeconds(response[i]['ending_time']);
+	        		receipt.purchaseDate = response[i]['purchase_date'];
+	        		receipt.redeemed = parseInt(response[i]['redeemed']);
+	        		receipt.favourite = response[i].hasOwnProperty('favourite') ? (response[i]['favourite'] === "1" ? true : false) : false;
+	        		receipt.logoImage = response[i]['logo_image'] === null ? "" : response[i]['logo_image'];
+
+	        		var timeInterval = receipt.purchaseDate.split(" ")[0];
+	        		if (systemType == "product") {
+	        			receipt.timeInterval = timeInterval + " " + trimSeconds(receipt.startingTime) + " - " + trimSeconds(receipt.endingTime);
+	        			if (currentDate <= timeInterval) {
+	        				if (receipt.endingTime <= currentTime) {
+	        					receipt.redeemed = receipt.redeemed == 1 ? 1 : 2;
+	        				}
+	        			} else {
+	        				receipt.redeemed = receipt.redeemed == 1 ? 1 : 2
+	        			}
+	        		} else {
+	        			var appointment = parseInt(response[i]["appointment_starting"]);
+	        			var duration = parseInt(response[i]["appointment_minute_duration"]);
+	        			receipt.timeInterval = timeInterval + " " + getTimeInterval(receipt.startingTime, duration, appointment);
+	        			var timeComponents = receipt.timeInterval.split(" ");
+	        			if (currentDate <= timeInterval) {
+	        				if (timeComponents[1] < currentTime) {
+	        					receipt.redeemed = receipt.redeemed == 1 ? 1 : 2;
+	        				}
+	        			} else {
+	        				receipt.redeemed = receipt.redeemed == 1 ? 1 : 2
+	        			}
+	        		}
+	        		receiptsAux.push(receipt);
+	        	}
+
+	        	receipts = receiptsAux.sort(function(receipt1, receipt2) {
+	                if (receipt1.id > receipt2.id) {
+	                    return -1;
+	                };
+	                return 1;
+	            });
+	            showReceipts();
+	        }
+		});
+	}
+                
+
+
+
+
 	$('body').on('click', 'a.offer-favourite-button', function(e) {
 		e.preventDefault();
 		var index;
@@ -589,28 +711,9 @@ $(function() {
 	});
 
 	if ($('#filtering-options').length === 1) {
-		requestOffers(false);
+		viewingFavourites = false;
+		requestOffers();
 	}
-
-
- 	// details-single-discount-section
-	// 		details-single-discount-text
- 	// details-multiple-discount-section
- 	// 		weird-text
- 	// 		category-select
- 	// 		details-multiple-discount-text
- 	// details-time-interval-section
- 	// 		time-interval-select
- 	// details-rating-section
- 	// purchase-offer
- 	// rate-location
- 	// get-directions
-
-
-
-
-
-
 
 	$('body').on('click', '.cell-button', function(e) {
 		var classList = $(this).attr('class').split(/\s+/);
@@ -620,11 +723,13 @@ $(function() {
 		$('#filtering-options').hide();
 		$('#map-container').hide();
 		$('#offers-container').hide();
+		$('#receipts-container').hide();
 		$('#details-container').show();
 
+		console.log(index);
+
 		locationOffers = jQuery.grep(offers, function(offer, i) {
-		  	if (offer.locationId === filteredOffers[index].locationId) {
-		  		console.log("YES");
+		  	if (offer.locationId === (viewingReceipts ? receipts[index].locationId : filteredOffers[index].locationId)) {
                 return true;
             }
             return false;
@@ -638,13 +743,16 @@ $(function() {
         $("#details-logo-image").attr("src","resources/vendor_images/" + locationOffers[0].logoImage);
         $("#details-main-image").attr("src","resources/vendor_images/" + locationOffers[0].offerImage);
         $('#details-favourite-image').attr("src","resources/system_images/" + (locationOffers[0].favourite ? "fullHeart.png" : "emptyHeart.png"));
+        selectedCategory = 0;
 
         if(hasCategories) {
+        	console.log("hhihi 1");
         	if (locationOffers.length == 1) {
         		$('#details-multiple-discount-section').hide();
         		$('#details-single-discount-section').show();
         		$('#details-single-discount-text').text(systemType == "location" ? (parseInt(locationOffers[0].discount) + "% discount for " + locationOffers[0].category) : (locationOffers[0].discount + " GBP for " + locationOffers[0].category));
         	} else {
+        		console.log("hhihi 3");
         		$('weird-text').text(systemType == "location" ? "The discount for" : "The price for");
         		$('#details-single-discount-section').hide();
         		$('#details-multiple-discount-section').show();
@@ -654,9 +762,21 @@ $(function() {
 		        	$('#category-select').html($('#category-select').html() + '<option class="details-text" value="' + i + '">' + locationOffers[i].category + '</option>');
 		        }
 		        $('#category-select').change(function() {
-					selectedCategory = $("#category-select option:selected").text();
+					selectedCategory = parseInt($("#category-select option:selected").val());
 					var i = $("#category-select option:selected").val();
 					$('#details-multiple-discount-text').text(systemType == "location" ? (parseInt(locationOffers[i].discount) + "%") : (locationOffers[i].discount + " GBP"));
+					if (locationOffers[i].quantity == 0) {
+						$('#purchase-offer').addClass('disabled-details-button');
+			        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+					} else {
+						$('#purchase-offer').removeClass('disabled-details-button');
+			        	$('#purchase-offer').text("Purchase offer");
+						if (systemType === "service") {
+							console.log("hoho");
+							requestAppointments(locationOffers[i].id, locationOffers[i].startingTime, locationOffers[i].endingTime, locationOffers[i].appointmentDuration);
+							selectedTimeInterval = 0;
+						}
+					}
 				});
         	}
         } else {
@@ -683,7 +803,7 @@ $(function() {
     		$('#purchase-offer').show();
         }
         if (systemType == "service") {
-			// TODO: GET APPOINTMENTS CALL
+			requestAppointments(locationOffers[0].id, locationOffers[0].startingTime, locationOffers[0].endingTime, locationOffers[0].appointmentDuration);
 			$('#details-time-interval-section').show();
     		startingTime = locationOffers[0].startingTime;
     		duration = locationOffers[0].appointmentDuration;
@@ -692,10 +812,87 @@ $(function() {
         }
 	});
 
-	$( ".target" ).change(function() {
-	  alert( "Handler for .change() called." );
-	});
+	function requestAppointments(id, minTime, maxTime, appointmentDuration) {
+		$.ajax({
+	        url: "services/appointments.php",
+	        type: "POST",
+	        dataType : "json",
+	        data: { 
+		        'offerId': id
+		    },
+	        success : function (response) {
+	        	appointments = response;
+	        	timeIntervals = getTimeIntervals(minTime, maxTime, appointmentDuration);
+	        	$('#time-interval-select').html("");
+		        for (var i = 0; i < timeIntervals.length; i++) {
+		        	$('#time-interval-select').html($('#time-interval-select').html() + '<option class="details-text" value="' + i + '">' + timeIntervals[i] + '</option>');
+		        }
+		        if (timeIntervals.length > 0) {
+		        	checkTimeInterval(timeIntervals[0]);
+		        }
+		        $('#time-interval-select').change(function() {
+					selectedTimeInterval = parseInt($("#time-interval-select option:selected").val());
+					checkTimeInterval(timeIntervals[selectedTimeInterval]);
+				});
+	        }
+    	});
+	}
 
+    function getTimeInterval(minTime, duration, appointment) {
+    	var start = getMinutes(minTime);
+    	return getHour(start + appointment * duration) + "-" + getHour(start + (appointment + 1) * duration);
+    }
+
+	function getTimeIntervals(minTime, maxTime, duration) {
+		var start = getMinutes(minTime);
+		var end = getMinutes(maxTime);
+		var intervals = (end-start) / duration;
+		var timeInt = [];
+
+		for (var i = 0; i < intervals; i++) {
+			if (jQuery.grep(appointments, function(appointment, index) {
+				  return parseInt(appointment.appointment_starting) === i;
+				}).length == 0) {
+				timeInt.push(getHour(start + i * duration) + "-" + getHour(start + (i + 1) * duration));
+			}
+		}
+		return timeInt;
+	}
+
+ 	function getMinutes(time) {
+ 		var timeComponents = time.split(':');
+ 		return parseInt(timeComponents[0]) * 60 + parseInt(timeComponents[1]);
+ 	}
+
+ 	function getHour(time) {
+ 		if (time < 600) {
+ 			return time % 60 < 10 ? ("0" + Math.floor(time/60) + ":0" + time % 60) : ("0" + Math.floor(time/60) + ":" + time % 60);
+ 		} else {
+ 			return time % 60 < 10 ? (Math.floor(time/60) + ":0" + time % 60) : (Math.floor(time/60) + ":" + time % 60);
+ 		}
+ 	}
+
+ 	function getIndex(minTime, duration, time) {
+ 		var timeComponents = time.split('-');
+ 		return Math.floor((getMinutes(timeComponents[0]) - getMinutes(startingTime)) / duration);
+ 	}
+
+ 	function checkTimeInterval(time) {
+ 		var DateArray = time.split('-');
+		var currDate = new Date();
+		var hour = currDate.getHours();
+		if (parseInt(hour) < 10) { hour = "0" + hour; }
+		var minute = currDate.getMinutes();
+		if (parseInt(minute) < 10) { minute = "0" + minute; }
+
+		if (hour + ":" + minute > DateArray[0]) {
+			$('#purchase-offer').addClass('disabled-details-button');
+        	$('#purchase-offer').text("Expired time interval");
+		} else {
+			$('#purchase-offer').removeClass('disabled-details-button');
+        	$('#purchase-offer').text("Purchase offer");
+		}
+ 	}
 
 	$('body').on('click', 'div.details-rating-star', function(e) {
 		index = $('.details-rating-star').index($(this));	
@@ -708,16 +905,372 @@ $(function() {
 				$('div.details-rating-star')[i].classList.add('empty-star');
 			}
 		};
+		checkedStars = index + 1;
+	});
 
+	$('#rate-location').click(function(e) {
+		e.preventDefault();
+		if (confirm('Give ' + locationOffers[0].name + ' a ' + checkedStars + ' star rating?')) {
+		    $.ajax({
+		        url: "services/location_rating.php",
+		        type: "POST",
+		        dataType : "json",
+		        data: { 
+			        'userId': userId,
+			        'locationId': locationOffers[0].locationId,
+			        'rating': checkedStars
+			    },
+		        success : function (response) {
+		        	if (response === true) {
+		        		alert("Success! Thank you for your feedback");
+		        	} else {
+		        		alert("Error! Please try again");
+		        	}
+		        }
+	    	});
+		}
+	});
+
+	$('#get-directions').click(function(e) {
+		e.preventDefault();
+		window.open('https://www.google.com/maps/dir/?api=1&origin=' + currentLocation.lat + ',' + currentLocation.lng + '&destination=' + locationOffers[0].latitude + ',' + locationOffers[0].longitude,'_blank');
+	});
+
+	$('body').on('click', '.receipt-rating-button', function(e) {
+		var classList = $(this).attr('class').split(/\s+/);
+		var elems = classList[classList.length - 1].split('-');
+		var index = parseInt(elems[3]);
+		
+		var ratingValue = prompt("How would you rate your experience on a scale from 1 to 5?");
+		if (!isNaN(parseFloat(ratingValue))) {
+			if (parseFloat(ratingValue) < 1 || parseFloat(ratingValue) > 5 || parseFloat(ratingValue) != Math.floor(parseFloat(ratingValue))) {
+				alert("Please enter a number from 1 to 5!");
+			} else {
+				$.ajax({
+			        url: "services/rating.php",
+			        type: "POST",
+			        dataType : "json",
+			        data: { 
+				        'receiptId': receipts[index].id,
+				        'locationId': receipts[index].locationId,
+				        'rating': parseInt(ratingValue)
+				    },
+			        success : function (response) {
+			        	console.log(response);
+			        	if (response.status == "success") {
+			        		alert("Success! Thank you for your feedback");
+			        	} else {
+			        		alert("Error! Please try again");
+			        	}
+			        }
+		    	});
+			}
+		} else {
+			alert("Please enter a number from 1 to 5!");
+		}
 
 	});
+
+
+	// if let status = result["status"] as? String {
+ //            if status == "success" {
+ //                let alert = UIAlertController(title: "Success",
+ //                                              message: "Thank you for your feedback" as String, preferredStyle:.alert)
+ //                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+ //                alert.addAction(done)
+ //                self.present(alert, animated: true, completion: nil)
+ //            } else {
+ //                let alert = UIAlertController(title: "Error",
+ //                                              message: "Please try again" as String, preferredStyle:.alert)
+ //                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+ //                alert.addAction(done)
+ //                self.present(alert, animated: true, completion: nil)
+ //            }
+ //        } else {
+ //            let alert = UIAlertController(title: "Error",
+ //                                          message: "Please try again" as String, preferredStyle:.alert)
+ //            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
+ //            alert.addAction(done)
+ //            self.present(alert, animated: true, completion: nil)
+ //        }
+
+
+	$('#profile-picture-button').click(function(e) {
+		e.preventDefault();
+		if (confirm("Upload a new profile picture?")) {
+			$('#upload-form').removeClass('no-display');
+		} else {
+			$('#upload-form').addClass('no-display');
+		}
+	});
+
+	$('#account-add-credit').click(function(e) {
+		e.preventDefault();
+		var amount = prompt("Enter the required amount.", "10.00");
+		if (!isNaN(parseFloat(amount))) {
+			braintree.dropin.create({
+		      authorization: 'sandbox_44pm2mq7_9579dnmk65pnbf2z',
+		      container: '#dropin-container'
+		    }, function (createErr, instance) {
+		    	creditAmount = amount;
+		    	if (instance != null) {
+			    	braintreeInstance = instance;
+			    }
+		      	$('#payment-submit').removeClass('no-display');
+		      	$('#dropin-container').removeClass('no-display');
+		    });
+		} else {
+			alert("Please enter a valid amount!");
+		}
+	});
+	
+	$('#payment-submit').click(function(e) {
+		e.preventDefault();
+		var instance = braintreeInstance;
+		instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+			$.ajax({
+				url: "services/payment.php",
+				type: "POST",
+				dataType : "json",
+				data: { 
+					'userId': userId,
+					'amount': creditAmount,
+					'payment_method_nonce': payload.nonce
+				},
+				success : function (response) {
+					console.log(response);
+					if (response.success === true) {
+						alert("Success! Your credit has been topped up");
+						$('#account-password').val("");
+						var completionHandler = function() {}
+					    credit = parseFloat(response.amount);
+					    $('#account-credit').val(credit + " GBP");
+			            SetSessionVariables({ 'credit': credit }, completionHandler);
+					} else {
+						alert("There was a problem with your purchase!");
+					}
+				}
+			});
+			creditAmount = 0;
+			$('#payment-submit').addClass('no-display');
+			$('#dropin-container').addClass('no-display');
+        });
+	});
+
+	$('#account-edit-button').click(function(e) {
+		e.preventDefault();
+		if ($('#account-name').prop('disabled')) {
+			$(".account-details-input").prop('disabled', false);
+		} else {
+			var name = $('#account-name').attr("placeholder");
+			var email = $('#account-email').attr("placeholder");
+			if ($('#account-name').val() != null && $('#account-name').val() != "" && $('#account-email').val() != null && $('#account-email').val() != "") {
+				if ($('#account-name').val() != name ||  $('#account-email').val() != email) {
+					$.ajax({
+				        url: "services/update_user_details.php",
+				        type: "POST",
+				        dataType : "json",
+				        data: { 
+					        'userId': userId,
+					        'name': $('#account-name').val(),
+					        'email': $('#account-email').val()
+					    },
+				        success : function (response) {
+				        	if (response.status === true) {
+				        		alert("Success! Your password has been changed");
+				        		$('#account-name').attr("placeholder", $('#account-name').val());
+								$('#account-email').attr("placeholder", $('#account-email').val());
+				        		$(".account-details-input").prop('disabled', true);
+				        	} else {
+				        		alert("Incorrect password!");
+				        	}
+				        }
+			    	});
+				} else {
+			    	$(".account-details-input").prop('disabled', true);
+			    }
+			} else {
+				alert("Please fill in all the password fields!");
+			}
+		}
+	});
+
+	$('#account-change-password').click(function(e) {
+		e.preventDefault();
+		if ($('#account-password-container').hasClass('no-display')) {
+			$('.password-form').removeClass('no-display');
+		} else {
+			if ($('#account-password').val() != null && $('#account-password').val() != "" && $('#account-new-password').val() != null && $('#account-new-password').val() != "" && $('#account-confirm-password').val() != null && $('#account-confirm-password').val() != "") {
+				if ($('#account-new-password').val() == $('#account-confirm-password').val()) {
+					$.ajax({
+				        url: "services/change_password.php",
+				        type: "POST",
+				        dataType : "json",
+				        data: { 
+					        'userId': userId,
+					        'oldPassword': $('#account-password').val(),
+					        'newPassword': $('#account-new-password').val()
+					    },
+				        success : function (response) {
+				        	if (response.status === true) {
+				        		alert("Success! Your password has been changed");
+				        		$('#account-password').val("");
+				        		$('#account-new-password').val("");
+				        		$('#account-confirm-password').val("");
+				        		$('.password-form').addClass('no-display');
+				        	} else {
+				        		alert("Incorrect password!");
+				        	}
+				        }
+			    	});
+				} else {
+					alert("Passwords do not match!");
+				}
+			} else {
+				alert("Please fill in all the password fields!");
+			}
+		}
+	});
+
+	$('#purchase-offer').click(function(e) {
+		e.preventDefault();
+		
+		if (systemType == "service") {
+			if (confirm('Book an appointment for ' + locationOffers[selectedCategory].discount + ' GBP in between ' + timeIntervals[selectedTimeInterval] + '?')) {
+			    $.ajax({
+			        url: "services/service_checkout.php",
+			        type: "POST",
+			        dataType : "json",
+			        data: { 
+				        'userId': userId,
+				        'offerId': locationOffers[selectedCategory].id,
+				        'appointment': getIndex(locationOffers[selectedCategory].startingTime,  locationOffers[selectedCategory].appointmentDuration, timeIntervals[selectedTimeInterval])
+				    },
+			        success : function (response) {
+			        	switch(response.status) {
+							case "success":
+								alert("Offer purchased! Voucher added to your receipts");
+								credit = parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								timeIntervals.splice(selectedTimeInterval, 1);
+								selectedTimeInterval = 0;
+								locationOffers[selectedCategory].quantity -= 1;
+								console.log(selectedCategory + " " + locationOffers[selectedCategory].quantity);
+								if (locationOffers[selectedCategory].quantity == 0) {
+						        	$('#purchase-offer').addClass('disabled-details-button');
+						        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+						        }
+						        $('#time-interval-select').html("");
+						        for (var i = 0; i < timeIntervals.length; i++) {
+						        	$('#time-interval-select').html($('#time-interval-select').html() + '<option class="details-text" value="' + i + '">' + timeIntervals[i] + '</option>');
+						        }
+								break;
+							case "offer_expired":
+								alert("Unsuccessful! Offer has sold out");
+								locationOffers[selectedCategory].quantity = 0;
+								$('#time-interval-select').html("");
+								selectedTimeInterval = 0;
+								$('#purchase-offer').addClass('disabled-details-button');
+					        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+								break;
+							case "user_does_not_exist":
+								window.location.replace("index.php");
+								break;
+							case "same_quantity":
+								console.log("checkout error: " + response.status);
+								credit -= parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								alert("An error has occured");
+								break;
+							case "no_receipt":
+								console.log("checkout error: " + response.status);
+								credit -= parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								locationOffers[selectedCategory].quantity -= 1;
+								if (locationOffers[selectedCategory].quantity === 0) {
+						        	$('#purchase-offer').addClass('disabled-details-button');
+						        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+						        }
+						        alert("An error has occured");
+								break;
+							case "insufficient_credit":
+								alert("Insufficient credit! Please top up");
+								break;
+							default:
+								console.log("checkout error: " + response.status);
+								alert("An error has occured");
+						}
+			        }
+		    	});
+			}
+		} else {
+			if (confirm('Purchase this offer for ' + locationOffers[selectedCategory].discount + ' GBP?')) {
+			    $.ajax({
+			        url: "services/product_checkout.php",
+			        type: "POST",
+			        dataType : "json",
+			        data: { 
+				        'userId': userId,
+				        'offerId': locationOffers[selectedCategory].id
+				    },
+			        success : function (response) {
+			        	switch(response.status) {
+							case "success":
+								alert("Offer purchased! Voucher added to your receipts");
+								credit -= parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								locationOffers[selectedCategory].quantity -= 1;
+								if (locationOffers[selectedCategory].quantity === 0) {
+						        	$('#purchase-offer').addClass('disabled-details-button');
+						        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+						        }
+								break;
+							case "offer_expired":
+								alert("Unsuccessful! Offer has sold out");
+								locationOffers[selectedCategory].quantity = 0;
+								$('#purchase-offer').addClass('disabled-details-button');
+					        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+								break;
+							case "user_does_not_exist":
+								window.location.replace("index.php");
+								break;
+							case "same_quantity":
+								console.log("checkout error: " + response.status);
+								credit -= parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								alert("An error has occured");
+								break;
+							case "no_receipt":
+								console.log("checkout error: " + response.status);
+								credit -= parseFloat(response.credit);
+								var completionHandler = function() {}
+								SetSessionVariables({ 'credit': credit }, completionHandler);
+								locationOffers[selectedCategory].quantity -= 1;
+								if (locationOffers[selectedCategory].quantity === 0) {
+						        	$('#purchase-offer').addClass('disabled-details-button');
+						        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
+						        }
+						        alert("An error has occured");
+								break;
+							case "insufficient_credit":
+								alert("Insufficient credit! Please top up");
+								break;
+							default:
+								console.log("checkout error: " + response.status);
+								alert("An error has occured");
+						}
+			        }
+		    	});
+			}
+		}
+	});
+	
 });
-
-
-
-
-
-
 
 		// console.log("Has categories: " + hasCategories);
 		// console.log("Max distance: " + maxDistance);

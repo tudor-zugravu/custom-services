@@ -3,11 +3,13 @@
 \contentsline {subsection}{\numberline {1.2}Background and Literature Survey}{1}{subsection.1.2}
 \contentsline {section}{\numberline {2}Background Theories}{2}{section.2}
 \contentsline {section}{\numberline {3}Main Result}{4}{section.3}
-\contentsline {subsection}{\numberline {3.1}Analysis and Design}{4}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}The scoping process}{4}{subsubsection.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}The planning process}{8}{subsubsection.3.1.2}
-\contentsline {section}{\numberline {4}Conclusion}{11}{section.4}
-\contentsline {section}{References}{13}{section*.5}
-\contentsline {section}{\numberline {A}Review of stochastic calculus}{14}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Riemann integration}{14}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}The It\^o integral}{14}{subsection.A.2}
+\contentsline {subsection}{\numberline {3.1}System Analysis and Planning}{4}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}The Scoping Process}{4}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}The Planning Process}{8}{subsubsection.3.1.2}
+\contentsline {subsection}{\numberline {3.2}System Design}{10}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Business Concept Model}{11}{subsubsection.3.2.1}
+\contentsline {section}{\numberline {4}Conclusion}{12}{section.4}
+\contentsline {section}{References}{14}{section*.5}
+\contentsline {section}{\numberline {A}Review of stochastic calculus}{15}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Riemann integration}{15}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}The It\^o integral}{15}{subsection.A.2}

@@ -1581,7 +1581,7 @@
                                             <segue destination="LpA-f0-EeK" kind="presentation" identifier="mapFiltersViewController" modalTransitionStyle="crossDissolve" id="IjF-Xs-SDK"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="drinkUpLogo" translatesAutoresizingMaskIntoConstraints="NO" id="dZo-9q-xZC">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="banWhite" translatesAutoresizingMaskIntoConstraints="NO" id="dZo-9q-xZC">
                                         <rect key="frame" x="10" y="30" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="6WW-ZS-JAZ"/>
@@ -2516,7 +2516,7 @@
                                                                         </stackView>
                                                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I6R-Ya-e7h">
                                                                             <rect key="frame" x="312" y="6.5" width="20" height="20"/>
-                                                                            <color key="backgroundColor" red="0.064136683299999997" green="0.67915224259999996" blue="0.79683555250000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <color key="backgroundColor" red="0.062745098039215685" green="0.67843137254901964" blue="0.79607843137254897" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="4JP-mi-Bcr"/>
                                                                                 <constraint firstAttribute="width" constant="20" id="72Q-L7-N8p"/>
@@ -2532,7 +2532,7 @@
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.93756812810897827" green="0.92613989114761353" blue="0.88844877481460571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.93725490196078431" green="0.92549019607843142" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="KGX-h9-qzS" secondAttribute="bottom" id="7Xc-kd-NGe"/>
                                                         <constraint firstItem="KGX-h9-qzS" firstAttribute="top" secondItem="8gm-Qs-Bct" secondAttribute="top" constant="8" id="Bgr-Ne-cPX"/>
@@ -2636,9 +2636,9 @@
         <image name="starRatingFull" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="257-8O-zt2"/>
         <segue reference="1Po-sR-0Z3"/>
-        <segue reference="G5r-Dl-bFs"/>
-        <segue reference="O2K-jm-d0p"/>
+        <segue reference="IbL-k6-iRz"/>
+        <segue reference="pdz-md-7zI"/>
+        <segue reference="IjF-Xs-SDK"/>
     </inferredMetricsTieBreakers>
 </document>
