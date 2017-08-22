@@ -6,10 +6,12 @@
 \contentsline {subsection}{\numberline {3.1}System Analysis and Planning}{4}{subsection.3.1}
 \contentsline {subsubsection}{\numberline {3.1.1}The Scoping Process}{4}{subsubsection.3.1.1}
 \contentsline {subsubsection}{\numberline {3.1.2}The Planning Process}{8}{subsubsection.3.1.2}
-\contentsline {subsection}{\numberline {3.2}System Design}{10}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Business Concept Model}{11}{subsubsection.3.2.1}
-\contentsline {section}{\numberline {4}Conclusion}{12}{section.4}
-\contentsline {section}{References}{14}{section*.5}
-\contentsline {section}{\numberline {A}Review of stochastic calculus}{15}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Riemann integration}{15}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}The It\^o integral}{15}{subsection.A.2}
+\contentsline {subsection}{\numberline {3.2}System Design}{11}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Use Cases}{12}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Business Type Model}{16}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Component Identification}{17}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}System Architecture}{20}{subsection.3.3}
+\contentsline {section}{\numberline {4}Conclusion}{22}{section.4}
+\contentsline {section}{References}{24}{section*.5}
+\contentsline {subsubsection}{\numberline {.0.1}The Planning Process}{25}{subsubsection.Alph0.0.1}
+\contentsline {subsubsection}{\numberline {.0.2}Business Concept Model}{26}{subsubsection.Alph0.0.2}
