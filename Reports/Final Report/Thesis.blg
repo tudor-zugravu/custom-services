@@ -12,44 +12,44 @@ A level-1 auxiliary file: contents/nomenclature.aux
 The style file: plain.bst
 A level-1 auxiliary file: appendix/app_1.aux
 Database file #1: bibliography.bib
-You've used 5 entries,
+You've used 6 entries,
             2118 wiz_defined-function locations,
-            528 strings with 4580 characters,
-and the built_in function-call counts, 1059 in all, are:
-= -- 93
-> -- 35
+            531 strings with 4633 characters,
+and the built_in function-call counts, 1274 in all, are:
+= -- 112
+> -- 42
 < -- 0
-+ -- 16
-- -- 10
-* -- 40
-:= -- 183
-add.period$ -- 12
-call.type$ -- 5
-change.case$ -- 20
++ -- 19
+- -- 12
+* -- 48
+:= -- 221
+add.period$ -- 15
+call.type$ -- 6
+change.case$ -- 23
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 45
-empty$ -- 111
-format.name$ -- 10
-if$ -- 226
+cite$ -- 6
+duplicate$ -- 57
+empty$ -- 133
+format.name$ -- 12
+if$ -- 272
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 4
-newline$ -- 25
-num.names$ -- 10
-pop$ -- 41
+int.to.str$ -- 6
+missing$ -- 6
+newline$ -- 30
+num.names$ -- 12
+pop$ -- 49
 preamble$ -- 1
-purify$ -- 15
+purify$ -- 18
 quote$ -- 0
-skip$ -- 36
+skip$ -- 42
 stack$ -- 0
-substring$ -- 26
-swap$ -- 5
+substring$ -- 31
+swap$ -- 6
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
+type$ -- 18
 warning$ -- 0
-while$ -- 10
-width$ -- 6
-write$ -- 48
+while$ -- 12
+width$ -- 7
+write$ -- 58

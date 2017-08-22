@@ -11,7 +11,10 @@
 \contentsline {subsubsection}{\numberline {3.2.2}Business Type Model}{16}{subsubsection.3.2.2}
 \contentsline {subsubsection}{\numberline {3.2.3}Component Identification}{17}{subsubsection.3.2.3}
 \contentsline {subsection}{\numberline {3.3}System Architecture}{20}{subsection.3.3}
-\contentsline {section}{\numberline {4}Conclusion}{22}{section.4}
-\contentsline {section}{References}{24}{section*.5}
-\contentsline {subsubsection}{\numberline {.0.1}The Planning Process}{25}{subsubsection.Alph0.0.1}
-\contentsline {subsubsection}{\numberline {.0.2}Business Concept Model}{26}{subsubsection.Alph0.0.2}
+\contentsline {subsubsection}{\numberline {3.3.1}Architectural Model}{20}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Design Patterns}{23}{subsubsection.3.3.2}
+\contentsline {section}{\numberline {4}Conclusion}{25}{section.4}
+\contentsline {section}{References}{27}{section*.5}
+\contentsline {subsubsection}{\numberline {.0.1}The Planning Process}{28}{subsubsection.Alph0.0.1}
+\contentsline {subsubsection}{\numberline {.0.2}Business Concept Model}{29}{subsubsection.Alph0.0.2}
+\contentsline {subsubsection}{\numberline {.0.3}Component Identification}{29}{subsubsection.Alph0.0.3}
