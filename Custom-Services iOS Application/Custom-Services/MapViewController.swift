@@ -93,6 +93,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
+    // Functions that manage the search bar by reloading the table with only the elements that match the search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredOffers = offers.filter({ (offer) -> Bool in
@@ -301,6 +302,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         offersModel.requestOffers(hasCategories: true)
     }
     
+    // Functions delegated by the offer cells upon pressing the favourite button
     func favouriteSelected(_ result: NSString, tag: Int) {}
     
     func reloadTable() {
@@ -386,7 +388,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         return mapMarkerView
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
@@ -415,17 +418,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
+    // Function called upon the appearance of the keyboard in order to adjust the view height
+    // source: http://truelogic.org/wordpress/2016/04/15/swift-moving-uitextfield-up-when-keyboard-is-shown/
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
@@ -438,8 +440,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
             }, completion: nil)
         }
     }
-    
-    // Called to dismiss the keyboard from the screen
+
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         if !self.dropdownMenuButton.table.frame.contains(gestureRecognizer.location(in: self.view)) && !self.dropdownMenuButton.frame.contains(gestureRecognizer.location(in: self.view)) {
             dropdownMenuButton.hideMenu()

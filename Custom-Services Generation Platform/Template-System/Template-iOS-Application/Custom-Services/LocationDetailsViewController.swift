@@ -12,6 +12,7 @@ import MapKit
 import HDAugmentedReality
 import UserNotifications
 
+// The class used for providind the functionalitites of the location details ViewControler
 class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, ARDataSource, FavouriteModelProtocol, LocationRatingModelProtocol, CheckoutModelProtocol, AppointmentsModelProtocol, DirectionsModelProtocol, CheckpointViewDelegate {
 
     @IBOutlet weak var stackView: UIStackView!
@@ -34,7 +35,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     @IBOutlet weak var ratingStack: UIStackView!
     @IBOutlet weak var rateLocationButton: UIButton!
     @IBOutlet weak var checkoutButton: UIButton!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -63,14 +63,13 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
     let directionsModel = DirectionsModel()
     let locationManager = CLLocationManager()
     let arViewController = ARViewController()
-    
     let hour = Calendar.current.component(.hour, from: Date()) < 10 ? "0\(Calendar.current.component(.hour, from: Date()))" : "\(Calendar.current.component(.hour, from: Date()))"
     let minute = Calendar.current.component(.minute, from: Date()) < 10 ? "0\(Calendar.current.component(.minute, from: Date()))" : "\(Calendar.current.component(.minute, from: Date()))"
     var currentTime = ""
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         currentTime = "\(hour):\(minute)"
         favouriteModel.delegate = self
         ratingModel.delegate = self
@@ -86,10 +85,9 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissMenu))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -104,7 +102,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         addressLabel.text = offers[0].address;
         timeIntervalLabel.text = "\(offers[0].minTime!) - \(offers[0].maxTime!)"
         aboutLabel.text = offers[0].about
-        
         if UserDefaults.standard.value(forKey: "type") as! String != "location" {
             if currentTime > offers[0].maxTime! {
                 checkoutButton.isEnabled = false;
@@ -116,7 +113,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                 checkoutButton.setTitle(UserDefaults.standard.value(forKey: "type") as! String == "product" ? "Sold out" : "Fully booked", for: UIControlState.disabled)
             }
         }
-        
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             if offers.count == 1 {
@@ -161,7 +157,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         } else {
             timeIntervalStack.isHidden = true
         }
-        
         if offers[0].offerLogo! != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offers[0].offerLogo!)").path
             self.logoImage.image = UIImage(contentsOfFile: filename)
@@ -174,7 +169,6 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         } else {
             self.locationImage.image = UIImage(named: "ban")
         }
-        
         if (favourite == true) {
             favouriteButton.setImage(UIImage(named: "fullHeart.png"), for: UIControlState.normal)
         } else {
@@ -182,6 +176,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainTitleLabel.text = Utils.instance.mainTitle
@@ -192,6 +187,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         bottomView.backgroundColor = Utils.instance.mainColour
     }
     
+    // Functions that manage the picker views and the elements
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -240,6 +236,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    
     func checkTimeInterval(time: String) {
         var DateArray = time.components(separatedBy: CharacterSet(charactersIn: "-:"))
         var components = DateComponents()
@@ -261,6 +258,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Functions called upon pressing the favourite button
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             favourite = favourite ? false : true
@@ -562,6 +560,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         isVR = true
     }
     
+    // Functions related to setting up the Augmented Reality component
+    // source: https://github.com/DanijelHuis/HDAugmentedReality
     func startAR() {
         arViewController.dataSource = self
         // Vertical offset by distance
@@ -596,6 +596,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         return checkpointView;
     }
     
+    // Function that reloads the elements on the camera screen upon the progress through the navigation process
     func proceedToNextCheckpoint() {
         let index = checkpoints.index(of: nextCheckpoint!)!
         if index == checkpoints.count - 1 {
@@ -624,6 +625,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function that monitors the progress made in the augmented reality navigation through using the current location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if !(arViewController.isViewLoaded && (arViewController.view.window != nil)) && self.isVR == true {
             self.isVR = false
@@ -665,6 +667,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function that displays the map view using Google Maps
     func openMapForPlace() {
         let coordinates = CLLocationCoordinate2D(latitude: CLLocationDegrees(offers[0].latitude!), longitude: CLLocationDegrees(offers[0].longitude!))
         let locationDistance: CLLocationDistance = 10000
@@ -726,7 +729,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         let _ = navigationController?.popViewController(animated: true)
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [

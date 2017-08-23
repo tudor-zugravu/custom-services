@@ -10,6 +10,7 @@ import UIKit
 import BraintreeDropIn
 import Braintree
 
+// The class used for providind the functionalitites of the profile ViewControler
 class ProfileViewController: UIViewController, ProfileModelProtocol {
 
     @IBOutlet weak var profilePictureImage: UIImageView!
@@ -19,7 +20,6 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var addCreditButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var changePasswordButton: UIButton!
@@ -29,11 +29,10 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     let profileModel = ProfileModel()
     var newPass: String = ""
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         profileModel.delegate = self
-        
         profilePictureImage.layer.shadowColor = UIColor.lightGray.cgColor
         profilePictureImage.layer.shadowOffset = CGSize(width:-2, height:2)
         profilePictureImage.layer.shadowRadius = 3
@@ -42,14 +41,12 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         profilePictureImage.layer.borderColor = UIColor.lightGray.cgColor
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
         if UserDefaults.standard.bool(forKey: "hasCredit") == false {
             addCreditButton.isHidden = true
             creditTextField.isHidden = true
@@ -60,19 +57,16 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 creditTextField.text = "Credit: \(credit) GBP"
             }
         }
-        
         if let name = UserDefaults.standard.value(forKey: "name") as? String,
             let email = UserDefaults.standard.value(forKey: "email") as? String,
             let profilePicture = UserDefaults.standard.value(forKey: "profilePicture") as? String {
             nameTextField.text = name
             emailTextField.text = email
-            
             if profilePicture != "" {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     profilePictureImage.image = UIImage(contentsOfFile: filename.path)
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/profile_pictures/\(profilePicture)") {
                         if let data = try? Data(contentsOf: url) {
                             var profilePic: UIImage
@@ -86,18 +80,17 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 }
             }
         }
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
@@ -107,6 +100,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         bottomView.backgroundColor = Utils.instance.mainColour
     }
 
+    // Functions called when the edit button is pressed, enabling the text fields or sending the editing request to the server
     @IBAction func editButtonPressed(_ sender: Any) {
         if editButton.titleLabel?.text == "Edit details" {
             nameTextField.isEnabled = true
@@ -139,10 +133,10 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         }
     }
     
+    // Functions called when the change password button is pressed, validating the fields and sending the request to the server
     @IBAction func changePasswordButtonPressed(_ sender: Any) {
         let passwordPopUp = UIAlertController(title: "Change password",
                                       message: "" as String, preferredStyle:.alert)
-        
         passwordPopUp.addTextField { (oldPassword: UITextField!) -> Void in
             oldPassword.placeholder = "Current password"
         }
@@ -152,14 +146,11 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         passwordPopUp.addTextField { (confirmNewPassword: UITextField!) -> Void in
             confirmNewPassword.placeholder = "Confirm new password"
         }
-        
         let update = UIAlertAction(title: "Save", style: .default, handler: {
             alert -> Void in
-            
             let oldPassword = passwordPopUp.textFields![0] as UITextField
             let newPassword = passwordPopUp.textFields![1] as UITextField
             let confirmNewPassword = passwordPopUp.textFields![2] as UITextField
-            
             if oldPassword.text != nil && oldPassword.text != "" && newPassword.text != nil && newPassword.text != "" && confirmNewPassword.text != nil && confirmNewPassword.text != "" {
                 if newPassword.text == confirmNewPassword.text {
                     self.newPass = newPassword.text!
@@ -179,20 +170,19 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 self.present(alert, animated: true, completion: nil)
             }
         })
-        
         passwordPopUp.addAction(update)
         let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         passwordPopUp.addAction(cancel)
         self.present(passwordPopUp, animated: true, completion: nil)
     }
     
+    // Functions called when the add credit button is pressed, querying the user for the amount and presenting the Braintree popover
     @IBAction func addCreditButtonPressed(_ sender: Any) {
         let creditPopUp = UIAlertController(title: "Amount to top up",
                                               message: "" as String, preferredStyle:.alert)
         creditPopUp.addTextField { (creditInput: UITextField!) -> Void in
             creditInput.keyboardType = UIKeyboardType.decimalPad
             creditInput.placeholder = ""
-            
         }
         let topUp = UIAlertAction(title: "Top up", style: .default, handler: {
             alert -> Void in
@@ -217,13 +207,13 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 self.present(alert, animated: true, completion: nil)
             }
         })
-        
         creditPopUp.addAction(topUp)
         let cancel = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         creditPopUp.addAction(cancel)
         self.present(creditPopUp, animated: true, completion: nil)
     }
     
+    // Functions called upon the receival of the editing status
     func detailsResponseReceived(_ response: [String:Any]) {
         if (response["error"] as? String) != nil && (response["error"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
@@ -255,6 +245,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         }
     }
     
+    // Functions called upon the receival of the password change status
     func passwordResponseReceived(_ response: [String:Any]) {
         if (response["error"] as? String) != nil && (response["status"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
@@ -287,6 +278,7 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         }
     }
     
+    // Functions called upon the receival of the crediting status
     func creditResponseReceived(_ response: [String:Any]) {
         if (response["error"] as? String) != nil && (response["error"] as? String) == "user_does_not_exist" {
             let alert = UIAlertController(title: "Error",
@@ -328,6 +320,8 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         }
     }
     
+    // Functions that presents the Braintree popover
+    // source: https://developers.braintreepayments.com/guides/drop-in/ios/v4
     func showDropIn(amount: Float, clientTokenOrTokenizationKey: String) {
         let request =  BTDropInRequest()
         let dropIn = BTDropInController(authorization: clientTokenOrTokenizationKey, request: request)
@@ -348,29 +342,27 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         let _ = navigationController?.popViewController(animated: true)
     }
 
+    // Clears the user data stored locally
     func signOut(_ sender: Any) {
-        
         Utils.instance.signOut()
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
 
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
+    // Function called upon the appearance of the keyboard in order to adjust the view height
+    // source: http://truelogic.org/wordpress/2016/04/15/swift-moving-uitextfield-up-when-keyboard-is-shown/
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
             let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
             let options = UIViewAnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
-            
             self.bottomConstraint.constant = (keyboardFrame.height - 10) * (show ? 1 : 0)
             UIView.animate(withDuration: duration!, delay: 0, options: options, animations: {
                 self.view.layoutIfNeeded()
@@ -378,7 +370,6 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         }
     }
     
-    // Called to dismiss the keyboard from the screen
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         view.endEditing(true)
     }

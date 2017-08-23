@@ -99,6 +99,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    // Functions that manage the search bar by reloading the table with only the elements that match the search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredOffers = offers.filter({ (offer) -> Bool in
@@ -124,6 +125,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         searchOn = false
     }
     
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -151,9 +153,11 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions delegated by the offer cells upon pressing the favourite button
     func didPressFavouriteButton(_ tag: Int) {
         favouriteModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
     }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "favouritesFiltersViewController") {
@@ -415,7 +419,6 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func refreshTable() {
-        // Code to refresh table view
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             offersModel.requestOffers(hasCategories: true)
         } else {
@@ -423,7 +426,8 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
@@ -448,22 +452,20 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func signOut(_ sender: Any) {
-        
         Utils.instance.signOut()
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
+    // Function called upon the appearance of the keyboard in order to adjust the view height
+    // source: http://truelogic.org/wordpress/2016/04/15/swift-moving-uitextfield-up-when-keyboard-is-shown/
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
@@ -478,7 +480,6 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         reloadTable()
     }
     
-    // Called to dismiss the keyboard from the screen
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         if !self.dropdownMenuButton.table.frame.contains(gestureRecognizer.location(in: self.view)) && !self.dropdownMenuButton.frame.contains(gestureRecognizer.location(in: self.view)) {
             dropdownMenuButton.hideMenu()
@@ -486,6 +487,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         view.endEditing(true)
     }
     
+    // Functions that manage the geolocation nofitications for the favourite locations
     func startMonitoring(point: PointModel) {
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             print("nope")

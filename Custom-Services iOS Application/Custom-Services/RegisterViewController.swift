@@ -55,6 +55,7 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
         registerButton.backgroundColor = Utils.instance.mainColour
     }
     
+    // Functions called when the register button is pressed, performing all the validation checks and initiating the registration request
     @IBAction func registerButtonPressed(_ sender: Any) {
         if nameTextField.text != nil && nameTextField.text != "" && emailTextField.text != nil && emailTextField.text != "" && confirmPasswordTextField.text != nil && confirmPasswordTextField.text != "" && passwordTextField.text != nil && passwordTextField.text != "" {
             if Utils.instance.isValidEmailFormat(email:emailTextField.text!) {
@@ -83,8 +84,8 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
         }
     }
     
+    // Functions called upon the receival of the registration response. If successful, the user information is saved and the offers view is presented
     func responseReceived(_ response: [String:Any]) {
-
         if let insertId = response["insertId"] as? Int {
             if insertId == 0 {
                 let alert = UIAlertController(title: "Register failed",
@@ -114,23 +115,21 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
         let _ = navigationController?.popViewController(animated: true)
     }
     
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
+    // Function called upon the appearance of the keyboard in order to adjust the view height
+    // source: http://truelogic.org/wordpress/2016/04/15/swift-moving-uitextfield-up-when-keyboard-is-shown/
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
             let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
             let options = UIViewAnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
-            
             self.bottomConstraint.constant = (keyboardFrame.height - 10) * (show ? 1 : 0)
             UIView.animate(withDuration: duration!, delay: 0, options: options, animations: {
                 self.view.layoutIfNeeded()
@@ -138,7 +137,6 @@ class RegisterViewController: UIViewController, RegisterModelProtocol {
         }
     }
     
-    // Called to dismiss the keyboard from the screen
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         view.endEditing(true)
     }

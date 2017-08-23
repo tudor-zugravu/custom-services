@@ -8,6 +8,8 @@
 
 import UIKit
 
+// External class used for the dropdown menu component
+// source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
 class DropMenuButton: UIButton, UITableViewDelegate, UITableViewDataSource
 {
     var items = [String]()

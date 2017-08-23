@@ -42,6 +42,9 @@ if ($categories == 1) {
   }
 }
 
+unlink('database.sql');
+unlink('solution.zip');
+
 $myfile = fopen("database.sql", "w") or die("Unable to open file!");
 fclose($myfile);
 copy('./Database-Templates/'.$database, "database.sql");
@@ -49,10 +52,12 @@ $database = "database.sql";
 $systemData = "INSERT INTO `System` (`system_id`, `type`, `main_colour`, `opaque_colour`, `background_colour`, `cell_background_colour`, `main_logo`, `main_title`, `main_tab_logo`, `main_tab_title`, `geolocation_notifications`, `navigation_logo`) VALUES
 (1, '" . $type . "', '" . $colour1 . "', '" . $colour2 . "', '" . $colour3 . "', '" . $colour4 . "', '', '" . $title . "', '', '" . $tabTitle . "', " . $notifications . ", '');";
 file_put_contents($database, $systemData, FILE_APPEND | LOCK_EX);
+$readme = "README.txt";
 
 $zip = new ZipArchive();
 $zip->open('solution.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 $zip->addFile($database, 'database-import.sql');
+$zip->addFile($readme, 'README.txt');
 $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(realpath('Template-System')), RecursiveIteratorIterator::LEAVES_ONLY);
 foreach ($files as $name => $file) {
     if (!$file->isDir()) {
@@ -64,4 +69,5 @@ foreach ($files as $name => $file) {
 
 $res = $zip->close();
 echo json_encode($res);
+// The steps followed for generating an archive can be found at: http://php.net/manual/en/ziparchive.addfile.php
 ?>

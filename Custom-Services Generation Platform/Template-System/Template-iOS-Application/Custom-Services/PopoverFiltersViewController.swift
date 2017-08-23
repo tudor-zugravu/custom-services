@@ -9,11 +9,13 @@
 import UIKit
 import SwiftRangeSlider
 
+// Protocol used for delegating the filter changes to the class that implements it
 protocol PopoverFiltersProtocol : class {
     func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool)
     func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String])
 }
 
+// The class used for providind the functionalitites of the Filtering ViewControler
 class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, CategoriesListCellProtocol {
     
     @IBOutlet weak var distanceLabel: UILabel!
@@ -24,8 +26,6 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var onlyAvailableSwitch: UISwitch!
     @IBOutlet weak var allCategoriesSwitch: UISwitch!
     @IBOutlet weak var tableView: UITableView!
-    
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var navigationLogo: UIImageView!
@@ -33,9 +33,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var searchButton: UIButton!
     
-    // TODO: Customize categories here
     var categories: [String] = []
-    
     var maxDistance: Int = 50
     var minTime: String = "08:00"
     var maxTime: String = "24:00"
@@ -48,12 +46,11 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
     @IBOutlet weak var categoriesStackView: UIStackView!
     weak var delegate: PopoverFiltersProtocol?
 
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-
         orderByPicker.delegate = self
         orderByPicker.dataSource = self
-        
         timeIntervalSlider.lowerValue = Double(Utils.instance.getTimeInt(time: minTime))
         timeIntervalSlider.upperValue = Double(Utils.instance.getTimeInt(time: maxTime))
         timeIntervalLabel.text = "\(minTime)-\(maxTime)"
@@ -61,7 +58,6 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         distanceLabel.text = "\(maxDistance) km"
         orderByPicker.selectRow(sortBy, inComponent: 0, animated: false)
         onlyAvailableSwitch.isOn = onlyAvailableOffers
-        
         if categories.count <= 1 {
             categoriesStackView.isHidden = true
         } else {
@@ -73,10 +69,12 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
     
+    // Function called upon the initiation of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         customizeAppearance()
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
@@ -85,7 +83,6 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         searchButton.backgroundColor = Utils.instance.mainColour
         distanceSlider.tintColor = Utils.instance.mainColour
         timeIntervalSlider.trackHighlightTintColor = Utils.instance.mainColour
-        
         if Utils.instance.navigationLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
             navigationLogo.image = UIImage(contentsOfFile: filename)
@@ -94,6 +91,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
 
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -111,7 +109,6 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         cell.tag = indexPath.row
         cell.categorySwitch.setOn(selections[indexPath.row], animated: false)
         cell.configureCell(categories[indexPath.row])
-        
         return cell
     }
     
@@ -119,6 +116,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions that manage the picker view and its elements
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -160,6 +158,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
     
+    // Functions that saves the filtering options selected by the user
     @IBAction func dismissPopover(_ sender: Any) {
         if categories.count == 1 {
             delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: onlyAvailableSwitch.isOn)

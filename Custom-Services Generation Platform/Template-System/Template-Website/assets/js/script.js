@@ -66,7 +66,7 @@ $(function() {
 		} else {
 			document.getElementById('display').innerHTML = "";
 			for (var i = 0; i < filteredOffers.length; i++) {
-				var offerCell = '<div class="row offer-cell"><div class="col-3 offer-details"><div class="row"><div class="col-4 no-padding"><img src="resources/vendor_images/' + filteredOffers[i].logoImage + '" class="offer-logo cell-button cell-button-' + i + '"/></div><div class="col-8 no-padding"> <p class="offer-title cell-button cell-button-' + i + '"> ' + filteredOffers[i].name + ' </p><p class="offer-time-interval"> ' + filteredOffers[i].startingTime + ' - ' + filteredOffers[i].endingTime + ' </p></div></div><div class="row"><div class="col-12 no-padding"><p class="offer-address"> ' + filteredOffers[i].address + ' </p></div></div><div class="row opaque-strip custom-opaque-colour"><div class="col-3 no-padding"><p class="offer-distance">' + (filteredOffers[i].distance > 1200 ? parseFloat(filteredOffers[i].distance / 1000).toFixed(1) + " km" : filteredOffers[i].distance + " m") + ' </p></div><div class="col-2 no-padding"><div class="row"><div class="col-7 no-padding"><p class="offer-rating">' + parseFloat(filteredOffers[i].rating).toFixed(1) + '</p></div><div class="col-5 no-padding"><img src="resources/system_images/ratingFull.png" class="rating-logo"/></div></div></div><div class="col-5 no-padding"><p class="offer-discount">' + ((filteredOffers[i].discountRange != null && filteredOffers[i].discountRange != "") ? filteredOffers[i].discountRange : filteredOffers[i].discount) + (systemType === "location" ? "% OFF" : " GBP") + '</p></div><div class="col-2 no-padding"><a href="" class="offer-favourite-button"><img src="resources/system_images/' + (filteredOffers[i].favourite ? 'fullHeart.png' : 'emptyHeart.png') + '" class="offer-favourite"/></a></div></div></div><div class="col-9 offer-image cell-button cell-button-' + i + '" style="background-image: url(/resources/vendor_images/' + filteredOffers[i].offerImage + '); background-size:100%;"></div></div>';
+				var offerCell = '<div class="row offer-cell"><div class="col-3 offer-details"><div class="row"><div class="col-4 no-padding"><img src="resources/vendor_images/' + filteredOffers[i].logoImage + '" class="offer-logo cell-button cell-button-' + i + '"/></div><div class="col-8 no-padding"> <p class="offer-title cell-button cell-button-' + i + '"> ' + filteredOffers[i].name + ' </p><p class="offer-time-interval"> ' + filteredOffers[i].startingTime + ' - ' + filteredOffers[i].endingTime + ' </p></div></div><div class="row offer-address-div"><div class="col-12 no-padding"><p class="offer-address"> ' + filteredOffers[i].address + ' </p></div></div><div class="row opaque-strip custom-opaque-colour"><div class="col-3 no-padding"><p class="offer-distance">' + (filteredOffers[i].distance > 1200 ? parseFloat(filteredOffers[i].distance / 1000).toFixed(1) + " km" : filteredOffers[i].distance + " m") + ' </p></div><div class="col-2 no-padding"><div class="row"><div class="col-7 no-padding"><p class="offer-rating">' + parseFloat(filteredOffers[i].rating).toFixed(1) + '</p></div><div class="col-5 no-padding"><img src="resources/system_images/ratingFull.png" class="rating-logo"/></div></div></div><div class="col-5 no-padding"><p class="offer-discount">' + ((filteredOffers[i].discountRange != null && filteredOffers[i].discountRange != "") ? filteredOffers[i].discountRange : filteredOffers[i].discount) + (systemType === "location" ? "% OFF" : " GBP") + '</p></div><div class="col-2 no-padding"><a href="" class="offer-favourite-button"><img src="resources/system_images/' + (filteredOffers[i].favourite ? 'fullHeart.png' : 'emptyHeart.png') + '" class="offer-favourite"/></a></div></div></div><div class="col-9 offer-image cell-button cell-button-' + i + '" style="background-image: url(/resources/vendor_images/' + filteredOffers[i].offerImage + '); background-size:100%;"></div></div>';
 				document.getElementById('display').innerHTML += offerCell;
 			};
 		}
@@ -600,7 +600,6 @@ $(function() {
 	        	'userId': userId
 		    },
 	        success : function (response) {
-	        	// console.log(response);
 
 	        	var currDate = new Date();
 				var hour = currDate.getHours();
@@ -684,7 +683,7 @@ $(function() {
 		var element = $(this).children()[0];
 
         $.ajax({
-	        url: "https://custom-services.co.uk/services/update_favourite.php",
+	        url: "services/update_favourite.php",
 	        type: "POST",
 	        dataType : "json",
 	        data: {
@@ -695,7 +694,7 @@ $(function() {
 	        success : function (response) {
 	        	
 	        	if (response === 1) {
-		        	element.src = "https://custom-services.co.uk/resources/system_images/" + (filteredOffers[index].favourite ? "emptyHeart.png" : "fullHeart.png")
+		        	element.src = "resources/system_images/" + (filteredOffers[index].favourite ? "emptyHeart.png" : "fullHeart.png")
 					filteredOffers[index].favourite = !filteredOffers[index].favourite;
 					if (viewingFavourites && !filteredOffers[index].favourite) {
 						$('.offer-cell')[index].style.display = "none";
@@ -726,7 +725,6 @@ $(function() {
 		$('#receipts-container').hide();
 		$('#details-container').show();
 
-		console.log(index);
 
 		locationOffers = jQuery.grep(offers, function(offer, i) {
 		  	if (offer.locationId === (viewingReceipts ? receipts[index].locationId : filteredOffers[index].locationId)) {
@@ -746,13 +744,11 @@ $(function() {
         selectedCategory = 0;
 
         if(hasCategories) {
-        	console.log("hhihi 1");
         	if (locationOffers.length == 1) {
         		$('#details-multiple-discount-section').hide();
         		$('#details-single-discount-section').show();
         		$('#details-single-discount-text').text(systemType == "location" ? (parseInt(locationOffers[0].discount) + "% discount for " + locationOffers[0].category) : (locationOffers[0].discount + " GBP for " + locationOffers[0].category));
         	} else {
-        		console.log("hhihi 3");
         		$('weird-text').text(systemType == "location" ? "The discount for" : "The price for");
         		$('#details-single-discount-section').hide();
         		$('#details-multiple-discount-section').show();
@@ -772,7 +768,6 @@ $(function() {
 						$('#purchase-offer').removeClass('disabled-details-button');
 			        	$('#purchase-offer').text("Purchase offer");
 						if (systemType === "service") {
-							console.log("hoho");
 							requestAppointments(locationOffers[i].id, locationOffers[i].startingTime, locationOffers[i].endingTime, locationOffers[i].appointmentDuration);
 							selectedTimeInterval = 0;
 						}
@@ -956,7 +951,6 @@ $(function() {
 				        'rating': parseInt(ratingValue)
 				    },
 			        success : function (response) {
-			        	console.log(response);
 			        	if (response.status == "success") {
 			        		alert("Success! Thank you for your feedback");
 			        	} else {
@@ -971,30 +965,6 @@ $(function() {
 
 	});
 
-
-	// if let status = result["status"] as? String {
- //            if status == "success" {
- //                let alert = UIAlertController(title: "Success",
- //                                              message: "Thank you for your feedback" as String, preferredStyle:.alert)
- //                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
- //                alert.addAction(done)
- //                self.present(alert, animated: true, completion: nil)
- //            } else {
- //                let alert = UIAlertController(title: "Error",
- //                                              message: "Please try again" as String, preferredStyle:.alert)
- //                let done = UIAlertAction(title: "Done", style: .default, handler: nil)
- //                alert.addAction(done)
- //                self.present(alert, animated: true, completion: nil)
- //            }
- //        } else {
- //            let alert = UIAlertController(title: "Error",
- //                                          message: "Please try again" as String, preferredStyle:.alert)
- //            let done = UIAlertAction(title: "Done", style: .default, handler: nil)
- //            alert.addAction(done)
- //            self.present(alert, animated: true, completion: nil)
- //        }
-
-
 	$('#profile-picture-button').click(function(e) {
 		e.preventDefault();
 		if (confirm("Upload a new profile picture?")) {
@@ -1008,6 +978,7 @@ $(function() {
 		e.preventDefault();
 		var amount = prompt("Enter the required amount.", "10.00");
 		if (!isNaN(parseFloat(amount))) {
+			// The Braintree component for authorising purchases has been created by following the steps provided at: https://developers.braintreepayments.com/guides/client-sdk/setup/javascript/v2
 			braintree.dropin.create({
 		      authorization: 'sandbox_44pm2mq7_9579dnmk65pnbf2z',
 		      container: '#dropin-container'
@@ -1038,7 +1009,6 @@ $(function() {
 					'payment_method_nonce': payload.nonce
 				},
 				success : function (response) {
-					console.log(response);
 					if (response.success === true) {
 						alert("Success! Your credit has been topped up");
 						$('#account-password').val("");
@@ -1156,7 +1126,6 @@ $(function() {
 								timeIntervals.splice(selectedTimeInterval, 1);
 								selectedTimeInterval = 0;
 								locationOffers[selectedCategory].quantity -= 1;
-								console.log(selectedCategory + " " + locationOffers[selectedCategory].quantity);
 								if (locationOffers[selectedCategory].quantity == 0) {
 						        	$('#purchase-offer').addClass('disabled-details-button');
 						        	$('#purchase-offer').text(systemType == "product" ? "Sold out" : "Fully booked");
@@ -1271,16 +1240,6 @@ $(function() {
 	});
 	
 });
-
-		// console.log("Has categories: " + hasCategories);
-		// console.log("Max distance: " + maxDistance);
-		// console.log("Min time: " + minTime);
-		// console.log("Max time: " + maxTime);
-		// console.log("Sort by: " + sortBy);
-		// console.log("All offers: " + onlyAvailableOffers);
-		// console.log("All categories: " + allCategories);
-		// console.log("Allowed categories: " + allowedCategories);
-
 
 
 

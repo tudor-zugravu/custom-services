@@ -8,6 +8,7 @@
 
 import UIKit
 
+// The class used for providind the functionalitites of the receipts ViewControler
 class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ReceiptsModelProtocol, ReceiptsListCellProtocol, CheckoutRatingModelProtocol  {
         
     @IBOutlet weak var tableView: UITableView!
@@ -24,10 +25,10 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
     var receiptsModel = ReceiptsModel()
     var checkoutRatingModel = CheckoutRatingModel()
     var refreshControl: UIRefreshControl!
-        
+    
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -39,36 +40,33 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         tableView.addSubview(refreshControl) // not required when using UITableViewController
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         searchOn = false
         searchBar.text = ""
-        
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         refreshTable()
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
         bottomView.backgroundColor = Utils.instance.mainColour
     }
     
+    // Functions that manage the search bar by reloading the table with only the elements that match the search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredReceipts = receipts.filter({ (receipt) -> Bool in
@@ -94,6 +92,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         searchOn = false
     }
     
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -156,6 +155,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions delegated by the receipt cells upon pressing the rating button
     func didPressRatingButton(_ tag: Int) {
         let ratingPopUp = UIAlertController(title: "Rate offer",
                                               message: "How would you rate your experience on a scale from 1 to 5?" as String, preferredStyle:.alert)

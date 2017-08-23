@@ -19,6 +19,7 @@ $(function() {
 				colour3 = $('#colour3').val();
 				colour4 = $('#colour4').val();
 
+				// The Braintree component for authorising purchases has been created by following the steps provided at: https://developers.braintreepayments.com/guides/client-sdk/setup/javascript/v2
 				braintree.dropin.create({
 			      authorization: 'sandbox_44pm2mq7_9579dnmk65pnbf2z',
 			      container: '#dropin-container'

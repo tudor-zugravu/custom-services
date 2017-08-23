@@ -10,6 +10,7 @@ import Foundation
 import CoreLocation
 import HDAugmentedReality
 
+// Class used for describing the Augmented Reality annotations
 class Checkpoint: ARAnnotation {
     var color = "yellow"
     

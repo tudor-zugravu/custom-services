@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title><?php echo $_SESSION['main_title']?></title>
+  <title>Custom Services</title>
   <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
   <link href="assets/css/style.css" rel="stylesheet" type="text/css" media="all" />
   <script src="assets/js/jquery-3.2.1.min.js"></script>
@@ -102,11 +102,11 @@
                         </div>
                         <div class="form-group">
                           <div class="row">
-                            <div class="col-3"></div>
-                            <div class="col-6">
+                            <div class="col-2"></div>
+                            <div class="col-8">
                               <input type="submit" name="generate-button" id="generate-button" tabindex="3" class="btn btn-default form-control custom-main-colour button" value="Generate system">
                             </div>
-                            <div class="col-3"></div>
+                            <div class="col-2"></div>
                           </div>
                         </div>
                       </form>

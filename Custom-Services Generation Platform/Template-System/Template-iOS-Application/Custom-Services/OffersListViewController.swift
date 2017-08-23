@@ -9,13 +9,13 @@
 import UIKit
 import CoreLocation
 
+// The class used for providind the functionalitites of the Offers ViewControler
 class OffersListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol, FavouriteModelProtocol {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var navigationLogo: UIImageView!
@@ -39,6 +39,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     var refreshControl: UIRefreshControl!
     var points: [PointModel] = []
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
         offersModel.delegate = self
@@ -58,15 +59,14 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    // Function called upon the initiation of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         customizeAppearance()
         searchOn = false
         searchBar.text = ""
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
@@ -77,7 +77,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -86,12 +86,12 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         tableView.reloadData()
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
         mainTitleLabel.text = Utils.instance.mainTitle
         mainTabBarItem.title = Utils.instance.mainTabBarItemLabel
-        
         if Utils.instance.navigationLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
             navigationLogo.image = UIImage(contentsOfFile: filename)
@@ -108,6 +108,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    // Functions that manage the search bar by reloading the table with only the elements that match the search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredOffers = offers.filter({ (offer) -> Bool in
@@ -133,6 +134,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         searchOn = false
     }
     
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -149,10 +151,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
         cell.delegate = self
         cell.tag = indexPath.row
-        
         let item: OfferModel = searchOn ? filteredOffers[indexPath.row] : offers[indexPath.row]
         cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, discount:item.discount!, minTime:item.minTime!, maxTime:item.maxTime!, offerImage:item.offerImage!, offerLogo:item.offerLogo!, favourite:item.favourite!, quantity: item.quantity!, discountRange: item.discountRange)
-        
         return cell
     }
     
@@ -164,6 +164,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions delegated by the offer cells upon pressing the favourite button
     func didPressFavouriteButton(_ tag: Int) {
         favouriteModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
     }
@@ -172,7 +173,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         if (segue.identifier == "offersFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
-
             popoverFiltersViewController.categories = categories
             popoverFiltersViewController.minTime = minTime
             popoverFiltersViewController.maxTime = maxTime
@@ -227,10 +227,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     func offersReceived(_ receivedOffers: [[String:Any]]) {
         var offersAux: [OfferModel] = []
         var item:OfferModel;
-        
-        // parse the received JSON and save the contacts
         for i in 0 ..< receivedOffers.count {
-            
             if let offerId = Int((receivedOffers[i]["offer_id"] as? String)!),
                 let locationId = Int((receivedOffers[i]["location_id"] as? String)!),
                 let name = receivedOffers[i]["name"] as? String,
@@ -261,32 +258,26 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                         item.category = category
                     }
                 }
-                
                 if let quantity = receivedOffers[i]["quantity"] as? String {
                     item.quantity = Int(quantity)
                 } else {
                     item.quantity = -1
                 }
-                
                 if let appointmentDuration = receivedOffers[i]["appointment_minute_duration"] as? String {
                     item.appointmentDuration = Int(appointmentDuration)
                 } else {
                     item.appointmentDuration = -1
                 }
-                
                 if let favourite = receivedOffers[i]["favourite"] as? String {
                     item.favourite = favourite == "1" ? true : false
                 } else {
                     item.favourite = false
                 }
-
                 if let logoImage = receivedOffers[i]["logo_image"] as? String {
-                    
                     let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(logoImage)")
                     if FileManager.default.fileExists(atPath: filename.path) {
                         item.offerLogo = logoImage
                     } else {
-                        // Download the profile picture, if exists
                         if let url = URL(string: "\(Utils.serverAddress)/resources/vendor_images/\(logoImage)") {
                             if let data = try? Data(contentsOf: url) {
                                 var logoImg: UIImage
@@ -305,14 +296,11 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 } else {
                     item.offerLogo = ""
                 }
-                
                 if let offerImage = receivedOffers[i]["image"] as? String {
-                    
                     let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)")
                     if FileManager.default.fileExists(atPath: filename.path) {
                         item.offerImage = offerImage
                     } else {
-                        // Download the profile picture, if exists
                         if let url = URL(string: "\(Utils.serverAddress)/resources/vendor_images/\(offerImage)") {
                             if let data = try? Data(contentsOf: url) {
                                 var offerImg: UIImage
@@ -331,13 +319,10 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
                 } else {
                     item.offerImage = ""
                 }
-                
                 offersAux.append(item)
             }
         }
-        
         offers = offersAux
-        
         if let currentLocation = locationManager.location {
             for offer in offers {
                 offer.setDistance(location: currentLocation)
@@ -352,7 +337,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func didChangeFiltersAllCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool) {
-
         self.maxDistance = distance
         self.minTime = lowerTimeInterval
         self.maxTime = higherTimeInterval
@@ -367,7 +351,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func didChangeFiltersSomeCategories(distance: Int, lowerTimeInterval: String, higherTimeInterval: String, sortBy: Int, onlyAvailableOffers: Bool, categories: [String]) {
-        
         self.maxDistance = distance
         self.minTime = lowerTimeInterval
         self.maxTime = higherTimeInterval
@@ -390,7 +373,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         offers = Utils.instance.removeDuplicateLocations(offers: offers, onlyAvailableOffers: onlyAvailableOffers)
         offers = Utils.instance.sortOffers(offers: offers, sortBy: sortBy)
         tableView.reloadData()
-        
         reloadPoints()
     }
     
@@ -419,7 +401,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func refreshTable() {
-        // Code to refresh table view
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             offersModel.requestOffers(hasCategories: true)
         } else {
@@ -427,7 +408,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
@@ -452,22 +434,18 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func signOut(_ sender: Any) {
-        
         Utils.instance.signOut()
         _ = self.navigationController?.popToRootViewController(animated: true)
     }
 
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
@@ -482,7 +460,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         reloadTable()
     }
     
-    // Called to dismiss the keyboard from the screen
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         if !self.dropdownMenuButton.table.frame.contains(gestureRecognizer.location(in: self.view)) && !self.dropdownMenuButton.frame.contains(gestureRecognizer.location(in: self.view)) {
             dropdownMenuButton.hideMenu()
@@ -490,6 +467,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         view.endEditing(true)
     }
     
+    // Functions that manage the geolocation nofitications for the favourite locations
     func startMonitoring(point: PointModel) {
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             print("nope")

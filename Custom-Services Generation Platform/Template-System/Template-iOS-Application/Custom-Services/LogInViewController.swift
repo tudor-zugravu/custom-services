@@ -8,12 +8,12 @@
 
 import UIKit
 
+// The class used for providind the functionalitites of the authentication ViewControler
 class LogInViewController: UIViewController, LogInModelProtocol {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var mainLogo: UIImageView!
@@ -24,31 +24,29 @@ class LogInViewController: UIViewController, LogInModelProtocol {
     
     let logInModel = LogInModel()
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         logInModel.delegate = self
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         customizeAppearance()
     }
     
-    // COPIED
+    // Function when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
@@ -56,7 +54,6 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         bottomView.backgroundColor = Utils.instance.mainColour
         loginButton.backgroundColor = Utils.instance.mainColour
         registerButton.backgroundColor = Utils.instance.mainColour
-        
         if Utils.instance.mainLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.mainLogo)").path
             mainLogo.image = UIImage(contentsOfFile: filename)
@@ -64,7 +61,8 @@ class LogInViewController: UIViewController, LogInModelProtocol {
             mainLogo.image = UIImage(named: "ban")
         }
     }
-        
+    
+    // Functions called when the login button is pressed
     @IBAction func loginButtonPressed(_ sender: Any) {
         if emailTextField.text != nil && emailTextField.text != "" && passwordTextField.text != nil && passwordTextField.text != "" {
             if Utils.instance.isValidEmailFormat(email:emailTextField.text!) {
@@ -85,6 +83,7 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         }
     }
     
+    // Function called upon the authentification of the user, which either opens the Offers view or presents an allert
     func responseReceived(_ response: [String:Any]) {
         if (response["status"] as? String) != nil {
             let alert = UIAlertController(title: "Login failed",
@@ -100,19 +99,16 @@ class LogInViewController: UIViewController, LogInModelProtocol {
             UserDefaults.standard.set(name, forKey:"name");
             UserDefaults.standard.set(email, forKey:"email");
             UserDefaults.standard.set(password, forKey:"password");
-            
             if UserDefaults.standard.bool(forKey: "hasCredit") == true {
                 if let credit = Float((response["credit"] as? String)!) {
                     UserDefaults.standard.set(credit, forKey:"credit");
                 }
             }
-            
             if let profilePicture = response["profile_picture"] as? String {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/profile_pictures/\(profilePicture)") {
                         if let data = try? Data(contentsOf: url) {
                             var profilePic: UIImage
@@ -141,17 +137,16 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         }
     }
     
-    // COPIED
     func keyboardWillShow(notification:NSNotification) {
         adjustingHeight(show: true, notification: notification)
     }
     
-    // COPIED
     func keyboardWillHide(notification:NSNotification) {
         adjustingHeight(show: false, notification: notification)
     }
     
-    // COPIED
+    // Function called upon the appearance of the keyboard in order to adjust the view height
+    // source: http://truelogic.org/wordpress/2016/04/15/swift-moving-uitextfield-up-when-keyboard-is-shown/
     func adjustingHeight(show:Bool, notification:NSNotification) {
         if let userInfo = notification.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] {
             let duration = (durationValue as AnyObject).doubleValue
@@ -165,7 +160,6 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         }
     }
     
-    // Called to dismiss the keyboard from the screen
     func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         view.endEditing(true)
     }

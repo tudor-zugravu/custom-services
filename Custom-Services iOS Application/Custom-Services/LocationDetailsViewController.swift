@@ -187,6 +187,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         bottomView.backgroundColor = Utils.instance.mainColour
     }
     
+    // Functions that manage the picker views and the elements
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -235,6 +236,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    
     func checkTimeInterval(time: String) {
         var DateArray = time.components(separatedBy: CharacterSet(charactersIn: "-:"))
         var components = DateComponents()
@@ -256,6 +258,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Functions called upon pressing the favourite button
     func favouriteSelected(_ result: NSString, tag: Int) {
         if result == "1" {
             favourite = favourite ? false : true
@@ -557,6 +560,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         isVR = true
     }
     
+    // Functions related to setting up the Augmented Reality component
+    // source: https://github.com/DanijelHuis/HDAugmentedReality
     func startAR() {
         arViewController.dataSource = self
         // Vertical offset by distance
@@ -591,6 +596,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         return checkpointView;
     }
     
+    // Function that reloads the elements on the camera screen upon the progress through the navigation process
     func proceedToNextCheckpoint() {
         let index = checkpoints.index(of: nextCheckpoint!)!
         if index == checkpoints.count - 1 {
@@ -619,6 +625,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function that monitors the progress made in the augmented reality navigation through using the current location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if !(arViewController.isViewLoaded && (arViewController.view.window != nil)) && self.isVR == true {
             self.isVR = false
@@ -660,6 +667,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         }
     }
     
+    // Function that displays the map view using Google Maps
     func openMapForPlace() {
         let coordinates = CLLocationCoordinate2D(latitude: CLLocationDegrees(offers[0].latitude!), longitude: CLLocationDegrees(offers[0].longitude!))
         let locationDistance: CLLocationDistance = 10000
@@ -721,7 +729,8 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         let _ = navigationController?.popViewController(animated: true)
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [

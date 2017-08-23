@@ -35,4 +35,5 @@ if ($uploadOk == 0) {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+// The steps followed for uploading an image can be found at: https://www.w3schools.com/php/php_file_upload.asp
 ?>

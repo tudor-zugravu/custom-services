@@ -134,7 +134,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         searchOn = false
     }
     
-    
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -151,10 +151,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
         cell.delegate = self
         cell.tag = indexPath.row
-        
         let item: OfferModel = searchOn ? filteredOffers[indexPath.row] : offers[indexPath.row]
         cell.configureCell(item.name!, rating: item.rating!, distance: item.distance!, discount:item.discount!, minTime:item.minTime!, maxTime:item.maxTime!, offerImage:item.offerImage!, offerLogo:item.offerLogo!, favourite:item.favourite!, quantity: item.quantity!, discountRange: item.discountRange)
-        
         return cell
     }
     
@@ -166,6 +164,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions delegated by the offer cells upon pressing the favourite button
     func didPressFavouriteButton(_ tag: Int) {
         favouriteModel.sendFavourite(locationId: offers[tag].locationId!, favourite: offers[tag].favourite! ? 0 : 1, tag: tag)
     }
@@ -174,7 +173,6 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         if (segue.identifier == "offersFiltersViewController") {
             let popoverFiltersViewController = segue.destination as! PopoverFiltersViewController
             popoverFiltersViewController.delegate = self
-
             popoverFiltersViewController.categories = categories
             popoverFiltersViewController.minTime = minTime
             popoverFiltersViewController.maxTime = maxTime
@@ -410,7 +408,8 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // Create the dropdown menu
+    // Function that initiates the DropMenuButton dropdown menu
+    // source: https://github.com/HacktechSolutions/Swift3.0-Dropdown-Menu
     func initializeDropdown() {
         if UserDefaults.standard.value(forKey: "type") as! String == "location" {
             dropdownMenuButton.initMenu(["View Profile", "Sign Out"], actions: [
@@ -468,6 +467,7 @@ class OffersListViewController: UIViewController, UITableViewDataSource, UITable
         view.endEditing(true)
     }
     
+    // Functions that manage the geolocation nofitications for the favourite locations
     func startMonitoring(point: PointModel) {
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             print("nope")

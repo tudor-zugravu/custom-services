@@ -91,6 +91,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
 
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -108,7 +109,6 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         cell.tag = indexPath.row
         cell.categorySwitch.setOn(selections[indexPath.row], animated: false)
         cell.configureCell(categories[indexPath.row])
-        
         return cell
     }
     
@@ -116,6 +116,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions that manage the picker view and its elements
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -157,6 +158,7 @@ class PopoverFiltersViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
     
+    // Functions that saves the filtering options selected by the user
     @IBAction func dismissPopover(_ sender: Any) {
         if categories.count == 1 {
             delegate?.didChangeFiltersAllCategories(distance: Int(distanceSlider.value), lowerTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.lowerValue)), higherTimeInterval: Utils.instance.getTime(time: Int(timeIntervalSlider.upperValue)), sortBy: orderByPicker.selectedRow(inComponent: 0), onlyAvailableOffers: onlyAvailableSwitch.isOn)

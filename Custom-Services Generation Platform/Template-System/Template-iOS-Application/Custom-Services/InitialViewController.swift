@@ -8,22 +8,25 @@
 
 import UIKit
 
+// The class used for providind the functionalitites of the initial ViewControler
 class InitialViewController: UIViewController, LogInModelProtocol, SystemModelProtocol {
     
     let systemModel = SystemModel()
     let logInModel = LogInModel()
 
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         logInModel.delegate = self
         systemModel.delegate = self
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewDidAppear(_ animated: Bool) {
         systemModel.requestSystemData()
     }
     
+    // Function called upon the receival of the system data, which are saved in the persistent memory of the bundle
     func systemDataReceived(_ systemData: [String:Any]) {
         if (systemData["error"] as? String) != nil {
             let alert = UIAlertController(title: "Error",
@@ -47,17 +50,14 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                 UserDefaults.standard.set(true, forKey: "hasCredit")
             }
             UserDefaults.standard.set(hasCategories == "1" ? true : false, forKey: "hasCategories")
-            
             var mainLogo = ""
             var navigationLogo = ""
             var mainTabBarItemLogo = ""
-            
             if let auxImage = systemData["main_logo"] as? String {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(auxImage)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     mainLogo = auxImage
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
@@ -76,13 +76,11 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
             } else {
                 mainLogo = ""
             }
-            
             if let auxImage = systemData["navigation_logo"] as? String {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(auxImage)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     navigationLogo = auxImage
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
@@ -101,13 +99,11 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
             } else {
                 navigationLogo = ""
             }
-
             if let auxImage = systemData["main_tab_logo"] as? String {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(auxImage)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     mainTabBarItemLogo = auxImage
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/system_images/\(auxImage)") {
                         if let data = try? Data(contentsOf: url) {
                             var auxPic: UIImage
@@ -126,9 +122,7 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
             } else {
                 mainTabBarItemLogo = ""
             }
-            
             Utils.instance.setCustomisationParameters(mainColour: Int(mainColour, radix: 16)!, opaqueColour: Int(opaqueColour, radix: 16)!, backgroundColour: Int(backgroundColour, radix: 16)!, cellBackgroundColour: Int(cellBackgroundColour, radix: 16)!, mainTitle: mainTitle, mainLogo: mainLogo, navigationLogo: navigationLogo, mainTabBarItemLabel: mainTabBarItemLabel, mainTabBarItemLogo: mainTabBarItemLogo, geolocationNotifications: geolocationNotifications == "1" ? true : false)
-            
             if hasCategories == "1" {
                 systemModel.requestCategories()
             } else {
@@ -142,23 +136,20 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         }
     }
 
+    // Function called upon the receival of the category elements which are saved in the persistent storage of the app
     func categoriesReceived(_ systemData: [[String:Any]]) {
         var categories: [String] = []
-        // parse the received JSON and save the contacts
         for i in 0 ..< systemData.count {
-            
             if let category = systemData[i]["category"] as? String {
                 categories.append(category)
             }
         }
-        
         if categories.isEmpty {
             UserDefaults.standard.set(false, forKey: "hasCategories")
         } else {
             UserDefaults.standard.set(true, forKey: "hasCategories")
             UserDefaults.standard.set(categories, forKey:"categories");
         }
-        
         if let email = UserDefaults.standard.value(forKey: "email") as? String,
             let password = UserDefaults.standard.value(forKey: "password") as? String {
             logInModel.checkCredentials(email: email, password: password)
@@ -167,6 +158,7 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
         }
     }
     
+    // Function called upon the authentification of the user, providing sessions by either presenting the offers view, or the login page
     func responseReceived(_ response: [String:Any]) {
         if (response["status"] as? String) != nil {
             self.performSegue(withIdentifier: "initialLoginViewController", sender: nil)
@@ -183,7 +175,6 @@ class InitialViewController: UIViewController, LogInModelProtocol, SystemModelPr
                     UserDefaults.standard.set(credit, forKey:"credit");
                 }
             }
-            
             if let profilePicture = response["profile_picture"] as? String {
                 UserDefaults.standard.set(profilePicture, forKey:"profilePicture");
             } else {

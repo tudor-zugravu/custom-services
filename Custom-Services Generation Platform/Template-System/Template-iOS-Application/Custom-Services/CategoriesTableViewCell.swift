@@ -8,16 +8,17 @@
 
 import UIKit
 
+// Protocol used for delegating touches to the class that implements it
 protocol CategoriesListCellProtocol : class {
     func didSwitch(_ tag: Int)
 }
 
+// The class used for the presentation of categories cell objects
 class CategoriesTableViewCell: UITableViewCell {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var categorySwitch: UISwitch!
-    
     weak var delegate: CategoriesListCellProtocol?
     
     override func awakeFromNib() {

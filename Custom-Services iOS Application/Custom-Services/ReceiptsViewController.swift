@@ -66,6 +66,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         bottomView.backgroundColor = Utils.instance.mainColour
     }
     
+    // Functions that manage the search bar by reloading the table with only the elements that match the search
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchOn = (searchBar.text != nil && searchBar.text != "") ? true : false
         filteredReceipts = receipts.filter({ (receipt) -> Bool in
@@ -91,6 +92,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         searchOn = false
     }
     
+    // Functions that manage the table and the content cells
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -153,6 +155,7 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Functions delegated by the receipt cells upon pressing the rating button
     func didPressRatingButton(_ tag: Int) {
         let ratingPopUp = UIAlertController(title: "Rate offer",
                                               message: "How would you rate your experience on a scale from 1 to 5?" as String, preferredStyle:.alert)

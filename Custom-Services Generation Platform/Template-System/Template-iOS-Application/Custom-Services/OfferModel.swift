@@ -9,9 +9,9 @@
 import UIKit
 import CoreLocation
 
-class OfferModel: NSObject, NSCoding {
 
-    //properties
+// The class used for the structure of Offer objects
+class OfferModel: NSObject, NSCoding {
     var id: Int?
     var locationId: Int?
     var name: String?
@@ -31,14 +31,11 @@ class OfferModel: NSObject, NSCoding {
     var category: String?
     var discountRange: String?
     var appointmentDuration: Int?
-    
-    //empty constructor
-    override init()
-    {
+
+    override init() {
         self.distance = 0
     }
-    
-    //construct with @name, @email and @telephone parameters
+
     init(id: Int, locationId: Int, name: String, address: String, about: String, rating: Float, latitude: Double, longitude: Double, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, appointmentDuration: Int) {
         
         self.id = id
@@ -102,6 +99,7 @@ class OfferModel: NSObject, NSCoding {
         coder.encode(appointmentDuration, forKey: "appointmentDuration")
     }
     
+    // Calculates the distance between the current position and the input location
     func setDistance(location: CLLocation) {
         self.distance = Int(round(location.distance(from: CLLocation(latitude: self.latitude!, longitude: self.longitude!))))
         if self.distance == nil {
@@ -109,7 +107,6 @@ class OfferModel: NSObject, NSCoding {
         }
     }
     
-    //prints object's current state
     override var description: String {
         return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Name: \(String(describing: name)), Address: \(String(describing: address)), About: \(String(describing: about)), Rating: \(String(describing: rating)), Distance: \(String(describing: distance)), Latitude: \(String(describing: latitude)), Longitude: \(String(describing: longitude)), Discount: \(String(describing: discount)), Time: \(String(describing: minTime))-\(String(describing: maxTime)), OfferImage: \(String(describing: offerImage)), OfferLogo: \(String(describing: offerLogo)), Favourite: \(String(describing: favourite)), Quantity: \(String(describing: quantity)), AppointmentDuration: \(String(describing: appointmentDuration)), Category: \(String(describing: category))"
     }

@@ -10,15 +10,14 @@ import UIKit
 import MapKit
 import CoreLocation
 
+// The class used for the structure of Point objects
 class PointModel: NSObject, NSCoding {
-    
     var latitude: Double?
     var longitude: Double?
     var radius: CLLocationDistance?
     var id: Int?
     var name: String?
 
-    //empty constructor
     override init() {
         
     }

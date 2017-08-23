@@ -176,7 +176,7 @@ html, body {
 	padding: 0;
 }
 .offer-title {
-	font-size: 22px !important;
+	font-size: 22px;
 	color: #000000;
 	margin: auto;
 	margin-top: 25px;
@@ -446,7 +446,7 @@ html, body {
 }
 .receipt-title {
 	text-decoration: underline;
-	font-size: 22px !important;
+	font-size: 22px;
 	color: #000000;
 	margin: auto;
 	margin-top: 17px;
@@ -509,7 +509,79 @@ html, body {
 .redeem-button-main-colour {
 	background-color: #10ADCB;
 }
+@media screen and (max-width: 1500px) {  
+	.navigation-logo {
+		width: 40px;
+		height: 40px;
+		margin-top: 15px;
+		margin-left: 10px;
+	}
+	.welcome-label {
+		font-size: 18px;
+	}
+	.session-log-out {
+		font-size: 14px;
+	}
+	.log-out {
+		margin-top: 15px;
+	}
 
+	#filtering-options {
+		width: 180px;
+		padding-left: 10px;
+		margin-top: 50px;
+		color: #495057;
+		font-size: 12px;
+	}
+	.slider-handle {
+	 	background-image: radial-gradient(#FFFFFF 50%, #686868);
+	}
+	.slider.slider-horizontal {
+		width: 160px;
+	}
+	.slider.slider-horizontal .slider-track {
+	 	height: 4px;
+	 	width: 160px;
+	 	margin-top: -2px;
+	}
+	.account-details-input {
+		font-size: 12px;
+	}
+	#account-credit {
+		font-size: 12px;
+	}
+	.button {
+		font-size: 14px;
+	}
+	.receipt-title {
+		font-size: 20px;
+		margin-left: 20px;
+	}
+	.receipt-time-interval {
+		font-size: 18px;
+		margin-left: 20px;
+	}
+	.receipt-price {
+		font-size: 16px;
+	}
+	.rate-receipt {
+		font-size: 14px;
+	}
+
+	.offer-details p {
+		font-size: 14px;
+	}
+	.offer-title {
+		margin-left: 20px;
+	}
+	.offer-time-interval {
+		margin-left: 20px;
+	}
+	.offer-address-div {
+		margin-top: 15px;
+		margin-bottom: 15px;
+	}
+}
 
 
 
