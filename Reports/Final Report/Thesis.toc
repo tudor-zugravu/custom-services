@@ -13,8 +13,11 @@
 \contentsline {subsection}{\numberline {3.3}System Architecture}{20}{subsection.3.3}
 \contentsline {subsubsection}{\numberline {3.3.1}Architectural Model}{20}{subsubsection.3.3.1}
 \contentsline {subsubsection}{\numberline {3.3.2}Design Patterns}{23}{subsubsection.3.3.2}
-\contentsline {section}{\numberline {4}Conclusion}{25}{section.4}
-\contentsline {section}{References}{27}{section*.5}
-\contentsline {subsubsection}{\numberline {.0.1}The Planning Process}{28}{subsubsection.Alph0.0.1}
-\contentsline {subsubsection}{\numberline {.0.2}Business Concept Model}{29}{subsubsection.Alph0.0.2}
-\contentsline {subsubsection}{\numberline {.0.3}Component Identification}{29}{subsubsection.Alph0.0.3}
+\contentsline {subsection}{\numberline {3.4}Implementation}{24}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Used Technologies}{24}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Database Templates}{26}{subsubsection.3.4.2}
+\contentsline {section}{\numberline {4}Conclusion}{30}{section.4}
+\contentsline {section}{References}{32}{section*.5}
+\contentsline {subsubsection}{\numberline {.0.1}The Planning Process}{33}{subsubsection.Alph0.0.1}
+\contentsline {subsubsection}{\numberline {.0.2}Business Concept Model}{34}{subsubsection.Alph0.0.2}
+\contentsline {subsubsection}{\numberline {.0.3}Component Identification}{34}{subsubsection.Alph0.0.3}

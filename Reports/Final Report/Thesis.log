@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  22 AUG 2017 22:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  23 AUG 2017 04:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -951,7 +951,7 @@ LaTeX Font Info:    Try loading font information for U+wasy on input line 61.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 )
-<img/kcl.png, id=87, 170.6375pt x 112.42pt>
+<img/kcl.png, id=99, 170.6375pt x 112.42pt>
 File: img/kcl.png Graphic file (type png)
  <use img/kcl.png>
 Package pdftex.def Info: img/kcl.png used on input line 61.
@@ -1048,11 +1048,11 @@ l.70 \include{contents/abstract}
 ]
 
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
-less on input line 85.
+less on input line 86.
 
 
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
-less on input line 86.
+less on input line 87.
 
 \openout2 = `contents/introduction.aux'.
 
@@ -1142,7 +1142,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 77--78
 
  []
 
-[8] <img/phase1.png, id=215, 1130.2225pt x 576.1525pt>
+[8] <img/phase1.png, id=232, 1130.2225pt x 576.1525pt>
 File: img/phase1.png Graphic file (type png)
  <use img/phase1.png>
 Package pdftex.def Info: img/phase1.png used on input line 81.
@@ -1152,7 +1152,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
-<img/phase2.png, id=216, 1397.22pt x 559.08875pt>
+<img/phase2.png, id=233, 1397.22pt x 559.08875pt>
 File: img/phase2.png Graphic file (type png)
  <use img/phase2.png>
 Package pdftex.def Info: img/phase2.png used on input line 90.
@@ -1177,7 +1177,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
-[11] <img/Use_Case_diagrams.png, id=238, 1583.9175pt x 1027.84pt>
+[11] <img/Use_Case_diagrams.png, id=255, 1583.9175pt x 1027.84pt>
 File: img/Use_Case_diagrams.png Graphic file (type png)
 
 <use img/Use_Case_diagrams.png>
@@ -1248,7 +1248,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 181--182
 
  []
 
-<img/Business_Type_Model.png, id=263, 774.895pt x 1090.0725pt>
+<img/Business_Type_Model.png, id=280, 774.895pt x 1090.0725pt>
 File: img/Business_Type_Model.png Graphic file (type png)
 
 <use img/Business_Type_Model.png>
@@ -1264,7 +1264,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 193--194
 
  []
 
-[17] <img/Initial_Architecture.png, id=272, 904.37875pt x 633.36626pt>
+[17] <img/Initial_Architecture.png, id=289, 904.37875pt x 633.36626pt>
 File: img/Initial_Architecture.png Graphic file (type png)
 
 <use img/Initial_Architecture.png>
@@ -1281,7 +1281,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 211--212
 
  []
 
-[20] <img/Client_Server.png, id=289, 1241.63875pt x 795.97375pt>
+[20] <img/Client_Server.png, id=307, 1241.63875pt x 795.97375pt>
 File: img/Client_Server.png Graphic file (type png)
 
 <use img/Client_Server.png>
@@ -1293,7 +1293,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 220--221
  []
 
 [21 <./img/Client_Server.png>]
-<img/System_Architecture.png, id=297, 1424.32124pt x 1336.995pt>
+<img/System_Architecture.png, id=315, 1424.32124pt x 1336.995pt>
 File: img/System_Architecture.png Graphic file (type png)
 
 <use img/System_Architecture.png>
@@ -1314,15 +1314,66 @@ Underfull \hbox (badness 10000) in paragraph at lines 235--236
 
  []
 
-[23])
-Underfull \hbox (badness 10000) in paragraph at lines 237--95
+[23]
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
 
  []
 
 [24]
+Underfull \hbox (badness 10000) in paragraph at lines 248--249
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 250--251
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 254--255
+
+ []
+
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 258--259
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 260--261
+
+ []
+
+[26] <img/database_structure.png, id=349, 970.62625pt x 597.23125pt>
+File: img/database_structure.png Graphic file (type png)
+
+<use img/database_structure.png>
+Package pdftex.def Info: img/database_structure.png used on input line 264.
+(pdftex.def)             Requested size: 388.24362pt x 238.88826pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 269--270
+
+ []
+
+[27 <./img/database_structure.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 271--272
+
+ []
+
+[28]
+Underfull \hbox (badness 10000) in paragraph at lines 273--274
+
+ []
+
+) [29]
 \openout2 = `contents/conclusion.aux'.
 
- (./contents/conclusion.tex) [25
+ (./contents/conclusion.tex) [30
 
 
 ]
@@ -1335,10 +1386,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 237--95
 
 No file Thesis.gls.
 No file Thesis.acr.
-[26
+[31
 
 
-]) (./Thesis.bbl) [27
+]) (./Thesis.bbl) [32
 
 ]
 \openout2 = `appendix/app_1.aux'.
@@ -1348,21 +1399,21 @@ No file Thesis.acr.
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 2.
 
-<img/WBS.png, id=327, 243.91125pt x 619.31375pt>
+<img/WBS.png, id=379, 243.91125pt x 619.31375pt>
 File: img/WBS.png Graphic file (type png)
  <use img/WBS.png>
 Package pdftex.def Info: img/WBS.png used on input line 6.
 (pdftex.def)             Requested size: 209.76329pt x 532.6089pt.
 
-<img/phase3.png, id=328, 1037.8775pt x 467.7475pt>
+<img/phase3.png, id=380, 1037.8775pt x 467.7475pt>
 File: img/phase3.png Graphic file (type png)
  <use img/phase3.png>
 Package pdftex.def Info: img/phase3.png used on input line 13.
 (pdftex.def)             Requested size: 415.14365pt x 187.09567pt.
 
-[28
+[33
 
- <./img/WBS.png>] <img/phase4.png, id=334, 1123.19624pt x 392.46625pt>
+ <./img/WBS.png>] <img/phase4.png, id=386, 1123.19624pt x 392.46625pt>
 File: img/phase4.png Graphic file (type png)
 
 <use img/phase4.png>
@@ -1373,56 +1424,52 @@ Overfull \hbox (31.01686pt too wide) in paragraph at lines 20--21
  [][] 
  []
 
-<img/Business_Concept_Model.png, id=335, 702.625pt x 796.9775pt>
+<img/Business_Concept_Model.png, id=387, 702.625pt x 796.9775pt>
 File: img/Business_Concept_Model.png Graphic file (type png)
 
 <use img/Business_Concept_Model.png>
 Package pdftex.def Info: img/Business_Concept_Model.png used on input line 29.
 (pdftex.def)             Requested size: 281.04501pt x 318.78534pt.
 
-<img/System_Interfaces.png, id=336, 903.375pt x 655.44875pt>
+<img/System_Interfaces.png, id=388, 903.375pt x 655.44875pt>
 File: img/System_Interfaces.png Graphic file (type png)
 
 <use img/System_Interfaces.png>
 Package pdftex.def Info: img/System_Interfaces.png used on input line 38.
 (pdftex.def)             Requested size: 271.01459pt x 196.63614pt.
-) [29 <./img/phase3.png> <./img/phase4.png>]
-[30 <./img/Business_Concept_Model.png> <./img/System_Interfaces.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 117.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 117.
+) [34 <./img/phase3.png> <./img/phase4.png>]
+[35 <./img/Business_Concept_Model.png> <./img/System_Interfaces.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
 
 (./Thesis.aux (./contents/abstract.aux) (./structure/figures_tables.aux)
 (./structure/acknowledgements.aux) (./contents/introduction.aux)
 (./contents/background.aux) (./contents/main.aux) (./contents/conclusion.aux)
 (./contents/nomenclature.aux) (./appendix/app_1.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 117.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 117.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
 Package rerunfilecheck Info: File `Thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 19EFAA547644F4D6A7AA9E721D3AE411;1434.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 117.
+(rerunfilecheck)             Checksum: 63ADB8E5C3A1E2FC03E7D30E7EA1ECDC;1653.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
  ) 
 Here is how much of TeX's memory you used:
- 21477 strings out of 492995
- 384904 string characters out of 6132704
- 517262 words of memory out of 5000000
- 24429 multiletter control sequences out of 15000+600000
+ 21505 strings out of 492995
+ 385390 string characters out of 6132704
+ 518533 words of memory out of 5000000
+ 24442 multiletter control sequences out of 15000+600000
  12009 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,11n,59p,1967b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,12n,59p,1967b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
 usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
 /local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
 local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on Thesis.pdf (38 pages, 863282 bytes).
+Output written on Thesis.pdf (43 pages, 997874 bytes).
 PDF statistics:
- 393 PDF objects out of 1000 (max. 8388607)
- 317 compressed objects within 4 object streams
- 78 named destinations out of 1000 (max. 500000)
- 238 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 448 PDF objects out of 1000 (max. 8388607)
+ 365 compressed objects within 4 object streams
+ 92 named destinations out of 1000 (max. 500000)
+ 267 words of extra memory for PDF output out of 10000 (max. 10000000)
 

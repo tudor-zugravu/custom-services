@@ -1,4 +1,8 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{curcin_2016}
+Dr.~Vasa Curcin.
+\newblock Entity relationship modelling, 2016.
 
 \bibitem{hamza_2017}
 Dr.~Hamza Hamza.
@@ -7,6 +11,11 @@ Dr.~Hamza Hamza.
 \bibitem{holyer_2016}
 Andrew Holyer.
 \newblock How to scope a tpm project, 2016.
+
+\bibitem{swift_2014}
+Apple Inc.
+\newblock {\em THE SWIFT PROGRAMMING LANGUAGE (SWIFT 3.1)}.
+\newblock Apple Inc., 2014.
 
 \bibitem{client-server_model_2017}
 Apple Inc.
@@ -18,9 +27,24 @@ Kevin Lano.
 \newblock {\em Model-driven software development with UML and Java}.
 \newblock Cengage Learning EMEA, 1 edition, 2009.
 
+\bibitem{what_is_database}
+Margaret Rouse.
+\newblock Database design and modeling, 2017.
+
+\bibitem{runceanu_2014}
+A~Runceanu.
+\newblock Proiectarea bazelor de date. laborator - normalizarea bazei de date,
+  2014.
+
 \bibitem{sastry_2017}
 Dr.~Nishanth Sastry.
 \newblock Model driven development, 2017.
+
+\bibitem{schifreen_2010}
+R.~Schifreen.
+\newblock {\em The Web Book: The ultimate beginner?s guide to HTML, CSS,
+  JavaScript, PHP and MySql}.
+\newblock Oakworth Business Publishing Ltd, 1 edition, 2010.
 
 \bibitem{wysocki_2013}
 Robert~K Wysocki.
