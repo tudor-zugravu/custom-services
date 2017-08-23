@@ -8,9 +8,8 @@
 
 import Foundation
 
+// The class used for the structure of Receipt objects
 class ReceiptModel: NSObject, NSCoding {
-    
-    //properties
     var id: Int?
     var locationId: Int?
     var favourite: Bool?
@@ -21,15 +20,11 @@ class ReceiptModel: NSObject, NSCoding {
     var offerLogo: String?
     var redeemed: Int?
     
-    //empty constructor
-    override init()
-    {
+    override init() {
         
     }
     
-    //construct with @name, @email and @telephone parameters
     init(id: Int, locationId: Int, favourite: Bool, offerId: Int, name: String, timeInterval: String, discount: Float, offerLogo: String, redeemed: Int) {
-        
         self.id = id
         self.locationId = locationId
         self.favourite = favourite
@@ -65,7 +60,6 @@ class ReceiptModel: NSObject, NSCoding {
         coder.encode(redeemed, forKey: "redeemed")
     }
     
-    //prints object's current state
     override var description: String {
         return "ID: \(String(describing: id)), LocationId: \(String(describing: locationId)), Favourite: \(String(describing: favourite)), OfferId: \(String(describing: offerId)), Name: \(String(describing: name)), TimeInterval: \(String(describing: timeInterval)), Discount: \(String(describing: discount)), OfferLogo: \(String(describing: offerLogo)), Redeemed: \(String(describing: redeemed))"
     }

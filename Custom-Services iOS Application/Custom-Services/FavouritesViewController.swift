@@ -9,13 +9,13 @@
 import UIKit
 import CoreLocation
 
+// The class used for providind the functionalitites of the favourites ViewControler
 class FavouritesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate , OfferListCellProtocol, PopoverFiltersProtocol, OffersModelProtocol, FavouriteModelProtocol {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var navigationLogo: UIImageView!
@@ -38,6 +38,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
     let locationManager = CLLocationManager()
     var refreshControl: UIRefreshControl!
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
         offersModel.delegate = self
@@ -58,21 +59,16 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         searchOn = false
         searchBar.text = ""
-        
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
             categories = UserDefaults.standard.value(forKey: "categories")! as! [String]
             offersModel.requestOffers(hasCategories: true)
@@ -81,7 +77,7 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -90,11 +86,11 @@ class FavouritesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.reloadData()
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
         mainTitleLabel.text = Utils.instance.mainTitle
-        
         if Utils.instance.navigationLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
             navigationLogo.image = UIImage(contentsOfFile: filename)

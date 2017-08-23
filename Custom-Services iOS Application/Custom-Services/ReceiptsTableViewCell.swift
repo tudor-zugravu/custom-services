@@ -8,12 +8,13 @@
 
 import UIKit
 
+// Protocol used for delegating touches to the class that implements it
 protocol ReceiptsListCellProtocol : class {
     func didPressRatingButton(_ tag: Int)
 }
 
+// The class used for the presentation of receipts cell objects
 class ReceiptsTableViewCell: UITableViewCell {
-
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var offerLogoImage: UIImageView!
     @IBOutlet weak var titleLabel: UnderlinedLabel!
@@ -22,13 +23,11 @@ class ReceiptsTableViewCell: UITableViewCell {
     @IBOutlet weak var availableView: UIView!
     @IBOutlet weak var starButton: UIButton!
     @IBOutlet weak var rateButton: UIButton!
-    
     weak var delegate: ReceiptsListCellProtocol?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = Utils.instance.backgroundColour
-        //cell layout
         containerView.layer.cornerRadius = 10
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.lightGray.cgColor
@@ -54,7 +53,6 @@ class ReceiptsTableViewCell: UITableViewCell {
         } else {
             discountLabel.text = "\(discount) GBP"
         }
-        
         if redeemed == 1 {
             starButton.isEnabled = true
             starButton.alpha = 1

@@ -42,10 +42,12 @@ class Utils: NSObject {
         return _googleAPIKey
     }
     
+    // Returns a UIColor from a hex Int value by applying a bit mask on the three colour components
     func getUIColourFromHex(hexValue:Int) -> UIColor {
         return UIColor(red: CGFloat((hexValue >> 16) & 0xff) / 255.0, green:CGFloat((hexValue >> 8) & 0xff) / 255.0, blue:CGFloat(hexValue & 0xff) / 255.0, alpha: 1)
     }
     
+    // Used for storing the customisation options of the system
     func setCustomisationParameters(mainColour: Int, opaqueColour: Int, backgroundColour: Int, cellBackgroundColour: Int, mainTitle: String, mainLogo: String, navigationLogo: String, mainTabBarItemLabel: String, mainTabBarItemLogo: String, geolocationNotifications: Bool) {
         self.mainColour = self.getUIColourFromHex(hexValue: mainColour)
         self.opaqueColour = self.getUIColourFromHex(hexValue: opaqueColour)
@@ -59,6 +61,7 @@ class Utils: NSObject {
         self.geolocationNotifications = geolocationNotifications
     }
 
+    // Returns a string representation of the time
     func getTime(time: Int) -> String {
         if time < 8 {
             return time % 4 == 0 ? "0\(time / 4 + 8):0\((time % 4) * 15)" : "0\(time / 4 + 8):\((time % 4) * 15)"
@@ -67,21 +70,25 @@ class Utils: NSObject {
         }
     }
     
+    // Returns an Int representation of the time
     func getTimeInt(time: String) -> Int {
         let timeComponents = time.components(separatedBy: ":")
         return (Int(timeComponents[0])! - 8) * 4 + Int(timeComponents[1])! / 15
     }
     
+    // Returns a string representation of the time without the seconds component
     func trimSeconds(time: String) -> String {
         let timeComponents = time.components(separatedBy: ":")
         return "\(timeComponents[0]):\(timeComponents[1])"
     }
     
+    // Returns the number of minutes of the time
     func getMinutes(time: String) -> Int {
         let timeComponents = time.components(separatedBy: ":")
         return Int(timeComponents[0])! * 60 + Int(timeComponents[1])!
     }
     
+    // Returns a string representation of the time
     func getHour(time: Int) -> String {
         if time < 600 {
             return time % 60 < 10 ? "0\(time / 60):0\(time % 60)" : "0\(time / 60):\(time % 60)"
@@ -90,16 +97,19 @@ class Utils: NSObject {
         }
     }
     
+    // Returns the index of the appointment
     func getIndex(startingTime: String, duration: Int, time: String) -> Int {
         let timeComponents = time.components(separatedBy: "-")
         return (getMinutes(time: timeComponents[0]) - getMinutes(time: startingTime)) / duration
     }
     
+    // Returns the string representation of an appointment
     func getTimeInterval(startingTime: String, duration: Int, appointment: Int) -> String {
         let start = getMinutes(time: startingTime)
         return "\(getHour(time: start + appointment * duration))-\(getHour(time: start + (appointment+1) * duration))"
     }
     
+    // Returns the array of appointments available
     func getTimeIntervals(startingTime: String, endingTime: String, duration: Int, appointments: [Int]) -> [String] {
         let start = getMinutes(time: startingTime)
         let end = getMinutes(time: endingTime)
@@ -115,6 +125,7 @@ class Utils: NSObject {
         return timeIntervals
     }
     
+    // Returns a filtered array of offers by taking in the filtering options
     func filterOffers(offers: [OfferModel], distance: Int, minTime: String, maxTime: String, sortBy: Int, onlyAvailableOffers: Bool, allCategories: Bool, allowedCategories: [String]) -> [OfferModel] {
         return offers.filter({ (offer) -> Bool in
             if offer.distance! > distance * 1000 {
@@ -133,6 +144,7 @@ class Utils: NSObject {
         })
     }
     
+    // Returns a sorted array of offers by taking in the filtering options
     func sortOffers(offers: [OfferModel], sortBy: Int) -> [OfferModel] {
         return offers.sorted(by: { (offer1, offer2) -> Bool in
             switch sortBy {
@@ -196,6 +208,7 @@ class Utils: NSObject {
         })
     }
     
+    // Returns an array of offers that are grouped by location
     func removeDuplicateLocations(offers: [OfferModel], onlyAvailableOffers: Bool) -> [OfferModel] {
         guard let firstOffer = offers.first else {
             return [] // Empty array
@@ -284,20 +297,22 @@ class Utils: NSObject {
         return uniqueOffers
     }
     
-    // COPIED
     // Function that returns the path of the images
+    // source: https://www.hackingwithswift.com/example-code/system/how-to-find-the-users-documents-directory
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
     
-    // COPIED
+    // Performs a check on the email field
+    // source: https://stackoverflow.com/questions/25471114/how-to-validate-an-e-mail-address-in-swift
     func isValidEmailFormat(email:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
         return NSPredicate(format:"SELF MATCHES %@", emailRegEx).evaluate(with: email)
     }
     
+    // Clears the user data stored locally
     func signOut() {
         // Delete profile picture
         if UserDefaults.standard.value(forKey: "profilePicture") as! String != "" {

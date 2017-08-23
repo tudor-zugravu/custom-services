@@ -10,17 +10,16 @@ import UIKit
 import GoogleMaps
 import CoreLocation
 
+// The class used for providind the functionalitites of the map ViewControler
 class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBarDelegate, PopoverFiltersProtocol, OffersModelProtocol, GMSMapViewDelegate {
 
     @IBOutlet weak var dropdownMenuButton: DropMenuButton!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var navigationLogo: UIImageView!
-    
     
     var categories: [String] = []
     let offersModel = OffersModel()
@@ -36,6 +35,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
     var searchOn : Bool = false
     let locationManager = CLLocationManager()
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
@@ -55,18 +55,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         searchOn = false
         searchBar.text = ""
-        
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         if UserDefaults.standard.bool(forKey: "hasCategories") == true {
@@ -77,7 +73,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         }
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -85,10 +81,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UISearchBa
         filteredOffers = []
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainTitleLabel.text = Utils.instance.mainTitle
-        
         if Utils.instance.navigationLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.navigationLogo)").path
             navigationLogo.image = UIImage(contentsOfFile: filename)

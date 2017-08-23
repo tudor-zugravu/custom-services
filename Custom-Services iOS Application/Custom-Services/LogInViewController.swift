@@ -8,12 +8,12 @@
 
 import UIKit
 
+// The class used for providind the functionalitites of the authentication ViewControler
 class LogInViewController: UIViewController, LogInModelProtocol {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var mainLogo: UIImageView!
@@ -24,31 +24,29 @@ class LogInViewController: UIViewController, LogInModelProtocol {
     
     let logInModel = LogInModel()
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         logInModel.delegate = self
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         customizeAppearance()
     }
     
-    // COPIED
+    // Function when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour
@@ -56,7 +54,6 @@ class LogInViewController: UIViewController, LogInModelProtocol {
         bottomView.backgroundColor = Utils.instance.mainColour
         loginButton.backgroundColor = Utils.instance.mainColour
         registerButton.backgroundColor = Utils.instance.mainColour
-        
         if Utils.instance.mainLogo != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(Utils.instance.mainLogo)").path
             mainLogo.image = UIImage(contentsOfFile: filename)

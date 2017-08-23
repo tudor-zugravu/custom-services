@@ -10,6 +10,7 @@ import UIKit
 import BraintreeDropIn
 import Braintree
 
+// The class used for providind the functionalitites of the profile ViewControler
 class ProfileViewController: UIViewController, ProfileModelProtocol {
 
     @IBOutlet weak var profilePictureImage: UIImageView!
@@ -19,7 +20,6 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var addCreditButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var navigationView: UIView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var changePasswordButton: UIButton!
@@ -29,11 +29,10 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
     let profileModel = ProfileModel()
     var newPass: String = ""
     
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         profileModel.delegate = self
-        
         profilePictureImage.layer.shadowColor = UIColor.lightGray.cgColor
         profilePictureImage.layer.shadowOffset = CGSize(width:-2, height:2)
         profilePictureImage.layer.shadowRadius = 3
@@ -42,14 +41,12 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
         profilePictureImage.layer.borderColor = UIColor.lightGray.cgColor
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
         if UserDefaults.standard.bool(forKey: "hasCredit") == false {
             addCreditButton.isHidden = true
             creditTextField.isHidden = true
@@ -60,19 +57,16 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 creditTextField.text = "Credit: \(credit) GBP"
             }
         }
-        
         if let name = UserDefaults.standard.value(forKey: "name") as? String,
             let email = UserDefaults.standard.value(forKey: "email") as? String,
             let profilePicture = UserDefaults.standard.value(forKey: "profilePicture") as? String {
             nameTextField.text = name
             emailTextField.text = email
-            
             if profilePicture != "" {
                 let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(profilePicture)")
                 if FileManager.default.fileExists(atPath: filename.path) {
                     profilePictureImage.image = UIImage(contentsOfFile: filename.path)
                 } else {
-                    // Download the profile picture, if exists
                     if let url = URL(string: "\(Utils.serverAddress)/resources/profile_pictures/\(profilePicture)") {
                         if let data = try? Data(contentsOf: url) {
                             var profilePic: UIImage
@@ -86,18 +80,17 @@ class ProfileViewController: UIViewController, ProfileModelProtocol {
                 }
             }
         }
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour

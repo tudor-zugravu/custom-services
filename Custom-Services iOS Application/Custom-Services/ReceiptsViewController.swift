@@ -8,6 +8,7 @@
 
 import UIKit
 
+// The class used for providind the functionalitites of the receipts ViewControler
 class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ReceiptsModelProtocol, ReceiptsListCellProtocol, CheckoutRatingModelProtocol  {
         
     @IBOutlet weak var tableView: UITableView!
@@ -24,10 +25,10 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
     var receiptsModel = ReceiptsModel()
     var checkoutRatingModel = CheckoutRatingModel()
     var refreshControl: UIRefreshControl!
-        
+    
+    // Function called upon the completion of the loading
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -39,30 +40,26 @@ class ReceiptsViewController: UIViewController , UITableViewDataSource, UITableV
         tableView.addSubview(refreshControl) // not required when using UITableViewController
     }
     
+    // Function called upon the completion of the view's rendering
     override func viewWillAppear(_ animated: Bool) {
         searchOn = false
         searchBar.text = ""
-        
         customizeAppearance()
-        
-        // Adding the gesture recognizer that will dismiss the keyboard on an exterior tap
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        
-        // COPIED
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         refreshTable()
     }
     
-    // COPIED
+    // Function called when the view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // Function that performs the customisation of the visual elements
     func customizeAppearance() {
         navigationView.backgroundColor = Utils.instance.mainColour
         mainView.backgroundColor = Utils.instance.backgroundColour

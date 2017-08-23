@@ -8,12 +8,13 @@
 
 import UIKit
 
+// Protocol used for delegating touches to the class that implements it
 protocol OfferListCellProtocol : class {
     func didPressFavouriteButton(_ tag: Int)
 }
 
+// The class used for the presentation of offer cell objects
 class OffersTableViewCell: UITableViewCell {
-    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var offerImage: UIImageView!
@@ -25,15 +26,12 @@ class OffersTableViewCell: UITableViewCell {
     @IBOutlet weak var finishedImage: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var opaqueView: UIView!
-    
-    
     weak var delegate: OfferListCellProtocol?
     var isFavourite: Bool = true
     
     override func awakeFromNib() {
         super.awakeFromNib()
         customizeAppearance()
-        //cell layout
         containerView.layer.cornerRadius = 10
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.lightGray.cgColor
@@ -54,7 +52,6 @@ class OffersTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         let color = opaqueView.backgroundColor
         super.setSelected(selected, animated: animated)
-        
         if(selected) {
             opaqueView.backgroundColor = color
         }
@@ -72,7 +69,6 @@ class OffersTableViewCell: UITableViewCell {
     }
     
     func configureCell(_ name: String, rating: Float, distance: Int, discount: Float, minTime: String, maxTime: String, offerImage: String, offerLogo: String, favourite: Bool, quantity: Int, discountRange: String?) {
-        
         nameLabel.text = name
         ratingLabel.text = "\(String(format: "%.1f", rating))"
         let dist: String = distance < 1200 ? "\(distance) m" : "\(String(format: "%.1f", Float(distance)/1000)) km"
@@ -91,7 +87,6 @@ class OffersTableViewCell: UITableViewCell {
             }
         }
         timeLabel.text = "\(minTime) - \(maxTime)"
-        
         if offerImage != "" {
             let filename = Utils.instance.getDocumentsDirectory().appendingPathComponent("\(offerImage)").path
             self.offerImage.image = UIImage(contentsOfFile: filename)
