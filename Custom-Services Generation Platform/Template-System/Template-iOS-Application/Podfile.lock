@@ -1,0 +1,43 @@
+PODS:
+  - Braintree/Card (4.8.5):
+    - Braintree/Core
+  - Braintree/Core (4.8.5)
+  - Braintree/UnionPay (4.8.5):
+    - Braintree/Card
+    - Braintree/Core
+  - BraintreeDropIn (5.2.2):
+    - BraintreeDropIn/DropIn (= 5.2.2)
+  - BraintreeDropIn/DropIn (5.2.2):
+    - Braintree/Card (~> 4.0)
+    - Braintree/Core (~> 4.0)
+    - Braintree/UnionPay (~> 4.0)
+    - BraintreeDropIn/UIKit
+  - BraintreeDropIn/UIKit (5.2.2)
+  - GoogleMaps (2.4.0):
+    - GoogleMaps/Maps (= 2.4.0)
+  - GoogleMaps/Base (2.4.0)
+  - GoogleMaps/Maps (2.4.0):
+    - GoogleMaps/Base
+  - GooglePlaces (2.4.0):
+    - GoogleMaps/Base (= 2.4.0)
+  - HDAugmentedReality (2.0.0)
+  - SwiftRangeSlider (1.0.2)
+
+DEPENDENCIES:
+  - BraintreeDropIn
+  - GoogleMaps
+  - GooglePlaces
+  - HDAugmentedReality (~> 2.0)
+  - SwiftRangeSlider
+
+SPEC CHECKSUMS:
+  Braintree: 12225834d0e39ffad56888756a3c0d8bda043d53
+  BraintreeDropIn: 0ff4879547af66dae814911992e01324975d556d
+  GoogleMaps: 8436ab5d1c25e36915b2f7416d0c8e3fa2e76c61
+  GooglePlaces: aafe5990fa7951e98e078761bbdaaf236d7e0c65
+  HDAugmentedReality: 6548c4197828eb9ae98ec203c56ebd5e535396b5
+  SwiftRangeSlider: 111f9a70b8502c6b0607bd3fcf5662f47009a90c
+
+PODFILE CHECKSUM: 905a9fa3f77e3f2621203e15c76ed9c54160f276
+
+COCOAPODS: 1.3.0
