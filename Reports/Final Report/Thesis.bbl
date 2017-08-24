@@ -1,5 +1,11 @@
 \begin{thebibliography}{10}
 
+\bibitem{ganttpro_2017}
+Ganttpro, 2017.
+
+\bibitem{github_2017}
+Github, 2017.
+
 \bibitem{curcin_2016}
 Dr.~Vasa Curcin.
 \newblock Entity relationship modelling, 2016.
@@ -12,6 +18,10 @@ Dr.~Hamza Hamza.
 Andrew Holyer.
 \newblock How to scope a tpm project, 2016.
 
+\bibitem{huis_2017}
+Danijel Huis.
+\newblock Hd augmented reality, 2017.
+
 \bibitem{swift_2014}
 Apple Inc.
 \newblock {\em THE SWIFT PROGRAMMING LANGUAGE (SWIFT 3.1)}.
@@ -21,6 +31,10 @@ Apple Inc.
 Apple Inc.
 \newblock {\em Client-Server model}.
 \newblock Apple Inc., 2017.
+
+\bibitem{notes_2017}
+Apple Inc.
+\newblock Notes, 2017.
 
 \bibitem{lano_2009}
 Kevin Lano.

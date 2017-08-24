@@ -14,11 +14,13 @@
 \contentsline {subsubsection}{\numberline {3.3.1}Architectural Model}{20}{subsubsection.3.3.1}
 \contentsline {subsubsection}{\numberline {3.3.2}Design Patterns}{23}{subsubsection.3.3.2}
 \contentsline {subsection}{\numberline {3.4}Implementation}{24}{subsection.3.4}
-\contentsline {subsubsection}{\numberline {3.4.1}Used Technologies}{24}{subsubsection.3.4.1}
-\contentsline {subsubsection}{\numberline {3.4.2}Database Templates}{26}{subsubsection.3.4.2}
-\contentsline {subsubsection}{\numberline {3.4.3}Server Template}{29}{subsubsection.3.4.3}
-\contentsline {subsubsection}{\numberline {3.4.4}iOS Mobile Application Template}{30}{subsubsection.3.4.4}
-\contentsline {subsubsection}{\numberline {3.4.5}Web Application Template}{33}{subsubsection.3.4.5}
-\contentsline {subsubsection}{\numberline {3.4.6}Generation Platform}{35}{subsubsection.3.4.6}
-\contentsline {section}{\numberline {4}Conclusion}{37}{section.4}
-\contentsline {section}{References}{39}{section*.5}
+\contentsline {subsubsection}{\numberline {3.4.1}Technologies and Tools}{24}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Database Templates}{27}{subsubsection.3.4.2}
+\contentsline {subsubsection}{\numberline {3.4.3}Server Template}{30}{subsubsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.4}iOS Mobile Application Template}{31}{subsubsection.3.4.4}
+\contentsline {subsubsection}{\numberline {3.4.5}Web Application Template}{34}{subsubsection.3.4.5}
+\contentsline {subsubsection}{\numberline {3.4.6}Generation Platform}{36}{subsubsection.3.4.6}
+\contentsline {subsubsection}{\numberline {3.4.7}User Interface Design}{37}{subsubsection.3.4.7}
+\contentsline {subsubsection}{\numberline {3.4.8}System Limitations}{38}{subsubsection.3.4.8}
+\contentsline {section}{\numberline {4}Conclusion}{39}{section.4}
+\contentsline {section}{References}{41}{section*.5}

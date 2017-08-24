@@ -12,44 +12,47 @@ A level-1 auxiliary file: contents/nomenclature.aux
 The style file: plain.bst
 A level-1 auxiliary file: appendix/app_1.aux
 Database file #1: bibliography.bib
-You've used 12 entries,
+Warning--to sort, need author or key in ganttpro_2017
+Warning--to sort, need author or key in github_2017
+You've used 16 entries,
             2118 wiz_defined-function locations,
-            553 strings with 5154 characters,
-and the built_in function-call counts, 2504 in all, are:
-= -- 220
-> -- 84
+            564 strings with 5279 characters,
+and the built_in function-call counts, 3202 in all, are:
+= -- 280
+> -- 100
 < -- 0
-+ -- 38
-- -- 24
-* -- 90
-:= -- 428
-add.period$ -- 29
-call.type$ -- 12
-change.case$ -- 46
++ -- 46
+- -- 28
+* -- 114
+:= -- 522
+add.period$ -- 35
+call.type$ -- 16
+change.case$ -- 60
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 109
-empty$ -- 265
-format.name$ -- 24
-if$ -- 538
+cite$ -- 18
+duplicate$ -- 137
+empty$ -- 355
+format.name$ -- 28
+if$ -- 700
 int.to.chr$ -- 0
-int.to.str$ -- 12
+int.to.str$ -- 16
 missing$ -- 10
-newline$ -- 56
-num.names$ -- 24
-pop$ -- 100
+newline$ -- 70
+num.names$ -- 28
+pop$ -- 136
 preamble$ -- 1
-purify$ -- 36
+purify$ -- 46
 quote$ -- 0
-skip$ -- 85
+skip$ -- 117
 stack$ -- 0
-substring$ -- 62
-swap$ -- 12
+substring$ -- 82
+swap$ -- 16
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 38
-warning$ -- 0
-while$ -- 24
-width$ -- 14
-write$ -- 111
+type$ -- 54
+warning$ -- 2
+while$ -- 28
+width$ -- 18
+write$ -- 139
+(There were 2 warnings)
