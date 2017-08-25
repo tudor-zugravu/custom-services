@@ -14,47 +14,48 @@ A level-1 auxiliary file: appendix/app_1.aux
 Database file #1: bibliography.bib
 Warning--to sort, need author or key in too_good_to_go
 Warning--to sort, need author or key in appsmakerstore
+Warning--to sort, need author or key in statistic_2017
 Warning--to sort, need author or key in ganttpro_2017
 Warning--to sort, need author or key in github_2017
-You've used 19 entries,
+You've used 23 entries,
             2118 wiz_defined-function locations,
-            574 strings with 5432 characters,
-and the built_in function-call counts, 3703 in all, are:
-= -- 323
-> -- 109
+            597 strings with 6146 characters,
+and the built_in function-call counts, 4926 in all, are:
+= -- 435
+> -- 173
 < -- 0
-+ -- 51
-- -- 30
-* -- 132
-:= -- 584
-add.period$ -- 39
-call.type$ -- 19
-change.case$ -- 70
++ -- 77
+- -- 52
+* -- 220
+:= -- 782
+add.period$ -- 50
+call.type$ -- 23
+change.case$ -- 92
 chr.to.int$ -- 0
-cite$ -- 23
-duplicate$ -- 158
-empty$ -- 423
-format.name$ -- 30
-if$ -- 819
+cite$ -- 28
+duplicate$ -- 194
+empty$ -- 525
+format.name$ -- 52
+if$ -- 1075
 int.to.chr$ -- 0
-int.to.str$ -- 19
-missing$ -- 10
-newline$ -- 80
-num.names$ -- 30
-pop$ -- 163
+int.to.str$ -- 23
+missing$ -- 12
+newline$ -- 99
+num.names$ -- 36
+pop$ -- 192
 preamble$ -- 1
-purify$ -- 53
+purify$ -- 72
 quote$ -- 0
-skip$ -- 141
+skip$ -- 171
 stack$ -- 0
-substring$ -- 97
-swap$ -- 19
+substring$ -- 171
+swap$ -- 23
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 66
-warning$ -- 4
-while$ -- 30
-width$ -- 21
-write$ -- 159
-(There were 4 warnings)
+type$ -- 82
+warning$ -- 5
+while$ -- 38
+width$ -- 25
+write$ -- 198
+(There were 5 warnings)

@@ -1,26 +1,27 @@
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}
-\contentsline {subsection}{\numberline {1.1}Project Aims, Objectives and Introduction}{1}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Background}{2}{subsection.1.2}
-\contentsline {section}{\numberline {2}Main Result}{5}{section.2}
-\contentsline {subsection}{\numberline {2.1}System Analysis and Planning}{5}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}The Scoping Process}{5}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}The Planning Process}{9}{subsubsection.2.1.2}
-\contentsline {subsection}{\numberline {2.2}System Design}{12}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Use Cases}{13}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Business Type Model}{17}{subsubsection.2.2.2}
-\contentsline {subsubsection}{\numberline {2.2.3}Component Identification}{18}{subsubsection.2.2.3}
-\contentsline {subsection}{\numberline {2.3}System Architecture}{21}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Architectural Model}{21}{subsubsection.2.3.1}
-\contentsline {subsubsection}{\numberline {2.3.2}Design Patterns}{24}{subsubsection.2.3.2}
-\contentsline {subsection}{\numberline {2.4}Implementation}{25}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Technologies and Tools}{25}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}Database Templates}{28}{subsubsection.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}Server Template}{31}{subsubsection.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}iOS Mobile Application Template}{32}{subsubsection.2.4.4}
-\contentsline {subsubsection}{\numberline {2.4.5}Web Application Template}{35}{subsubsection.2.4.5}
-\contentsline {subsubsection}{\numberline {2.4.6}Generation Platform}{37}{subsubsection.2.4.6}
-\contentsline {subsubsection}{\numberline {2.4.7}User Interface Design}{38}{subsubsection.2.4.7}
-\contentsline {subsubsection}{\numberline {2.4.8}Results and Evaluation}{39}{subsubsection.2.4.8}
-\contentsline {section}{\numberline {3}Conclusion}{41}{section.3}
-\contentsline {section}{References}{44}{section*.5}
-\contentsline {section}{\numberline {A}Appendix}{46}{appendix.A}
+\contentsline {subsection}{\numberline {1.1}Motivation}{1}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Project Aims and Objectives}{1}{subsection.1.2}
+\contentsline {section}{\numberline {2}Background Theories}{3}{section.2}
+\contentsline {section}{\numberline {3}Main Result}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}System Analysis and Planning}{6}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}The Scoping Process}{6}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}The Planning Process}{10}{subsubsection.3.1.2}
+\contentsline {subsection}{\numberline {3.2}System Design}{13}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Use Cases}{14}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Business Type Model}{18}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Component Identification}{19}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}System Architecture}{22}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Architectural Model}{22}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Design Patterns}{25}{subsubsection.3.3.2}
+\contentsline {subsection}{\numberline {3.4}Implementation}{26}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Technologies and Tools}{26}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Database Templates}{29}{subsubsection.3.4.2}
+\contentsline {subsubsection}{\numberline {3.4.3}Server Template}{32}{subsubsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.4}iOS Mobile Application Template}{33}{subsubsection.3.4.4}
+\contentsline {subsubsection}{\numberline {3.4.5}Web Application Template}{36}{subsubsection.3.4.5}
+\contentsline {subsubsection}{\numberline {3.4.6}Generation Platform}{38}{subsubsection.3.4.6}
+\contentsline {subsubsection}{\numberline {3.4.7}User Interface Design}{39}{subsubsection.3.4.7}
+\contentsline {subsubsection}{\numberline {3.4.8}Results and Evaluation}{40}{subsubsection.3.4.8}
+\contentsline {section}{\numberline {4}Conclusion}{42}{section.4}
+\contentsline {section}{References}{45}{section*.5}
+\contentsline {section}{\numberline {A}Appendix}{47}{appendix.A}
