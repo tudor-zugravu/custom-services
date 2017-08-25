@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  24 AUG 2017 23:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.8.19)  25 AUG 2017 05:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1048,28 +1048,64 @@ l.70 \include{contents/abstract}
 ]
 
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
-less on input line 86.
+less on input line 85.
 
 
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
-less on input line 87.
+less on input line 86.
 
 \openout2 = `contents/introduction.aux'.
 
-(./contents/introduction.tex) [1
+(./contents/introduction.tex
+Underfull \hbox (badness 10000) in paragraph at lines 5--6
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--8
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--10
+
+ []
+
+[1
 
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 15--16
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+
+ []
+
+[3]) [4]
 \openout2 = `contents/background.aux'.
 
- (./contents/background.tex) [2
-
-
-] [3]
+ (./contents/background.tex)
 \openout2 = `contents/main.aux'.
 
-
-(./contents/main.tex
+ (./contents/main.tex
 Underfull \hbox (badness 10000) in paragraph at lines 8--12
 
  []
@@ -1094,7 +1130,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--17
 
  []
 
-[4
+[5
+
+
 
 
 ]
@@ -1104,15 +1142,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 18--49
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 18--49
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 50--51
 
  []
 
 [6]
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+
+ []
+
+[7]
 Underfull \hbox (badness 10000) in paragraph at lines 52--53
 
  []
@@ -1127,7 +1165,7 @@ Overfull \hbox (3.7256pt too wide) in paragraph at lines 58--58
 []\OT1/cmr/m/n/10.95 Flexible
  []
 
-[7]
+[8]
 Underfull \hbox (badness 10000) in paragraph at lines 73--74
 
  []
@@ -1142,7 +1180,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 77--78
 
  []
 
-[8] <img/phase1.png, id=242, 1130.2225pt x 576.1525pt>
+[9] <img/phase1.png, id=251, 1130.2225pt x 576.1525pt>
 File: img/phase1.png Graphic file (type png)
  <use img/phase1.png>
 Package pdftex.def Info: img/phase1.png used on input line 81.
@@ -1152,7 +1190,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
-<img/phase2.png, id=243, 1397.22pt x 559.08875pt>
+<img/phase2.png, id=252, 1397.22pt x 559.08875pt>
 File: img/phase2.png Graphic file (type png)
  <use img/phase2.png>
 Package pdftex.def Info: img/phase2.png used on input line 90.
@@ -1162,12 +1200,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 95--96
 
  []
 
-[9 <./img/phase1.png>]
+[10 <./img/phase1.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 97--98
 
  []
 
-[10 <./img/phase2.png>]
+[11 <./img/phase2.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 102--103
 
  []
@@ -1177,7 +1215,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
-[11] <img/Use_Case_diagrams.png, id=265, 1583.9175pt x 1027.84pt>
+[12] <img/Use_Case_diagrams.png, id=274, 1583.9175pt x 1027.84pt>
 File: img/Use_Case_diagrams.png Graphic file (type png)
 
 <use img/Use_Case_diagrams.png>
@@ -1188,7 +1226,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 117--118
 
  []
 
-[12 <./img/Use_Case_diagrams.png>]
+[13 <./img/Use_Case_diagrams.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 119--120
 
  []
@@ -1198,7 +1236,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 121--122
 
  []
 
-[13]
+[14]
 Underfull \hbox (badness 10000) in paragraph at lines 123--124
 
  []
@@ -1218,7 +1256,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 139--149
 
  []
 
-[14]
+[15]
 Underfull \hbox (badness 10000) in paragraph at lines 150--151
 
  []
@@ -1233,7 +1271,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 160--161
 
  []
 
-[15]
+[16]
 Underfull \hbox (badness 10000) in paragraph at lines 177--178
 
  []
@@ -1243,12 +1281,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 179--180
 
  []
 
-[16]
+[17]
 Underfull \hbox (badness 10000) in paragraph at lines 181--182
 
  []
 
-<img/Business_Type_Model.png, id=290, 774.895pt x 1090.0725pt>
+<img/Business_Type_Model.png, id=300, 774.895pt x 1090.0725pt>
 File: img/Business_Type_Model.png Graphic file (type png)
 
 <use img/Business_Type_Model.png>
@@ -1264,14 +1302,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 193--194
 
  []
 
-[17] <img/Initial_Architecture.png, id=299, 904.37875pt x 633.36626pt>
+[18] <img/Initial_Architecture.png, id=308, 904.37875pt x 633.36626pt>
 File: img/Initial_Architecture.png Graphic file (type png)
 
 <use img/Initial_Architecture.png>
 Package pdftex.def Info: img/Initial_Architecture.png used on input line 198.
 (pdftex.def)             Requested size: 271.31572pt x 190.01134pt.
- [18 <./img/Business_Type_Model.png>]
-[19 <./img/Initial_Architecture.png>]
+ [19 <./img/Business_Type_Model.png>]
+[20 <./img/Initial_Architecture.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 207--208
 
  []
@@ -1281,7 +1319,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 211--212
 
  []
 
-[20] <img/Client_Server.png, id=317, 1241.63875pt x 795.97375pt>
+[21] <img/Client_Server.png, id=326, 1241.63875pt x 795.97375pt>
 File: img/Client_Server.png Graphic file (type png)
 
 <use img/Client_Server.png>
@@ -1292,14 +1330,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 220--221
 
  []
 
-[21 <./img/Client_Server.png>]
-<img/System_Architecture.png, id=325, 1424.32124pt x 1336.995pt>
+[22 <./img/Client_Server.png>]
+<img/System_Architecture.png, id=335, 1424.32124pt x 1336.995pt>
 File: img/System_Architecture.png Graphic file (type png)
 
 <use img/System_Architecture.png>
 Package pdftex.def Info: img/System_Architecture.png used on input line 224.
 (pdftex.def)             Requested size: 313.35164pt x 294.1398pt.
- [22 <./img/System_Architecture.png>]
+ [23 <./img/System_Architecture.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 231--232
 
  []
@@ -1314,12 +1352,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 235--236
 
  []
 
-[23]
+[24]
 Underfull \hbox (badness 10000) in paragraph at lines 246--247
 
  []
 
-[24]
+[25]
 Underfull \hbox (badness 10000) in paragraph at lines 248--249
 
  []
@@ -1334,7 +1372,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 252--253
 
  []
 
-[25]
+[26]
 Underfull \hbox (badness 10000) in paragraph at lines 254--255
 
  []
@@ -1349,7 +1387,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--259
 
  []
 
-[26]
+[27]
 Underfull \hbox (badness 10000) in paragraph at lines 262--263
 
  []
@@ -1359,7 +1397,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--265
 
  []
 
-[27] <img/database_structure.png, id=373, 970.62625pt x 597.23125pt>
+[28] <img/database_structure.png, id=383, 970.62625pt x 597.23125pt>
 File: img/database_structure.png Graphic file (type png)
 
 <use img/database_structure.png>
@@ -1370,12 +1408,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 273--274
 
  []
 
-[28 <./img/database_structure.png>]
+[29 <./img/database_structure.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 275--276
 
  []
 
-[29]
+[30]
 Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
@@ -1390,12 +1428,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 283--284
 
  []
 
-[30]
+[31]
 Underfull \hbox (badness 10000) in paragraph at lines 289--290
 
  []
 
-[31]
+[32]
 Underfull \hbox (badness 10000) in paragraph at lines 291--292
 
  []
@@ -1405,7 +1443,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 293--294
 
  []
 
-[32]
+[33]
 Underfull \hbox (badness 10000) in paragraph at lines 295--296
 
  []
@@ -1420,12 +1458,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 299--300
 
  []
 
-[33]
+[34]
 Underfull \hbox (badness 10000) in paragraph at lines 305--306
 
  []
 
-[34]
+[35]
 Underfull \hbox (badness 10000) in paragraph at lines 307--308
 
  []
@@ -1440,7 +1478,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 315--316
 
  []
 
-[35]
+[36]
 Underfull \hbox (badness 10000) in paragraph at lines 317--318
 
  []
@@ -1450,7 +1488,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 319--320
 
  []
 
-[36]
+[37]
 Underfull \hbox (badness 10000) in paragraph at lines 323--324
 
  []
@@ -1460,10 +1498,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 325--326
 
  []
 
-[37]) [38]
+[38]
+Underfull \hbox (badness 10000) in paragraph at lines 329--330
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 331--332
+
+ []
+
+[39]) [40]
 \openout2 = `contents/conclusion.aux'.
 
- (./contents/conclusion.tex) [39
+ (./contents/conclusion.tex) [41
 
 
 ]
@@ -1476,28 +1524,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 325--326
 
 No file Thesis.gls.
 No file Thesis.acr.
-[40
+[42
 
 
-]) (./Thesis.bbl) [41
+]) (./Thesis.bbl [43
 
-]
+]) [44]
 \openout2 = `appendix/app_1.aux'.
 
  (./appendix/app_1.tex
-<img/WBS.png, id=440, 243.91125pt x 619.31375pt>
+<img/WBS.png, id=457, 243.91125pt x 619.31375pt>
 File: img/WBS.png Graphic file (type png)
  <use img/WBS.png>
 Package pdftex.def Info: img/WBS.png used on input line 4.
 (pdftex.def)             Requested size: 209.76329pt x 532.6089pt.
 
-<img/phase3.png, id=441, 1037.8775pt x 467.7475pt>
+<img/phase3.png, id=458, 1037.8775pt x 467.7475pt>
 File: img/phase3.png Graphic file (type png)
  <use img/phase3.png>
 Package pdftex.def Info: img/phase3.png used on input line 11.
 (pdftex.def)             Requested size: 415.14365pt x 187.09567pt.
 
-<img/phase4.png, id=442, 1123.19624pt x 392.46625pt>
+<img/phase4.png, id=459, 1123.19624pt x 392.46625pt>
 File: img/phase4.png Graphic file (type png)
  <use img/phase4.png>
 Package pdftex.def Info: img/phase4.png used on input line 18.
@@ -1507,61 +1555,54 @@ Overfull \hbox (31.01686pt too wide) in paragraph at lines 18--19
  [][] 
  []
 
-<img/Business_Concept_Model.png, id=443, 702.625pt x 796.9775pt>
+<img/Business_Concept_Model.png, id=460, 702.625pt x 796.9775pt>
 File: img/Business_Concept_Model.png Graphic file (type png)
 
 <use img/Business_Concept_Model.png>
 Package pdftex.def Info: img/Business_Concept_Model.png used on input line 25.
 (pdftex.def)             Requested size: 281.04501pt x 318.78534pt.
 
-<img/System_Interfaces.png, id=444, 903.375pt x 655.44875pt>
+<img/System_Interfaces.png, id=461, 903.375pt x 655.44875pt>
 File: img/System_Interfaces.png Graphic file (type png)
 
 <use img/System_Interfaces.png>
 Package pdftex.def Info: img/System_Interfaces.png used on input line 32.
 (pdftex.def)             Requested size: 271.01459pt x 196.63614pt.
-) [42
+) [45
 
- <./img/WBS.png>] [43 <./img/phase3.png> <./img/phase4.png>] [44 <./img/Busines
+ <./img/WBS.png>] [46 <./img/phase3.png> <./img/phase4.png>] [47 <./img/Busines
 s_Concept_Model.png> <./img/System_Interfaces.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 117.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 117.
  (./Thesis.aux (./contents/abstract.aux)
 (./structure/figures_tables.aux) (./structure/acknowledgements.aux)
 (./contents/introduction.aux) (./contents/background.aux) (./contents/main.aux)
 (./contents/conclusion.aux) (./contents/nomenclature.aux) (./appendix/app_1.aux
 ))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
-
-
-Package rerunfilecheck Warning: File `Thesis.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Thesis.out':
-(rerunfilecheck)             Before: 892EBF6CEE3FEEDD4071207E4C17A613;1796
-(rerunfilecheck)             After:  42013EA1B4F1685DEA593FFA5189951B;1874.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 117.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 117.
+Package rerunfilecheck Info: File `Thesis.out' has not changed.
+(rerunfilecheck)             Checksum: 227C1DE9C7CBE29E0E9C495997D8DB9D;1801.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 117.
  ) 
 Here is how much of TeX's memory you used:
- 21530 strings out of 492995
- 385685 string characters out of 6132704
- 518695 words of memory out of 5000000
- 24450 multiletter control sequences out of 15000+600000
+ 21538 strings out of 492995
+ 385804 string characters out of 6132704
+ 517793 words of memory out of 5000000
+ 24453 multiletter control sequences out of 15000+600000
  12009 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,12n,59p,1967b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,12n,59p,1967b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
 usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
 /local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
 local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on Thesis.pdf (52 pages, 1018181 bytes).
+Output written on Thesis.pdf (55 pages, 1022852 bytes).
 PDF statistics:
- 512 PDF objects out of 1000 (max. 8388607)
- 419 compressed objects within 5 object streams
- 109 named destinations out of 1000 (max. 500000)
+ 530 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
+ 114 named destinations out of 1000 (max. 500000)
  283 words of extra memory for PDF output out of 10000 (max. 10000000)
 

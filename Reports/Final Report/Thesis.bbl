@@ -1,10 +1,16 @@
 \begin{thebibliography}{10}
 
+\bibitem{appsmakerstore}
+Appsmakerstore, 2017.
+
 \bibitem{ganttpro_2017}
 Ganttpro, 2017.
 
 \bibitem{github_2017}
 Github, 2017.
+
+\bibitem{too_good_to_go}
+Too good to go, 2017.
 
 \bibitem{curcin_2016}
 Dr.~Vasa Curcin.
@@ -63,6 +69,10 @@ R.~Schifreen.
 \newblock {\em The Web Book: The ultimate beginner?s guide to HTML, CSS,
   JavaScript, PHP and MySql}.
 \newblock Oakworth Business Publishing Ltd, 1 edition, 2010.
+
+\bibitem{terms_2017}
+TechTerms.
+\newblock Client-server model definition, 2017.
 
 \bibitem{wysocki_2013}
 Robert~K Wysocki.

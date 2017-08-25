@@ -213,7 +213,7 @@ The decision that needed to be made at the time was whether to use the client-se
 \begin{figure}[!ht]
 \centering
 \includegraphics[scale=0.1]{img/Client_Server.png}
-\caption{Client-Server architecture}
+\caption{Client-Server architecture\cite{terms_2017}}
 \label{fig:client_server_model}
 \end{figure}
 
@@ -324,9 +324,13 @@ The main aspect that was taken into consideration while designing the visual ele
 
 The customised solution generation implemented in this project implies adjusting the colour palette based on the client's preferences. However, the first version of the system does not allow choosing the position of the graphical elements on the screen. A previously established layout is provided, the design of which regarded the most strategic points of where the information should be displayed. As such, the only visual aspects that can be changed are the colours, the iOS application's tab bar item logo and the images of the platforms, as seen in Figure. In order to ensure that the layout rules applied to the images do not derange the visual aspect, constraints have been enforced on the picture sizes uploaded by the client.\\
 
-\subsubsection{System Limitations}
+\subsubsection{Results and Evaluation}
 
+The final solution's development was finished upon the completion of the generation platform, as all the template components have been created and their functionalities implemented prior to that. In addition, the communication processes and the dependencies between them have been defined and implemented while building the solution, thus resulting in a completely functional system. Performing an analysis of the functional requirements of the system suggested that the end results are satisfying. Both the iOS and web applications have an almost indistinguishable latency, except when retrieving the offers for the first time, as the images need to be downloaded. However, the caching feature solves part of having this additional waiting time, even though better algorithms should be used in future releases. The space allocated on disk needed for installing the iOS application is not small, this being a potential problem for the customers. The increased storage requirements are due to the Google Maps component, which is essential for the navigation steps and the map view. However, the dynamic retrieval of images and offer related information helps mitigate this solution by reducing the bundle size. From a user experience point of view, both the web and iOS templates can be considered efficient, customers being able to access any page in a seamless manner as the number of steps needed to reach any view has been considered when the navigation structure was designed. \\
 
+In contrast, a limitation of the system is that both the client applications require internet connection in order to operate. Storing the data persistently was considered, but as the information is very dynamic and can be changed in a matter of seconds, this solution was abandoned for this version. Another major limitation is that the server component was designed based on the LAMP structure, restricting the server configuration possibilities. Similarly, the only present mobile solution is for the iOS operating system, confining the customer segment to only iPhone users, as well as adding the requirement of having a device running on the OS X operating system, which is needed for building the application. The last major system constraint is that the customisable retail solutions can only be location, product or service based and not any combination of the three, thus restricting the target offers as well as the customer base. \\
+
+The testing of the five template components was performed by considering each and every one of them as blackboxes. Thus, a number of evaluation cases have been established including acceptance criteria based on the system specifications. As such, the functionalities tested number the authentication, register, user session, profile editing, adding credit, purchasing, redeeming and navigation features. This process lead to the discovery of some of the limitations and performance issues. However, the acceptance criteria were met for the functionalities, thus indicating that a complete solution for the retail customisation system was created.
 
 
 
