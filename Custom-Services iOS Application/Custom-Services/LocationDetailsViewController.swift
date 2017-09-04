@@ -633,9 +633,10 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
         if isVR {
             if locations.count > 0 {
                 let location = locations.last!
-                if location.horizontalAccuracy < 20 {
+                if location.horizontalAccuracy < 30 {
                     if nextCheckpoint != nil {
                         if Double(location.distance(from: checkpoints.last!.location)) < 20 {
+                            print(Double(location.distance(from: checkpoints.last!.location)))
                             arViewController.dismiss(animated: true, completion: nil)
                             isVR = false
                             let alert = UIAlertController(title: "Navigation completed",
@@ -644,6 +645,7 @@ class LocationDetailsViewController: UIViewController, UIPickerViewDelegate, UIP
                             alert.addAction(done)
                             self.present(alert, animated: true, completion: nil)
                         } else if Double(location.distance(from: nextCheckpoint!.location)) < 20 {
+                            print(Double(location.distance(from: nextCheckpoint!.location)))
                             let index = checkpoints.index(of: nextCheckpoint!)!
                             
                             checkpoints[index].title = "Previous checkpoint.red"

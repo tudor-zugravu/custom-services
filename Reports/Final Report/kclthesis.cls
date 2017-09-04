@@ -50,8 +50,9 @@
 \newcommand*{\@signdate}{\today}
 
 % New Comment for todonotes
-\newcommand{\insertref}[1]{\todo[color=green!40]{#1}}\newcommand{\explainindetail}[1]{\todo[color=red!40]{#1}}
-\newcommand{\askfeedback}[1]{\todo[color=blue!40]{#1}}
+\newcommand{\insertref}[1]{\todo[color=green!40]{#1}}
+\newcommand{\explainindetail}[1]{\todo[color=red!40]{#1}}
+\newcommand{\askfeedback}[1]{\todo[color=blue!40]{#1}}
 
 \renewcommand*{\maketitle}{
 \begin{titlepage}
@@ -65,11 +66,13 @@
 \end{minipage}%
 \begin{minipage}{0.25\textwidth}
 	\begin{flushleft}
-	\scriptsize{The Strand\\
+	\scriptsize{Department of Informatics\\
+		King?s College London\\
 		Strand Campus\\
-		London WC2R 2LS\\
-		Telephone 020 7848 2145\\
-		Fax 020 7848 2851}
+		Bush House\\
+		30 Aldwych\\
+		London\\
+		WC2B 4BG}
 	\end{flushleft}
 \end{minipage}%
 \begin{minipage}{0.25\textwidth}
@@ -156,7 +159,7 @@
 \begin{center}
 Department of Informatics \\ 
 King's College London \\
-WC2R 2LS London \\ 
+WC2B 4BG \\ 
 United Kingdom
 \end{center}
 
@@ -197,8 +200,8 @@ Course: \@programme
 \vspace{1.2cm}
 
 \begin{center}
-Thesis submitted as part of the requirements for the award of the MSc in Web Intelligence.\\
-7CCSMPRJ - MSc Individual Project - 2016
+Thesis submitted as part of the requirements for the award of the MSc in Advanced Software Engineering with Management.\\
+7CCSMPRJ - MSc Individual Project - 2017
 \end{center}
 \end{titlepage}
 }
